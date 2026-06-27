@@ -1,21 +1,22 @@
-import { LayoutDashboard, Settings } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { LayoutDashboard, Settings, X } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { TopologyWidget } from './widgets/TopologyWidget';
 import { ChartWidget } from './widgets/ChartWidget';
 import { InsightCard } from './widgets/InsightCard';
 import { DataQualityWidget } from './widgets/DataQualityWidget';
 import { WidgetFrame } from './WidgetFrame';
-import type {
-  NodeStatus,
-  StateSummarySpec,
-  Widget
-} from '@shared/types';
+import { WorkspaceKpiStrip } from './WorkspaceKpiStrip';
+import { useDecisions } from '@/lib/useDecisions';
+import { getSeries, type Decision } from '@/lib/api';
+import type { ChartSpec, NodeStatus, StateSummarySpec, Widget } from '@shared/types';
 
-type InsightAction = (
-  action: 'accept' | 'reject',
-  id: string,
-  title: string
-) => void;
+type TopoWidget = Extract<Widget, { type: 'topology' }>;
+type InsightWidget = Extract<Widget, { type: 'insight_card' }>;
+type DetailWidget = Extract<
+  Widget,
+  { type: 'chart' | 'data_quality' | 'state_summary' }
+>;
 
 const STATUS_COLOR: Record<NodeStatus, string> = {
   ok: 'text-emerald-400',
@@ -36,7 +37,7 @@ function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
         {spec.items.map((it, i) => (
           <div
             key={i}
-            className="rounded-[calc(var(--radius)*0.8)] border border-[var(--border)] bg-[var(--background)] p-3 [border-style:var(--border-style)]"
+            className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3"
           >
             <div className="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)]">
               {it.label}
@@ -60,40 +61,100 @@ function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
   );
 }
 
-function WidgetView({
-  widget,
-  onInsightAction
-}: {
-  widget: Widget;
-  onInsightAction?: InsightAction;
-}) {
+function DetailWidgetView({ widget }: { widget: DetailWidget }) {
   switch (widget.type) {
-    case 'state_summary':
-      return <StateSummaryWidget spec={widget.spec} />;
-    case 'topology':
-      return <TopologyWidget spec={widget.spec} />;
     case 'chart':
       return <ChartWidget spec={widget.spec} />;
     case 'data_quality':
       return <DataQualityWidget spec={widget.spec} />;
-    case 'insight_card':
-      return (
-        <InsightCard id={widget.id} spec={widget.spec} onAction={onInsightAction} />
-      );
+    case 'state_summary':
+      return <StateSummaryWidget spec={widget.spec} />;
   }
 }
 
 export function Workspace({
   widgets,
   sessionId,
-  onOpenSettings,
-  onInsightAction
+  onOpenSettings
 }: {
   widgets: Widget[];
   sessionId: string;
   onOpenSettings: () => void;
-  onInsightAction?: InsightAction;
 }) {
+  const { decisions, refetch } = useDecisions(sessionId);
+
+  const topologyWidgets = useMemo(
+    () => widgets.filter((w): w is TopoWidget => w.type === 'topology'),
+    [widgets]
+  );
+  const insightWidgets = useMemo(
+    () => widgets.filter((w): w is InsightWidget => w.type === 'insight_card'),
+    [widgets]
+  );
+  const detailWidgets = useMemo(
+    () =>
+      widgets.filter(
+        (w): w is DetailWidget =>
+          w.type === 'chart' ||
+          w.type === 'data_quality' ||
+          w.type === 'state_summary'
+      ),
+    [widgets]
+  );
+
+  const decidedByCard = useMemo(() => {
+    const m = new Map<string, Decision>();
+    for (const d of decisions) {
+      if (d.insight_card_id && !m.has(d.insight_card_id)) m.set(d.insight_card_id, d);
+    }
+    return m;
+  }, [decisions]);
+
+  const [selectedInsightId, setSelectedInsightId] = useState<string | null>(null);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
+  const [activeTopo, setActiveTopo] = useState(0);
+  const [drawer, setDrawer] = useState<ChartSpec | null>(null);
+
+  const cardRefs = useRef(new Map<string, HTMLDivElement>());
+
+  const activeIdx = Math.min(activeTopo, Math.max(0, topologyWidgets.length - 1));
+  const activeTopology: TopoWidget | undefined = topologyWidgets[activeIdx];
+
+  const topoIndexForNodes = (nodeIds: string[]) => {
+    if (!nodeIds.length) return activeIdx;
+    const idx = topologyWidgets.findIndex(w =>
+      w.spec.nodes.some(n => nodeIds.includes(n.id))
+    );
+    return idx >= 0 ? idx : activeIdx;
+  };
+
+  const selectInsight = (w: InsightWidget) => {
+    setSelectedInsightId(w.id);
+    const nodes = w.spec.relatedNodeIds ?? [];
+    setSelectedNodeIds(nodes);
+    setActiveTopo(topoIndexForNodes(nodes));
+  };
+
+  const selectNode = async (nodeId: string) => {
+    setSelectedNodeIds([nodeId]);
+    const insight = insightWidgets.find(w =>
+      (w.spec.relatedNodeIds ?? []).includes(nodeId)
+    );
+    if (insight) {
+      setSelectedInsightId(insight.id);
+      cardRefs.current
+        .get(insight.id)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    const node = activeTopology?.spec.nodes.find(n => n.id === nodeId);
+    if (node?.sensorId != null) {
+      const spec = await getSeries(sessionId, node.sensorId).catch(() => null);
+      setDrawer(spec ?? null);
+    }
+  };
+
+  const empty = widgets.length === 0;
+
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[image:var(--workspace-background)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
@@ -101,32 +162,108 @@ export function Workspace({
         <span className="text-[14px] font-medium text-[var(--foreground)]">
           Workspace
         </span>
-        <span className="text-[12px] text-[var(--muted-foreground)]">
-          {widgets.length} widget{widgets.length === 1 ? '' : 's'}
-        </span>
         <span className="flex-1" />
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={onOpenSettings}
-          aria-label="Open settings"
-        >
+        <Button variant="ghost" size="icon" onClick={onOpenSettings} aria-label="Open settings">
           <Settings />
         </Button>
       </header>
 
-      {widgets.length === 0 ? (
-        <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto overscroll-contain p-8 text-center text-sm text-[var(--muted-foreground)]">
-          Widgets the copilot assembles - topology, charts, insights - appear
-          here.
+      <WorkspaceKpiStrip widgets={widgets} decisions={decisions} />
+
+      {empty ? (
+        <div className="flex min-h-0 flex-1 items-center justify-center p-8 text-center text-sm text-[var(--muted-foreground)]">
+          The copilot assembles topology, charts, and insights here as it works.
         </div>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-4">
-          {widgets.map(w => (
-            <WidgetFrame key={w.id} widgetId={w.id} sessionId={sessionId}>
-              <WidgetView widget={w} onInsightAction={onInsightAction} />
-            </WidgetFrame>
-          ))}
+        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] overflow-hidden">
+          {/* CENTER: tabbed topology sections + node drill-down drawer */}
+          <div className="flex min-h-0 flex-col overflow-hidden border-r border-[var(--border)]">
+            {topologyWidgets.length > 0 && (
+              <div className="flex gap-1 overflow-x-auto border-b border-[var(--border)] px-2">
+                {topologyWidgets.map((w, i) => (
+                  <button
+                    key={w.id}
+                    onClick={() => setActiveTopo(i)}
+                    className={`-mb-px whitespace-nowrap border-b-2 px-3 py-2 text-[13px] ${
+                      i === activeIdx
+                        ? 'border-[var(--primary)] text-[var(--foreground)]'
+                        : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
+                    }`}
+                  >
+                    {w.spec.title}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="min-h-0 flex-1 p-3">
+              {activeTopology ? (
+                <TopologyWidget
+                  spec={activeTopology.spec}
+                  onNodeClick={selectNode}
+                  selectionHighlight={selectedNodeIds}
+                  fill
+                />
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
+                  No topology yet — ask the copilot to map the system.
+                </div>
+              )}
+            </div>
+
+            {drawer && (
+              <div className="border-t border-[var(--border)] bg-[var(--panel)] p-3">
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-[12px] font-medium text-[var(--muted-foreground)]">
+                    Sensor series
+                  </span>
+                  <Button variant="ghost" size="icon" onClick={() => setDrawer(null)} aria-label="Close">
+                    <X />
+                  </Button>
+                </div>
+                <ChartWidget spec={drawer} height={180} bare />
+              </div>
+            )}
+          </div>
+
+          {/* RIGHT: insights rail + detail widgets */}
+          <aside className="flex min-h-0 flex-col overflow-hidden">
+            <div className="px-3 py-2 text-[12px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+              Insights
+            </div>
+            <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain p-3">
+              {insightWidgets.length === 0 && (
+                <div className="text-[13px] text-[var(--muted-foreground)]">
+                  Insights the copilot surfaces appear here.
+                </div>
+              )}
+              {insightWidgets.map(w => (
+                <div
+                  key={w.id}
+                  ref={el => {
+                    if (el) cardRefs.current.set(w.id, el);
+                    else cardRefs.current.delete(w.id);
+                  }}
+                >
+                  <InsightCard
+                    id={w.id}
+                    spec={w.spec}
+                    sessionId={sessionId}
+                    selected={selectedInsightId === w.id}
+                    onSelect={() => selectInsight(w)}
+                    decided={decidedByCard.get(w.id)}
+                    onDecided={refetch}
+                  />
+                </div>
+              ))}
+
+              {detailWidgets.map(w => (
+                <WidgetFrame key={w.id} widgetId={w.id} sessionId={sessionId}>
+                  <DetailWidgetView widget={w} />
+                </WidgetFrame>
+              ))}
+            </div>
+          </aside>
         </div>
       )}
     </div>

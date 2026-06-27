@@ -2,6 +2,7 @@
 // session registry (id, dataset, name, SDK session id for resume).
 
 import { fileURLToPath } from 'node:url';
+import { randomUUID } from 'node:crypto';
 import Database from 'better-sqlite3';
 
 const DB_PATH = process.env.MEMORY_DB
@@ -37,6 +38,19 @@ db.exec(`
     created_at     TEXT NOT NULL,
     updated_at     TEXT NOT NULL
   );
+  CREATE TABLE IF NOT EXISTS decisions (
+    id               TEXT PRIMARY KEY,
+    dataset_id       TEXT NOT NULL,
+    session_id       TEXT,
+    insight_card_id  TEXT,
+    insight_title    TEXT NOT NULL,
+    decision_type    TEXT NOT NULL,   -- 'accept' | 'override' | 'dismiss'
+    rationale        TEXT,
+    related_node_ids TEXT,            -- JSON string[]
+    impact           REAL,
+    created_at       TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_decisions_dataset ON decisions(dataset_id);
 `);
 
 // --- Annotations (dataset-scoped) ------------------------------------------
@@ -169,4 +183,128 @@ export function renameSession(id: string, name: string): void {
     new Date().toISOString(),
     id
   );
+}
+
+export function deleteSessionRow(id: string): boolean {
+  const tx = db.transaction((sessionId: string) => {
+    db.prepare('DELETE FROM decisions WHERE session_id = ?').run(sessionId);
+    return db.prepare('DELETE FROM sessions WHERE id = ?').run(sessionId).changes;
+  });
+  return tx(id) > 0;
+}
+
+// --- Decisions (dataset-scoped) --------------------------------------------
+
+export type DecisionType = 'accept' | 'override' | 'dismiss';
+
+export interface DecisionRow {
+  id: string;
+  dataset_id: string;
+  session_id: string | null;
+  insight_card_id: string | null;
+  insight_title: string;
+  decision_type: DecisionType;
+  rationale: string | null;
+  related_node_ids: string | null; // JSON string[]
+  impact: number | null;
+  created_at: string;
+}
+
+export interface Decision extends Omit<DecisionRow, 'related_node_ids'> {
+  related_node_ids: string[];
+}
+
+function hydrate(row: DecisionRow): Decision {
+  let nodes: string[] = [];
+  try {
+    nodes = row.related_node_ids ? JSON.parse(row.related_node_ids) : [];
+  } catch {
+    nodes = [];
+  }
+  return { ...row, related_node_ids: nodes };
+}
+
+export function recordDecision(input: {
+  datasetId: string;
+  sessionId?: string | null;
+  insightCardId?: string | null;
+  insightTitle: string;
+  decisionType: DecisionType;
+  rationale?: string | null;
+  relatedNodeIds?: string[];
+  impact?: number | null;
+}): Decision {
+  const row: DecisionRow = {
+    id: randomUUID(),
+    dataset_id: input.datasetId,
+    session_id: input.sessionId ?? null,
+    insight_card_id: input.insightCardId ?? null,
+    insight_title: input.insightTitle,
+    decision_type: input.decisionType,
+    rationale: input.rationale ?? null,
+    related_node_ids: JSON.stringify(input.relatedNodeIds ?? []),
+    impact: input.impact ?? null,
+    created_at: new Date().toISOString()
+  };
+  db.prepare(
+    `INSERT INTO decisions
+       (id, dataset_id, session_id, insight_card_id, insight_title,
+        decision_type, rationale, related_node_ids, impact, created_at)
+     VALUES (@id, @dataset_id, @session_id, @insight_card_id, @insight_title,
+        @decision_type, @rationale, @related_node_ids, @impact, @created_at)`
+  ).run(row);
+  return hydrate(row);
+}
+
+export function getDecisions(filter: {
+  datasetId: string;
+  sessionId?: string;
+  limit?: number;
+}): Decision[] {
+  const rows = filter.sessionId
+    ? (db
+        .prepare(
+          'SELECT * FROM decisions WHERE dataset_id = ? AND session_id = ? ORDER BY created_at DESC LIMIT ?'
+        )
+        .all(filter.datasetId, filter.sessionId, filter.limit ?? 200) as DecisionRow[])
+    : (db
+        .prepare(
+          'SELECT * FROM decisions WHERE dataset_id = ? ORDER BY created_at DESC LIMIT ?'
+        )
+        .all(filter.datasetId, filter.limit ?? 200) as DecisionRow[]);
+  return rows.map(hydrate);
+}
+
+const tokens = (s: string) =>
+  new Set(
+    s
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter(t => t.length > 2)
+  );
+
+/** Rank prior decisions by related-node overlap + title-token overlap. */
+export function findSimilarDecisions(filter: {
+  datasetId: string;
+  nodeIds?: string[];
+  title?: string;
+  limit?: number;
+}): Decision[] {
+  const all = getDecisions({ datasetId: filter.datasetId });
+  const wantNodes = new Set(filter.nodeIds ?? []);
+  const wantTokens = filter.title ? tokens(filter.title) : new Set<string>();
+
+  const scored = all.map(d => {
+    const nodeOverlap = d.related_node_ids.filter(n => wantNodes.has(n)).length;
+    const titleOverlap = [...tokens(d.insight_title)].filter(t =>
+      wantTokens.has(t)
+    ).length;
+    return { d, score: nodeOverlap * 3 + titleOverlap };
+  });
+
+  return scored
+    .filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, filter.limit ?? 3)
+    .map(s => s.d);
 }

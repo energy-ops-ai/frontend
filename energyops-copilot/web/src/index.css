@@ -446,3 +446,18 @@ pre {
   scrollbar-width: thin;
   scrollbar-color: #3f3f46 transparent;
 }
+
+/* analyzing-overlay: transient tool chips + thought bubbles pop in */
+@keyframes eo-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.eo-pop-in {
+  animation: eo-pop-in 0.35s ease both;
+}

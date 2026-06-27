@@ -19,7 +19,9 @@ import {
   setSdkSessionId,
   getSessionRow,
   listSessions,
+  deleteSessionRow,
   touchSession,
+  getDecisions,
   type SessionRow
 } from './db/memory.js';
 
@@ -56,6 +58,8 @@ export class Session {
   sdkSessionId: string | null = null;
 
   private widgetSeq = 0;
+  private firstMessage = true;
+  private pendingContext: string[] = [];
   private inputQueue = createInputQueue();
   private pending = new Map<
     string,
@@ -128,11 +132,40 @@ export class Session {
     return { behavior: 'deny', message: answer.message || 'User denied this action' };
   };
 
+  /** Queue a context note (e.g. an operator decision) for the agent's next turn. */
+  noteDecision(text: string): void {
+    this.pendingContext.push(text);
+  }
+
   send(text: string): void {
     touchSession(this.id);
+
+    const prefix: string[] = [];
+    if (this.firstMessage) {
+      this.firstMessage = false;
+      const prior = getDecisions({ datasetId: this.datasetId, limit: 10 });
+      if (prior.length) {
+        const lines = prior.map(
+          d =>
+            `- ${d.decision_type} "${d.insight_title}"${d.rationale ? `: ${d.rationale}` : ''}`
+        );
+        prefix.push(
+          `Prior operator decisions for this dataset (most recent first):\n${lines.join('\n')}`
+        );
+      }
+    }
+    if (this.pendingContext.length) {
+      prefix.push(...this.pendingContext);
+      this.pendingContext = [];
+    }
+
+    const content = prefix.length
+      ? `[Context]\n${prefix.join('\n\n')}\n\n${text}`
+      : text;
+
     this.inputQueue.push({
       type: 'user',
-      message: { role: 'user', content: text },
+      message: { role: 'user', content },
       parent_tool_use_id: null,
       session_id: ''
     });
@@ -175,4 +208,13 @@ export function getSession(id: string): Session | undefined {
 
 export function listSessionRows(datasetId: string): SessionRow[] {
   return listSessions(datasetId);
+}
+
+export async function deleteSession(id: string): Promise<boolean> {
+  const existing = live.get(id);
+  if (existing) {
+    await existing.interrupt().catch(() => {});
+    live.delete(id);
+  }
+  return deleteSessionRow(id);
 }

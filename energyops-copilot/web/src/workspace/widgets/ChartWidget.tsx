@@ -1,16 +1,20 @@
 import { useMemo } from 'react';
 import {
+  Area,
+  Bar,
   CartesianGrid,
+  ComposedChart,
+  Legend,
   Line,
-  LineChart,
   ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
+  Scatter,
   Tooltip,
   XAxis,
-  YAxis,
-  Legend
+  YAxis
 } from 'recharts';
-import type { ChartSpec } from '@shared/types';
+import type { ChartSpec, ChartType } from '@shared/types';
 import { Card } from '@/components/ui';
 
 const COLORS = [
@@ -23,12 +27,61 @@ const COLORS = [
 ];
 
 const fmtTick = (v: string) => {
-  // Shorten ISO timestamps to "MM-DD HH:00"; leave other labels as-is.
   const m = /^\d{4}-(\d{2})-(\d{2})T(\d{2})/.exec(v);
   return m ? `${m[1]}-${m[2]} ${m[3]}:00` : v;
 };
 
-export function ChartWidget({ spec }: { spec: ChartSpec }) {
+function seriesElement(
+  s: ChartSpec['series'][number],
+  i: number,
+  fallback: ChartType
+) {
+  const kind = s.kind ?? fallback;
+  const color = COLORS[i % COLORS.length];
+  const yAxisId = s.axis ?? 'left';
+  const common = { key: s.name, dataKey: s.name, name: s.name, yAxisId };
+  switch (kind) {
+    case 'bar':
+      return <Bar {...common} fill={color} radius={[3, 3, 0, 0]} />;
+    case 'area':
+      return (
+        <Area
+          {...common}
+          type="monotone"
+          stroke={color}
+          fill={color}
+          fillOpacity={0.18}
+          strokeWidth={2}
+          dot={false}
+          connectNulls
+        />
+      );
+    case 'scatter':
+      return <Scatter {...common} fill={color} />;
+    default:
+      return (
+        <Line
+          {...common}
+          type="monotone"
+          stroke={color}
+          strokeWidth={2}
+          strokeDasharray={s.role === 'expected' ? '5 4' : undefined}
+          dot={false}
+          connectNulls
+        />
+      );
+  }
+}
+
+export function ChartWidget({
+  spec,
+  height = 280,
+  bare = false
+}: {
+  spec: ChartSpec;
+  height?: number;
+  bare?: boolean;
+}) {
   const data = useMemo(
     () =>
       spec.x.map((label, i) => {
@@ -38,6 +91,78 @@ export function ChartWidget({ spec }: { spec: ChartSpec }) {
       }),
     [spec]
   );
+
+  const fallback: ChartType = spec.chartType ?? 'line';
+  const hasRight = spec.series.some(s => s.axis === 'right');
+  const axisTick = { fill: 'var(--muted-foreground)', fontSize: 11 };
+
+  const chart = (
+    <div style={{ height }}>
+      <ResponsiveContainer width="100%" height="100%">
+        <ComposedChart data={data} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
+          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
+          <XAxis
+            dataKey="x"
+            tickFormatter={fmtTick}
+            tick={axisTick}
+            minTickGap={32}
+          />
+          <YAxis yAxisId="left" tick={axisTick} width={48} />
+          {hasRight && (
+            <YAxis yAxisId="right" orientation="right" tick={axisTick} width={48} />
+          )}
+          <Tooltip
+            contentStyle={{
+              background: 'var(--panel-strong)',
+              border: '1px solid var(--border)',
+              borderRadius: 8,
+              fontSize: 12
+            }}
+            labelFormatter={label => fmtTick(String(label))}
+          />
+          <Legend wrapperStyle={{ fontSize: 12 }} />
+          {spec.markBands?.map((b, i) => (
+            <ReferenceArea
+              key={`mb${i}`}
+              x1={b.from}
+              x2={b.to}
+              yAxisId="left"
+              fill="var(--accent)"
+              fillOpacity={0.12}
+              label={{ value: b.label, fill: 'var(--accent)', fontSize: 11 }}
+            />
+          ))}
+          {spec.referenceLines?.map((r, i) => (
+            <ReferenceLine
+              key={`rl${i}`}
+              y={r.value}
+              yAxisId={r.axis ?? 'left'}
+              stroke="var(--muted-foreground)"
+              strokeDasharray="4 4"
+              label={{ value: r.label, fill: 'var(--muted-foreground)', fontSize: 10 }}
+            />
+          ))}
+          {spec.series.map((s, i) => seriesElement(s, i, fallback))}
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
+  );
+
+  if (bare) {
+    return (
+      <div>
+        <div className="mb-1 text-[12px] font-medium text-[var(--foreground)]">
+          {spec.title}
+          {spec.unit ? (
+            <span className="ml-2 font-normal text-[var(--muted-foreground)]">
+              ({spec.unit})
+            </span>
+          ) : null}
+        </div>
+        {chart}
+      </div>
+    );
+  }
 
   return (
     <Card className="p-4">
@@ -49,52 +174,7 @@ export function ChartWidget({ spec }: { spec: ChartSpec }) {
           </span>
         ) : null}
       </div>
-      <div style={{ height: 280 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
-            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-            <XAxis
-              dataKey="x"
-              tickFormatter={fmtTick}
-              tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
-              minTickGap={32}
-            />
-            <YAxis tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} width={48} />
-            <Tooltip
-              contentStyle={{
-                background: 'var(--panel-strong)',
-                border: '1px solid var(--border)',
-                borderRadius: 8,
-                fontSize: 12
-              }}
-              labelFormatter={label => fmtTick(String(label))}
-            />
-            <Legend wrapperStyle={{ fontSize: 12 }} />
-            {spec.markBands?.map((b, i) => (
-              <ReferenceArea
-                key={i}
-                x1={b.from}
-                x2={b.to}
-                fill="var(--accent)"
-                fillOpacity={0.12}
-                label={{ value: b.label, fill: 'var(--accent)', fontSize: 11 }}
-              />
-            ))}
-            {spec.series.map((s, i) => (
-              <Line
-                key={s.name}
-                type="monotone"
-                dataKey={s.name}
-                stroke={COLORS[i % COLORS.length]}
-                strokeWidth={2}
-                strokeDasharray={s.role === 'expected' ? '5 4' : undefined}
-                dot={false}
-                connectNulls
-              />
-            ))}
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      {chart}
     </Card>
   );
 }

@@ -32,6 +32,7 @@ export interface AgentState {
   widgets: Widget[];
   status: string;
   working: boolean;
+  completedTurns: number; // increments on each agent `result` (turn finished)
 }
 
 const initialState: AgentState = {
@@ -39,7 +40,8 @@ const initialState: AgentState = {
   streaming: null,
   widgets: [],
   status: 'connecting…',
-  working: false
+  working: false,
+  completedTurns: 0
 };
 
 let seq = 0;
@@ -137,6 +139,7 @@ function reduceSdk(state: AgentState, m: any): AgentState {
         ...state,
         streaming: null,
         working: false,
+        completedTurns: state.completedTurns + 1,
         status: `ready${dur}${cost}`
       };
     }

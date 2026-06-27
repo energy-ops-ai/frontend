@@ -3,6 +3,7 @@
 // expected_value column (falls back to per-sensor statistical baselines).
 
 import { getDuck, type Duck } from './duck.js';
+import type { ChartSpec } from '../types.js';
 
 interface TsSchema {
   table: string;
@@ -298,4 +299,51 @@ async function sensorCount(duck: Duck, s: TsSchema): Promise<number> {
     1
   );
   return Number(r.rows[0]?.n ?? 0);
+}
+
+const num = (v: unknown) => (v === null || v === undefined ? null : Number(v));
+
+/** A single sensor's time series as a ChartSpec — powers the node drill-down. */
+export async function getSensorSeries(
+  datasetId: string,
+  sensorId: number,
+  opts: { from?: string; to?: string; maxPoints?: number } = {}
+): Promise<ChartSpec | null> {
+  const s = await getTsSchema(datasetId);
+  if (!s) return null;
+  const duck = await getDuck(datasetId);
+
+  const cols = [`${q(s.timeCol)} AS x`, `${q(s.valueCol)} AS actual`];
+  if (s.expectedCol) cols.push(`${q(s.expectedCol)} AS expected`);
+  const where = [`${q(s.idCol)} = ${Number(sensorId)}`];
+  if (opts.from) where.push(`${q(s.timeCol)} >= TIMESTAMP '${sanitizeTs(opts.from)}'`);
+  if (opts.to) where.push(`${q(s.timeCol)} <= TIMESTAMP '${sanitizeTs(opts.to)}'`);
+
+  const sql = `SELECT ${cols.join(', ')} FROM ${q(s.table)}
+               WHERE ${where.join(' AND ')} ORDER BY ${q(s.timeCol)}`;
+  const res = await duck.raw(sql, 5000);
+  let rows = res.rows;
+  const maxPoints = opts.maxPoints ?? 500;
+  if (rows.length > maxPoints) {
+    const stride = Math.ceil(rows.length / maxPoints);
+    rows = rows.filter((_, i) => i % stride === 0);
+  }
+
+  const names = await sensorNames(duck, s);
+  const series: ChartSpec['series'] = [
+    { name: 'Actual', role: 'actual', data: rows.map(r => num(r.actual)) }
+  ];
+  if (s.expectedCol) {
+    series.push({
+      name: 'Expected',
+      role: 'expected',
+      data: rows.map(r => num(r.expected))
+    });
+  }
+  return {
+    title: names.get(Number(sensorId)) ?? `Sensor ${sensorId}`,
+    x: rows.map(r => String(r.x)),
+    series,
+    chartType: 'line'
+  };
 }

@@ -3,6 +3,7 @@
 //   GET  /datasets/:id/sessions          list sessions for a dataset
 //   POST /datasets/:id/sessions          { prompt?, name? } -> create + start a session
 //   GET  /sessions/:id/events            SSE stream for one session
+//   DELETE /sessions/:id                 delete one session
 //   POST /sessions/:id/message           { text }
 //   POST /sessions/:id/permission        { id, behavior, ... }
 //   POST /sessions/:id/interrupt
@@ -20,14 +21,20 @@ import type { Context } from 'hono';
 import type { Bus } from './bus.js';
 import { listDatasets } from './db/datasets.js';
 import { getDuck } from './db/duck.js';
-import { listDiagrams } from './db/topology.js';
+import { getSensorSeries } from './db/scan.js';
+import { getDiagram, listDiagrams } from './db/topology.js';
 import {
   getAnnotations,
   setAnnotation,
-  type AnnotationKind
+  recordDecision,
+  getDecisions,
+  findSimilarDecisions,
+  type AnnotationKind,
+  type DecisionType
 } from './db/memory.js';
 import {
   createSession,
+  deleteSession,
   getSession,
   listSessionRows,
   type Session
@@ -105,6 +112,18 @@ app.get('/datasets/:id/topologies', c =>
   c.json(listDiagrams(c.req.param('id')))
 );
 
+app.get('/datasets/:id/topologies/:diagramId', c => {
+  const id = c.req.param('id');
+  if (!listDatasets().some(d => d.id === id)) return c.json(null, 404);
+  const diagram = getDiagram(id, c.req.param('diagramId'));
+  if (!diagram) return c.json(null, 404);
+  return c.json({
+    title: diagram.name,
+    nodes: diagram.nodes,
+    edges: diagram.edges
+  });
+});
+
 app.get('/datasets/:id/tables', async c => {
   const id = c.req.param('id');
   if (!listDatasets().some(d => d.id === id)) return c.json([], 404);
@@ -115,6 +134,36 @@ app.get('/datasets/:id/tables', async c => {
     out.push({ table: t, rows: Number(r.rows[0]?.n ?? 0) });
   }
   return c.json(out);
+});
+
+app.get('/datasets/:id/tables/:table/rows', async c => {
+  const id = c.req.param('id');
+  if (!listDatasets().some(d => d.id === id)) return c.json({ error: 'unknown dataset' }, 404);
+
+  const duck = await getDuck(id);
+  const table = c.req.param('table');
+  if (!duck.tables().includes(table)) return c.json({ error: 'unknown table' }, 404);
+
+  const page = Math.max(1, Number(c.req.query('page') ?? 1) || 1);
+  const pageSize = Math.min(
+    100,
+    Math.max(5, Number(c.req.query('pageSize') ?? 25) || 25)
+  );
+  const offset = (page - 1) * pageSize;
+  const quoted = `"${table.replace(/"/g, '""')}"`;
+  const [count, rows] = await Promise.all([
+    duck.raw(`SELECT count(*) AS n FROM ${quoted}`, 1),
+    duck.raw(`SELECT * FROM ${quoted} LIMIT ${pageSize} OFFSET ${offset}`, pageSize)
+  ]);
+
+  return c.json({
+    table,
+    page,
+    pageSize,
+    totalRows: Number(count.rows[0]?.n ?? 0),
+    columns: rows.columns,
+    rows: rows.rows
+  });
 });
 
 app.post('/datasets/:id/sessions', async c => {
@@ -142,6 +191,11 @@ app.get('/sessions/:id/events', c => {
   const s = getSession(c.req.param('id'));
   if (!s) return c.text('no such session', 404);
   return sseForBus(c, s.bus);
+});
+
+app.delete('/sessions/:id', async c => {
+  const ok = await deleteSession(c.req.param('id'));
+  return c.json({ ok }, ok ? 200 : 404);
 });
 
 app.post('/sessions/:id/message', async c => {
@@ -187,6 +241,72 @@ app.post('/sessions/:id/annotation', async c => {
     text: string;
   }>();
   return c.json(setAnnotation(s.datasetId, kind, String(id), String(text ?? '')));
+});
+
+// --- Decisions (dataset-scoped, recorded directly from the UI) -------------
+
+app.get('/sessions/:id/decisions', c => {
+  const s = getSession(c.req.param('id'));
+  if (!s) return c.json([]);
+  return c.json(getDecisions({ datasetId: s.datasetId, sessionId: s.id }));
+});
+
+app.get('/sessions/:id/decisions/similar', c => {
+  const s = getSession(c.req.param('id'));
+  if (!s) return c.json([]);
+  const nodeIds = c.req.query('nodeIds')?.split(',').filter(Boolean);
+  const title = c.req.query('title') || undefined;
+  return c.json(findSimilarDecisions({ datasetId: s.datasetId, nodeIds, title }));
+});
+
+app.post('/sessions/:id/decision', async c => {
+  const s = getSession(c.req.param('id'));
+  if (!s) return c.json({ error: 'no such session' }, 404);
+  const body = await c.req.json<{
+    insightCardId?: string;
+    insightTitle?: string;
+    decisionType?: string;
+    rationale?: string;
+    relatedNodeIds?: string[];
+    impact?: number;
+  }>();
+  const decisionType = body.decisionType as DecisionType;
+  if (!['accept', 'override', 'dismiss'].includes(decisionType)) {
+    return c.json({ error: 'invalid decisionType' }, 400);
+  }
+  if (
+    (decisionType === 'override' || decisionType === 'dismiss') &&
+    !body.rationale?.trim()
+  ) {
+    return c.json({ error: 'rationale required for override/dismiss' }, 400);
+  }
+  const decision = recordDecision({
+    datasetId: s.datasetId,
+    sessionId: s.id,
+    insightCardId: body.insightCardId,
+    insightTitle: body.insightTitle ?? 'Insight',
+    decisionType,
+    rationale: body.rationale,
+    relatedNodeIds: body.relatedNodeIds,
+    impact: body.impact ?? null
+  });
+  // Make the agent aware on its next turn (no tool call needed).
+  s.noteDecision(
+    `Operator decision on insight "${decision.insight_title}": ${decisionType}` +
+      (decision.rationale ? ` — ${decision.rationale}` : '') +
+      '.'
+  );
+  return c.json(decision);
+});
+
+app.get('/sessions/:id/series', async c => {
+  const s = getSession(c.req.param('id'));
+  if (!s) return c.json(null, 404);
+  const sensorId = Number(c.req.query('sensorId'));
+  if (!Number.isFinite(sensorId)) return c.json(null, 400);
+  const from = c.req.query('from') || undefined;
+  const to = c.req.query('to') || undefined;
+  return c.json(await getSensorSeries(s.datasetId, sensorId, { from, to }));
 });
 
 // ---------------------------------------------------------------------------

@@ -361,12 +361,12 @@ interface AskQuestion {
   options: { label: string; description?: string }[];
 }
 
-function AskQuestionCard({
+export function AskQuestionCard({
   item,
   answerPermission
 }: {
   item: Extract<FeedItem, { kind: 'permission' }>;
-  answerPermission: Props['answerPermission'];
+  answerPermission: (id: string, answer: PermissionAnswer) => void;
 }) {
   const questions =
     (item.input as { questions?: AskQuestion[] })?.questions ?? [];

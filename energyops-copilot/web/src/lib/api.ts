@@ -1,4 +1,5 @@
 // Thin fetch helpers for the dataset / session REST API.
+import type { ChartSpec, TopologySpec } from '@shared/types';
 
 export interface DatasetInfo {
   id: string;
@@ -31,6 +32,15 @@ export interface TableInfo {
   rows: number;
 }
 
+export interface TableRows {
+  table: string;
+  page: number;
+  pageSize: number;
+  totalRows: number;
+  columns: string[];
+  rows: Record<string, unknown>[];
+}
+
 export interface AnalysisRange {
   from?: string;
   to?: string;
@@ -47,8 +57,23 @@ export const getSessions = (datasetId: string) =>
   getJSON<SessionRow[]>(`/datasets/${datasetId}/sessions`);
 export const getTopologies = (datasetId: string) =>
   getJSON<DiagramInfo[]>(`/datasets/${datasetId}/topologies`);
+export const getTopology = (datasetId: string, diagramId: string) =>
+  getJSON<TopologySpec>(
+    `/datasets/${datasetId}/topologies/${encodeURIComponent(diagramId)}`
+  );
 export const getTables = (datasetId: string) =>
   getJSON<TableInfo[]>(`/datasets/${datasetId}/tables`);
+export const getTableRows = (
+  datasetId: string,
+  table: string,
+  page: number,
+  pageSize = 25
+) =>
+  getJSON<TableRows>(
+    `/datasets/${datasetId}/tables/${encodeURIComponent(
+      table
+    )}/rows?page=${page}&pageSize=${pageSize}`
+  );
 
 export async function startSession(
   datasetId: string,
@@ -63,3 +88,62 @@ export async function startSession(
   const { id } = (await res.json()) as { id: string };
   return id;
 }
+
+export async function deleteSession(sessionId: string): Promise<void> {
+  const res = await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`delete session -> ${res.status}`);
+}
+
+// --- Decisions + series ----------------------------------------------------
+
+export type DecisionType = 'accept' | 'override' | 'dismiss';
+
+export interface Decision {
+  id: string;
+  dataset_id: string;
+  session_id: string | null;
+  insight_card_id: string | null;
+  insight_title: string;
+  decision_type: DecisionType;
+  rationale: string | null;
+  related_node_ids: string[];
+  impact: number | null;
+  created_at: string;
+}
+
+export const getDecisions = (sessionId: string) =>
+  getJSON<Decision[]>(`/sessions/${sessionId}/decisions`);
+
+export const getSimilarDecisions = (
+  sessionId: string,
+  nodeIds: string[],
+  title: string
+) =>
+  getJSON<Decision[]>(
+    `/sessions/${sessionId}/decisions/similar?nodeIds=${encodeURIComponent(
+      nodeIds.join(',')
+    )}&title=${encodeURIComponent(title)}`
+  );
+
+export async function postDecision(
+  sessionId: string,
+  body: {
+    insightCardId?: string;
+    insightTitle: string;
+    decisionType: DecisionType;
+    rationale?: string;
+    relatedNodeIds?: string[];
+    impact?: number;
+  }
+): Promise<Decision> {
+  const res = await fetch(`/sessions/${sessionId}/decision`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`decision → ${res.status}`);
+  return res.json() as Promise<Decision>;
+}
+
+export const getSeries = (sessionId: string, sensorId: number) =>
+  getJSON<ChartSpec | null>(`/sessions/${sessionId}/series?sensorId=${sensorId}`);

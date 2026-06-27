@@ -38,15 +38,21 @@ export interface TopologySpec {
   collapsedGroups?: string[]; // group keys rendered as one node (simplification)
 }
 
+export type ChartType = 'line' | 'area' | 'bar' | 'scatter';
+
 export interface ChartSpec {
   title: string;
-  x: string[]; // ISO timestamps
+  x: string[]; // x labels (ISO timestamps for time series, or categories for bar/scatter)
   series: {
     name: string;
     data: (number | null)[];
     role?: 'actual' | 'expected' | 'deviation';
+    kind?: ChartType; // per-series form override (for mixed charts); falls back to chartType
+    axis?: 'left' | 'right'; // dual-axis support
   }[];
   unit?: string;
+  chartType?: ChartType; // default chart form (default: line)
+  referenceLines?: { value: number; label?: string; axis?: 'left' | 'right' }[];
   markBands?: { from: string; to: string; label?: string }[];
 }
 
@@ -79,6 +85,9 @@ export interface InsightCardSpec {
   recommendations?: string[];
   question?: string;
   relatedDecisions?: { id: string; summary: string }[];
+  relatedNodeIds?: string[]; // topology node ids this insight concerns (cross-panel linking)
+  impact?: { value: number; unit?: string; confidence?: 'low' | 'med' | 'high' }; // grounded estimate only
+  chart?: ChartSpec; // agent-curated chart embedded in the card (built server-side from SQL)
 }
 
 export type Widget =

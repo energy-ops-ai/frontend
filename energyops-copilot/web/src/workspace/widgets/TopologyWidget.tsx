@@ -91,17 +91,36 @@ function toNode(
   };
 }
 
-export function TopologyWidget({ spec }: { spec: TopologySpec }) {
+export function TopologyWidget({
+  spec,
+  onNodeClick,
+  selectionHighlight,
+  fill = false
+}: {
+  spec: TopologySpec;
+  onNodeClick?: (nodeId: string) => void;
+  selectionHighlight?: string[];
+  fill?: boolean;
+}) {
   const { nodes, edges } = useMemo(() => {
     const highlight = new Set(spec.highlight ?? []);
-    const ns = layout(spec).map(node =>
-      highlight.has(node.id)
-        ? {
-            ...node,
-            style: { ...node.style, boxShadow: '0 0 0 2px var(--accent)' }
-          }
-        : node
-    );
+    const selected = new Set(selectionHighlight ?? []);
+    const clickable = !!onNodeClick;
+    const ns = layout(spec).map(node => {
+      const ring = selected.has(node.id)
+        ? '0 0 0 2px var(--primary)'
+        : highlight.has(node.id)
+          ? '0 0 0 2px var(--accent)'
+          : undefined;
+      return {
+        ...node,
+        style: {
+          ...node.style,
+          boxShadow: ring,
+          cursor: clickable ? 'pointer' : 'default'
+        }
+      };
+    });
     const es: Edge[] = spec.edges.map((e, i) => ({
       id: `e${i}`,
       source: e.source,
@@ -118,14 +137,14 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
       labelStyle: { fill: 'var(--muted-foreground)', fontSize: 10 }
     }));
     return { nodes: ns, edges: es };
-  }, [spec]);
+  }, [spec, selectionHighlight, onNodeClick]);
 
   return (
-    <Card className="overflow-hidden p-0">
+    <Card className={`flex flex-col overflow-hidden p-0 ${fill ? 'h-full' : ''}`}>
       <div className="border-b border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--foreground)]">
         {spec.title}
       </div>
-      <div style={{ height: 360 }}>
+      <div className={fill ? 'min-h-0 flex-1' : ''} style={fill ? undefined : { height: 360 }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -138,6 +157,7 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
           zoomOnScroll={false}
           panOnScroll={false}
           preventScrolling={false}
+          onNodeClick={(_, n) => onNodeClick?.(n.id)}
         >
           <Background color="var(--border)" gap={18} />
           <Controls showInteractive={false} />
