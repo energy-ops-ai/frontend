@@ -1,5 +1,5 @@
-import { useMemo, useRef, useState } from 'react';
-import { LayoutDashboard, Settings, X } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, LayoutDashboard, Settings, X } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { TopologyWidget } from './widgets/TopologyWidget';
 import { ChartWidget } from './widgets/ChartWidget';
@@ -75,10 +75,14 @@ function DetailWidgetView({ widget }: { widget: DetailWidget }) {
 export function Workspace({
   widgets,
   sessionId,
+  onBack,
+  onNodeChartOpenChange,
   onOpenSettings
 }: {
   widgets: Widget[];
   sessionId: string;
+  onBack?: () => void;
+  onNodeChartOpenChange?: (open: boolean) => void;
   onOpenSettings: () => void;
 }) {
   const { decisions, refetch } = useDecisions(sessionId);
@@ -116,6 +120,10 @@ export function Workspace({
   const [drawer, setDrawer] = useState<ChartSpec | null>(null);
 
   const cardRefs = useRef(new Map<string, HTMLDivElement>());
+
+  useEffect(() => {
+    onNodeChartOpenChange?.(Boolean(drawer));
+  }, [drawer, onNodeChartOpenChange]);
 
   const activeIdx = Math.min(activeTopo, Math.max(0, topologyWidgets.length - 1));
   const activeTopology: TopoWidget | undefined = topologyWidgets[activeIdx];
@@ -158,6 +166,12 @@ export function Workspace({
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[image:var(--workspace-background)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
+        {onBack && (
+          <Button variant="ghost" onClick={onBack} aria-label="Back to dataset" className="px-2">
+            <ArrowLeft />
+            Dataset
+          </Button>
+        )}
         <LayoutDashboard size={15} className="text-[var(--muted-foreground)]" />
         <span className="text-[14px] font-medium text-[var(--foreground)]">
           Workspace
@@ -175,7 +189,7 @@ export function Workspace({
           The copilot assembles topology, charts, and insights here as it works.
         </div>
       ) : (
-        <div className="grid min-h-0 flex-1 grid-cols-[1fr_340px] overflow-hidden">
+        <div className="grid min-h-0 flex-1 grid-cols-[1fr_510px] overflow-hidden">
           {/* CENTER: tabbed topology sections + node drill-down drawer */}
           <div className="flex min-h-0 flex-col overflow-hidden border-r border-[var(--border)]">
             {topologyWidgets.length > 0 && (

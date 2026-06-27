@@ -5,10 +5,12 @@ import {
   CalendarRange,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
   GitFork,
   MessageSquarePlus,
   Play,
   Sparkles,
+  StickyNote,
   Table2,
   Trash2,
   X
@@ -16,6 +18,8 @@ import {
 import { Button, Card, Textarea } from '@/components/ui';
 import {
   deleteSession,
+  getDatasetAnnotations,
+  getDatasetDecisions,
   getDatasets,
   getSessions,
   getTableRows,
@@ -25,21 +29,37 @@ import {
   startSession,
   type DatasetInfo,
   type DiagramInfo,
+  type Annotation,
+  type Decision,
   type SessionRow,
   type TableInfo,
   type TableRows
 } from '@/lib/api';
 import { TopologyWidget } from '@/workspace/widgets/TopologyWidget';
 import type { TopologySpec } from '@shared/types';
+import type { ProviderSettings } from '@/App';
 
-type Tab = 'sessions' | 'topologies' | 'data';
+type Tab = 'sessions' | 'topologies' | 'data' | 'log';
+
+type LogEntry =
+  | { type: 'decision'; at: string; item: Decision }
+  | { type: 'annotation'; at: string; item: Annotation };
+
+const tabs: { id: Tab; label: string }[] = [
+  { id: 'sessions', label: 'Sessions' },
+  { id: 'topologies', label: 'Topologies' },
+  { id: 'data', label: 'Data' },
+  { id: 'log', label: 'Decisions and annotations' }
+];
 
 export function DatasetPage({
   datasetId,
+  providerSettings,
   onBack,
   onOpenSession
 }: {
   datasetId: string;
+  providerSettings: ProviderSettings;
   onBack: () => void;
   onOpenSession: (sessionId: string) => void;
 }) {
@@ -55,6 +75,9 @@ export function DatasetPage({
   const [tablePage, setTablePage] = useState(1);
   const [tableRows, setTableRows] = useState<TableRows | null>(null);
   const [tableLoading, setTableLoading] = useState(false);
+  const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  const [decisions, setDecisions] = useState<Decision[]>([]);
+  const [logLoading, setLogLoading] = useState(false);
   const [prompt, setPrompt] = useState('');
   const [rangeFrom, setRangeFrom] = useState('');
   const [rangeTo, setRangeTo] = useState('');
@@ -89,6 +112,8 @@ export function DatasetPage({
     getSessions(datasetId).then(setSessions).catch(() => {});
     getTopologies(datasetId).then(setTopologies).catch(() => {});
     getTables(datasetId).then(setTables).catch(() => {});
+    setAnnotations([]);
+    setDecisions([]);
   }, [datasetId]);
 
   useEffect(() => {
@@ -129,10 +154,48 @@ export function DatasetPage({
     };
   }, [datasetId, selectedTable, tablePage]);
 
+  useEffect(() => {
+    if (tab !== 'log') return;
+    let alive = true;
+    setLogLoading(true);
+    Promise.all([getDatasetAnnotations(datasetId), getDatasetDecisions(datasetId)])
+      .then(([nextAnnotations, nextDecisions]) => {
+        if (!alive) return;
+        setAnnotations(nextAnnotations);
+        setDecisions(nextDecisions);
+      })
+      .catch(() => {
+        if (!alive) return;
+        setAnnotations([]);
+        setDecisions([]);
+      })
+      .finally(() => {
+        if (alive) setLogLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [datasetId, tab]);
+
   const totalPages = useMemo(() => {
     if (!tableRows) return 1;
     return Math.max(1, Math.ceil(tableRows.totalRows / tableRows.pageSize));
   }, [tableRows]);
+
+  const logEntries = useMemo<LogEntry[]>(() => {
+    return [
+      ...decisions.map(item => ({
+        type: 'decision' as const,
+        at: item.created_at,
+        item
+      })),
+      ...annotations.map(item => ({
+        type: 'annotation' as const,
+        at: item.updated_at,
+        item
+      }))
+    ].sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
+  }, [annotations, decisions]);
 
   const selectTable = (table: string) => {
     setSelectedTable(table);
@@ -148,10 +211,29 @@ export function DatasetPage({
   const start = async () => {
     setStarting(true);
     try {
-      const id = await startSession(datasetId, prompt.trim() || undefined, {
-        from: rangeFrom || undefined,
-        to: rangeTo || undefined
-      });
+      const id = await startSession(
+        datasetId,
+        prompt.trim() || undefined,
+        {
+          from: rangeFrom || undefined,
+          to: rangeTo || undefined
+        },
+        providerSettings.provider,
+        providerSettings.provider === 'openrouter'
+          ? providerSettings.openRouterModel
+          : providerSettings.provider === 'azure'
+            ? providerSettings.azureModel
+            : undefined,
+        providerSettings.provider === 'openrouter'
+          ? providerSettings.openRouterApiKey
+          : undefined,
+        providerSettings.provider === 'azure'
+          ? providerSettings.azureEndpoint
+          : undefined,
+        providerSettings.provider === 'azure'
+          ? providerSettings.azureApiKey
+          : undefined
+      );
       onOpenSession(id);
     } finally {
       setStarting(false);
@@ -188,17 +270,17 @@ export function DatasetPage({
       </header>
 
       <nav className="flex gap-1 border-b border-[var(--border)] px-3">
-        {(['sessions', 'topologies', 'data'] as Tab[]).map(t => (
+        {tabs.map(t => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`-mb-px border-b-2 px-3 py-2 text-[13px] capitalize ${
-              tab === t
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            className={`-mb-px border-b-2 px-3 py-2 text-[13px] ${
+              tab === t.id
                 ? 'border-[var(--primary)] text-[var(--foreground)]'
                 : 'border-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)]'
             }`}
           >
-            {t}
+            {t.label}
           </button>
         ))}
       </nav>
@@ -252,7 +334,17 @@ export function DatasetPage({
                     />
                   </label>
                 </div>
-                <div className="mt-3 flex justify-end">
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <div className="text-[12px] text-[var(--muted-foreground)]">
+                    Provider:{' '}
+                    <span className="font-medium text-[var(--foreground)]">
+                      {providerSettings.provider === 'openrouter'
+                        ? `OpenRouter · ${providerSettings.openRouterModel || 'model not set'}`
+                        : providerSettings.provider === 'azure'
+                          ? `Azure · ${providerSettings.azureModel || 'deployment not set'}`
+                        : 'Claude Agent SDK'}
+                    </span>
+                  </div>
                   <Button variant="primary" onClick={start} disabled={starting}>
                     <Play size={15} /> {starting ? 'Starting…' : 'Start analysis'}
                   </Button>
@@ -469,6 +561,124 @@ export function DatasetPage({
                   )}
                 </div>
               </Card>
+            </div>
+          )}
+
+          {tab === 'log' && (
+            <div className="min-w-0">
+              <div className="mb-4 grid gap-3 sm:grid-cols-2">
+                <Card className="flex items-center gap-3 p-3">
+                  <div className="grid h-9 w-9 place-items-center rounded-md bg-[var(--primary)]/12 text-[var(--primary)]">
+                    <ClipboardList size={17} />
+                  </div>
+                  <div>
+                    <div className="text-[18px] font-semibold">{decisions.length}</div>
+                    <div className="text-[12px] text-[var(--muted-foreground)]">
+                      Decisions
+                    </div>
+                  </div>
+                </Card>
+                <Card className="flex items-center gap-3 p-3">
+                  <div className="grid h-9 w-9 place-items-center rounded-md bg-[var(--primary)]/12 text-[var(--primary)]">
+                    <StickyNote size={17} />
+                  </div>
+                  <div>
+                    <div className="text-[18px] font-semibold">{annotations.length}</div>
+                    <div className="text-[12px] text-[var(--muted-foreground)]">
+                      Annotations
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              {logLoading && (
+                <Card className="p-4 text-[13px] text-[var(--muted-foreground)]">
+                  Loading log...
+                </Card>
+              )}
+
+              {!logLoading && logEntries.length === 0 && (
+                <Card className="p-4 text-[13px] text-[var(--muted-foreground)]">
+                  No decisions or annotations recorded for this dataset yet.
+                </Card>
+              )}
+
+              {!logLoading && logEntries.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  {logEntries.map(entry => {
+                    if (entry.type === 'decision') {
+                      const d = entry.item;
+                      return (
+                        <Card key={`decision-${d.id}`} className="p-4">
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <div className="flex min-w-0 items-center gap-2">
+                              <ClipboardList
+                                size={16}
+                                className="shrink-0 text-[var(--primary)]"
+                              />
+                              <div className="min-w-0">
+                                <div className="truncate text-[13px] font-semibold">
+                                  {d.insight_title}
+                                </div>
+                                <div className="mt-0.5 flex flex-wrap gap-2 text-[12px] text-[var(--muted-foreground)]">
+                                  <span>{d.decision_type}</span>
+                                  {d.session_id && <span>session {d.session_id}</span>}
+                                  <span>{new Date(d.created_at).toLocaleString()}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          {d.rationale && (
+                            <p className="mt-3 whitespace-pre-wrap text-[13px] leading-5">
+                              {d.rationale}
+                            </p>
+                          )}
+                          {d.related_node_ids.length > 0 && (
+                            <div className="mt-3 flex flex-wrap gap-1.5">
+                              {d.related_node_ids.map(nodeId => (
+                                <span
+                                  key={nodeId}
+                                  className="rounded border border-[var(--border)] px-2 py-0.5 font-mono text-[11px] text-[var(--muted-foreground)]"
+                                >
+                                  {nodeId}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </Card>
+                      );
+                    }
+
+                    const a = entry.item;
+                    return (
+                      <Card
+                        key={`annotation-${a.target_kind}-${a.target_id}`}
+                        className="p-4"
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <StickyNote
+                              size={16}
+                              className="shrink-0 text-[var(--primary)]"
+                            />
+                            <div className="min-w-0">
+                              <div className="truncate text-[13px] font-semibold">
+                                {a.target_kind} {a.target_id}
+                              </div>
+                              <div className="mt-0.5 text-[12px] text-[var(--muted-foreground)]">
+                                updated {new Date(a.updated_at).toLocaleString()}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <p className="mt-3 whitespace-pre-wrap text-[13px] leading-5">
+                          {a.text}
+                        </p>
+                      </Card>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
         </div>

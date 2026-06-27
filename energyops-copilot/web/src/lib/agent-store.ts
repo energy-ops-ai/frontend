@@ -2,8 +2,9 @@
 // streaming bubble, the workspace widgets, and a status line. Mirrors the
 // rendering logic from the spike's index.html, restructured as a reducer.
 
-import { useCallback, useEffect, useReducer } from 'react';
+import { useCallback, useEffect, useReducer, useRef } from 'react';
 import type { ServerEvent, Widget } from '@shared/types';
+import { getSessionSnapshot, postProviderCredentials } from '@/lib/api';
 
 export type FeedItem =
   | { kind: 'user'; id: string; text: string }
@@ -91,6 +92,9 @@ function reduceSdk(state: AgentState, m: any): AgentState {
             { kind: 'thinking', id: uid(), text: block.thinking }
           ];
         } else if (block.type === 'tool_use') {
+          // Upsert by tool id: re-applying the same event (e.g. a history
+          // replay) must not append a duplicate-keyed feed item.
+          if (feed.some(f => f.kind === 'tool' && f.id === block.id)) continue;
           feed = [
             ...feed,
             {
@@ -151,6 +155,89 @@ function reduceEvent(state: AgentState, event: ServerEvent): AgentState {
   switch (event.kind) {
     case 'sdk':
       return reduceSdk(state, event.message);
+    case 'agent': {
+      const ev = event.event;
+      switch (ev.type) {
+        case 'user_message':
+          return {
+            ...state,
+            feed: [...state.feed, { kind: 'user', id: uid(), text: ev.text }]
+          };
+        case 'meta':
+          return {
+            ...state,
+            status: 'ready',
+            feed: [
+              ...state.feed,
+              {
+                kind: 'meta',
+                id: uid(),
+                text: `${ev.provider} session${ev.model ? ` · ${ev.model}` : ''}`
+              }
+            ]
+          };
+        case 'assistant_delta':
+          return {
+            ...state,
+            working: true,
+            status: 'working...',
+            streaming: (state.streaming ?? '') + ev.text
+          };
+        case 'assistant_message':
+          return {
+            ...state,
+            streaming: null,
+            feed: ev.text.trim()
+              ? [...state.feed, { kind: 'assistant', id: uid(), text: ev.text }]
+              : state.feed
+          };
+        case 'tool_start':
+          return {
+            ...state,
+            working: true,
+            status: 'working...',
+            streaming: null,
+            // Upsert by id so a replayed event can't append a duplicate.
+            feed: state.feed.some(f => f.kind === 'tool' && f.id === ev.id)
+              ? state.feed
+              : [
+                  ...state.feed,
+                  {
+                    kind: 'tool',
+                    id: ev.id,
+                    name: ev.name,
+                    input: ev.input,
+                    status: 'running'
+                  }
+                ]
+          };
+        case 'tool_result':
+          return {
+            ...state,
+            feed: state.feed.map(f =>
+              f.kind === 'tool' && f.id === ev.id
+                ? {
+                    ...f,
+                    status: ev.isError ? 'error' : 'done',
+                    result: ev.result
+                  }
+                : f
+            )
+          };
+        case 'turn_complete': {
+          const dur = ev.duration_ms ? ` · ${(ev.duration_ms / 1000).toFixed(1)}s` : '';
+          const cost = ev.total_cost_usd ? ` · $${ev.total_cost_usd.toFixed(4)}` : '';
+          return {
+            ...state,
+            streaming: null,
+            working: false,
+            completedTurns: state.completedTurns + 1,
+            status: `ready${dur}${cost}`
+          };
+        }
+      }
+      return state;
+    }
     case 'widget': {
       // Upsert: reusing an id replaces the widget in place (refinement);
       // a new id appends.
@@ -202,6 +289,12 @@ function reduceEvent(state: AgentState, event: ServerEvent): AgentState {
             : f
         )
       };
+    case 'credential_needed':
+      return {
+        ...state,
+        working: false,
+        feed: [...state.feed, { kind: 'meta', id: uid(), text: event.message }]
+      };
     case 'error':
       return {
         ...state,
@@ -214,6 +307,7 @@ function reduceEvent(state: AgentState, event: ServerEvent): AgentState {
 
 type Action =
   | { type: 'event'; event: ServerEvent }
+  | { type: 'snapshot'; events: ServerEvent[] }
   | { type: 'user'; text: string }
   | { type: 'status'; text: string }
   | { type: 'reset' };
@@ -222,6 +316,14 @@ function reducer(state: AgentState, action: Action): AgentState {
   switch (action.type) {
     case 'reset':
       return initialState;
+    case 'snapshot': {
+      const restored = action.events.reduce(reduceEvent, state);
+      return {
+        ...restored,
+        working: false,
+        status: restored.status.startsWith('connecting') ? 'ready' : restored.status
+      };
+    }
     case 'event':
       return reduceEvent(state, action.event);
     case 'user':
@@ -243,31 +345,107 @@ export interface PermissionAnswer {
   updatedInput?: Record<string, unknown>;
 }
 
-export function useAgentStream(sessionId: string) {
+export function useAgentStream(
+  sessionId: string,
+  options: {
+    openRouterApiKey?: string;
+    azureEndpoint?: string;
+    azureApiKey?: string;
+    azureModel?: string;
+  } = {}
+) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const esRef = useRef<EventSource | null>(null);
 
-  useEffect(() => {
+  const openStream = useCallback(() => {
+    if (esRef.current) return;
+    // The SSE endpoint replays the FULL history on connect and then streams
+    // live events, so it is the single source of truth. Reset first so the
+    // replay rebuilds state from scratch instead of stacking on top of an
+    // already-hydrated snapshot — which doubled tool cards (duplicate React
+    // keys) and desynced widgets (the topology "disappearing").
     dispatch({ type: 'reset' });
     const es = new EventSource(`/sessions/${sessionId}/events`);
+    esRef.current = es;
+    es.onopen = () => dispatch({ type: 'status', text: 'ready' });
     es.onmessage = e => {
       if (!e.data) return;
       dispatch({ type: 'event', event: JSON.parse(e.data) as ServerEvent });
     };
-    es.onerror = () =>
-      dispatch({ type: 'status', text: 'disconnected — is the server running?' });
-    return () => es.close();
+    es.onerror = () => {
+      es.close();
+      esRef.current = null;
+      dispatch({ type: 'status', text: 'stream disconnected' });
+    };
   }, [sessionId]);
 
+  useEffect(() => {
+    dispatch({ type: 'reset' });
+    esRef.current?.close();
+    esRef.current = null;
+    let cancelled = false;
+
+    void getSessionSnapshot(sessionId)
+      .then(snapshot => {
+        if (cancelled) return;
+        // Live session: the stream replays history + live (single source of
+        // truth). Idle session: seed from the snapshot and don't hold a stream.
+        if (snapshot.live) openStream();
+        else dispatch({ type: 'snapshot', events: snapshot.events });
+      })
+      .catch(() => {
+        if (!cancelled) {
+          dispatch({ type: 'status', text: 'session not found' });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+      esRef.current?.close();
+      esRef.current = null;
+    };
+  }, [sessionId, openStream]);
+
+  useEffect(() => {
+    if (options.openRouterApiKey || options.azureApiKey) {
+      void postProviderCredentials(sessionId, {
+        openRouterApiKey: options.openRouterApiKey,
+        azureEndpoint: options.azureEndpoint,
+        azureApiKey: options.azureApiKey,
+        azureModel: options.azureModel
+      });
+    }
+  }, [
+    sessionId,
+    options.openRouterApiKey,
+    options.azureEndpoint,
+    options.azureApiKey,
+    options.azureModel
+  ]);
+
   const send = useCallback(
-    async (text: string) => {
-      dispatch({ type: 'user', text });
+    async (text: string, openRouterApiKey = options.openRouterApiKey) => {
       await fetch(`/sessions/${sessionId}/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({
+          text,
+          openRouterApiKey,
+          azureEndpoint: options.azureEndpoint,
+          azureApiKey: options.azureApiKey,
+          azureModel: options.azureModel
+        })
       });
+      openStream();
     },
-    [sessionId]
+    [
+      sessionId,
+      options.openRouterApiKey,
+      options.azureEndpoint,
+      options.azureApiKey,
+      options.azureModel,
+      openStream
+    ]
   );
 
   const answerPermission = useCallback(

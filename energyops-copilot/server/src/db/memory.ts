@@ -4,6 +4,7 @@
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import Database from 'better-sqlite3';
+import type { ServerEvent } from '../types.js';
 
 const DB_PATH = process.env.MEMORY_DB
   ? process.env.MEMORY_DB
@@ -51,7 +52,25 @@ db.exec(`
     created_at       TEXT NOT NULL
   );
   CREATE INDEX IF NOT EXISTS idx_decisions_dataset ON decisions(dataset_id);
+  CREATE TABLE IF NOT EXISTS session_events (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    session_id TEXT NOT NULL,
+    event_json TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS idx_session_events_session
+    ON session_events(session_id, id);
 `);
+
+const sessionCols = db.prepare('PRAGMA table_info(sessions)').all() as {
+  name: string;
+}[];
+if (sessionCols.length && !sessionCols.some(c => c.name === 'provider')) {
+  db.exec("ALTER TABLE sessions ADD COLUMN provider TEXT NOT NULL DEFAULT 'claude'");
+}
+if (sessionCols.length && !sessionCols.some(c => c.name === 'model')) {
+  db.exec('ALTER TABLE sessions ADD COLUMN model TEXT');
+}
 
 // --- Annotations (dataset-scoped) ------------------------------------------
 
@@ -133,6 +152,8 @@ export interface SessionRow {
   dataset_id: string;
   name: string;
   sdk_session_id: string | null;
+  provider: 'claude' | 'openrouter' | 'azure';
+  model: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -141,12 +162,22 @@ export function insertSession(row: {
   id: string;
   dataset_id: string;
   name: string;
+  provider?: 'claude' | 'openrouter' | 'azure';
+  model?: string | null;
 }): SessionRow {
   const now = new Date().toISOString();
   db.prepare(
-    `INSERT INTO sessions (id, dataset_id, name, sdk_session_id, created_at, updated_at)
-     VALUES (?, ?, ?, NULL, ?, ?)`
-  ).run(row.id, row.dataset_id, row.name, now, now);
+    `INSERT INTO sessions (id, dataset_id, name, sdk_session_id, provider, model, created_at, updated_at)
+     VALUES (?, ?, ?, NULL, ?, ?, ?, ?)`
+  ).run(
+    row.id,
+    row.dataset_id,
+    row.name,
+    row.provider ?? 'claude',
+    row.model ?? null,
+    now,
+    now
+  );
   return getSessionRow(row.id)!;
 }
 
@@ -187,10 +218,36 @@ export function renameSession(id: string, name: string): void {
 
 export function deleteSessionRow(id: string): boolean {
   const tx = db.transaction((sessionId: string) => {
+    db.prepare('DELETE FROM session_events WHERE session_id = ?').run(sessionId);
     db.prepare('DELETE FROM decisions WHERE session_id = ?').run(sessionId);
     return db.prepare('DELETE FROM sessions WHERE id = ?').run(sessionId).changes;
   });
   return tx(id) > 0;
+}
+
+// --- Session event snapshots -----------------------------------------------
+
+export function appendSessionEvent(sessionId: string, event: ServerEvent): void {
+  db.prepare(
+    `INSERT INTO session_events (session_id, event_json, created_at)
+     VALUES (?, ?, ?)`
+  ).run(sessionId, JSON.stringify(event), new Date().toISOString());
+}
+
+export function getSessionEvents(sessionId: string): ServerEvent[] {
+  const rows = db
+    .prepare('SELECT event_json FROM session_events WHERE session_id = ? ORDER BY id')
+    .all(sessionId) as { event_json: string }[];
+
+  const events: ServerEvent[] = [];
+  for (const row of rows) {
+    try {
+      events.push(JSON.parse(row.event_json) as ServerEvent);
+    } catch {
+      // Ignore corrupt dev rows; the rest of the snapshot is still useful.
+    }
+  }
+  return events;
 }
 
 // --- Decisions (dataset-scoped) --------------------------------------------

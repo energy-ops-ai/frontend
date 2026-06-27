@@ -111,11 +111,22 @@ export interface PermissionRequest {
   suggestions: unknown[];
 }
 
+export type AgentEvent =
+  | { type: 'meta'; provider: 'claude' | 'openrouter' | 'azure'; model?: string; sessionId?: string }
+  | { type: 'user_message'; text: string }
+  | { type: 'assistant_delta'; text: string }
+  | { type: 'assistant_message'; text: string }
+  | { type: 'tool_start'; id: string; name: string; input: unknown }
+  | { type: 'tool_result'; id: string; result: string; isError?: boolean }
+  | { type: 'turn_complete'; duration_ms?: number; total_cost_usd?: number };
+
 export type ServerEvent =
   | { kind: 'sdk'; message: unknown }
+  | { kind: 'agent'; event: AgentEvent }
   | { kind: 'widget'; widget: Widget }
   | { kind: 'widget_update'; id: string; patch: Partial<Widget> }
   | { kind: 'widget_remove'; id: string } // id === 'all' clears the workspace
   | PermissionRequest
   | { kind: 'permission_resolved'; id: string; behavior: 'allow' | 'deny' }
+  | { kind: 'credential_needed'; provider: 'openrouter' | 'azure'; message: string }
   | { kind: 'error'; error: string };

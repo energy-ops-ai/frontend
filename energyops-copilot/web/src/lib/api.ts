@@ -1,5 +1,5 @@
 // Thin fetch helpers for the dataset / session REST API.
-import type { ChartSpec, TopologySpec } from '@shared/types';
+import type { ChartSpec, ServerEvent, TopologySpec } from '@shared/types';
 
 export interface DatasetInfo {
   id: string;
@@ -17,8 +17,16 @@ export interface SessionRow {
   dataset_id: string;
   name: string;
   sdk_session_id: string | null;
+  provider?: 'claude' | 'openrouter' | 'azure';
+  model?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface SessionSnapshot {
+  row: SessionRow;
+  live: boolean;
+  events: ServerEvent[];
 }
 
 export interface DiagramInfo {
@@ -41,6 +49,22 @@ export interface TableRows {
   rows: Record<string, unknown>[];
 }
 
+export type AnnotationKind =
+  | 'sensor'
+  | 'node'
+  | 'edge'
+  | 'subsystem'
+  | 'dataset'
+  | 'widget';
+
+export interface Annotation {
+  dataset_id: string;
+  target_kind: AnnotationKind;
+  target_id: string;
+  text: string;
+  updated_at: string;
+}
+
 export interface AnalysisRange {
   from?: string;
   to?: string;
@@ -55,6 +79,8 @@ async function getJSON<T>(url: string): Promise<T> {
 export const getDatasets = () => getJSON<DatasetInfo[]>('/datasets');
 export const getSessions = (datasetId: string) =>
   getJSON<SessionRow[]>(`/datasets/${datasetId}/sessions`);
+export const getSessionSnapshot = (sessionId: string) =>
+  getJSON<SessionSnapshot>(`/sessions/${sessionId}/snapshot`);
 export const getTopologies = (datasetId: string) =>
   getJSON<DiagramInfo[]>(`/datasets/${datasetId}/topologies`);
 export const getTopology = (datasetId: string, diagramId: string) =>
@@ -74,16 +100,31 @@ export const getTableRows = (
       table
     )}/rows?page=${page}&pageSize=${pageSize}`
   );
+export const getDatasetAnnotations = (datasetId: string) =>
+  getJSON<Annotation[]>(`/datasets/${datasetId}/annotations`);
 
 export async function startSession(
   datasetId: string,
   prompt?: string,
-  range?: AnalysisRange
+  range?: AnalysisRange,
+  provider?: 'claude' | 'openrouter' | 'azure',
+  model?: string,
+  openRouterApiKey?: string,
+  azureEndpoint?: string,
+  azureApiKey?: string
 ): Promise<string> {
   const res = await fetch(`/datasets/${datasetId}/sessions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, range })
+    body: JSON.stringify({
+      prompt,
+      range,
+      provider,
+      model,
+      openRouterApiKey,
+      azureEndpoint,
+      azureApiKey
+    })
   });
   const { id } = (await res.json()) as { id: string };
   return id;
@@ -92,6 +133,23 @@ export async function startSession(
 export async function deleteSession(sessionId: string): Promise<void> {
   const res = await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
   if (!res.ok) throw new Error(`delete session -> ${res.status}`);
+}
+
+export async function postProviderCredentials(
+  sessionId: string,
+  credentials: {
+    openRouterApiKey?: string;
+    azureEndpoint?: string;
+    azureApiKey?: string;
+    azureModel?: string;
+  }
+): Promise<void> {
+  const res = await fetch(`/sessions/${sessionId}/provider-credentials`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(credentials)
+  });
+  if (!res.ok) throw new Error(`provider credentials -> ${res.status}`);
 }
 
 // --- Decisions + series ----------------------------------------------------
@@ -110,6 +168,9 @@ export interface Decision {
   impact: number | null;
   created_at: string;
 }
+
+export const getDatasetDecisions = (datasetId: string) =>
+  getJSON<Decision[]>(`/datasets/${datasetId}/decisions`);
 
 export const getDecisions = (sessionId: string) =>
   getJSON<Decision[]>(`/sessions/${sessionId}/decisions`);

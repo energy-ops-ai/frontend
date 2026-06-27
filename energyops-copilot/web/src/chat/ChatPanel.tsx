@@ -1,12 +1,15 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ArrowLeft,
   Brain,
+  Check,
   ChevronRight,
   FileInput,
-  FileText,
+  Loader2,
   ShieldCheck,
-  Wrench
+  Wrench,
+  X
 } from 'lucide-react';
 import { Badge, Button, Card, Textarea } from '@/components/ui';
 import type {
@@ -14,6 +17,7 @@ import type {
   FeedItem,
   PermissionAnswer
 } from '@/lib/agent-store';
+import { labelFor } from '@/lib/tool-labels';
 
 interface Props {
   state: AgentState;
@@ -21,6 +25,8 @@ interface Props {
   answerPermission: (id: string, answer: PermissionAnswer) => void;
   interrupt: () => void;
   onBack?: () => void;
+  onClose?: () => void;
+  autoFocusInput?: boolean;
 }
 
 const pretty = (v: unknown) => {
@@ -90,7 +96,7 @@ const renderInline = (text: string): ReactNode[] => {
   return nodes;
 };
 
-function MarkdownContent({ text }: { text: string }) {
+export function MarkdownContent({ text }: { text: string }) {
   const lines = text.replace(/\r\n/g, '\n').split('\n');
   const blocks: ReactNode[] = [];
   let i = 0;
@@ -232,67 +238,118 @@ function DetailIconButton({
   );
 }
 
-function ToolCard({ item }: { item: Extract<FeedItem, { kind: 'tool' }> }) {
-  const [expanded, setExpanded] = useState<'input' | 'result' | null>(null);
+function ToolStatusIcon({ status }: { status: 'running' | 'done' | 'error' }) {
+  if (status === 'running')
+    return <Loader2 size={12} className="shrink-0 animate-spin text-[var(--primary)]" />;
+  if (status === 'error')
+    return <X size={12} className="shrink-0 text-[var(--destructive)]" />;
+  return <Check size={12} className="shrink-0 text-emerald-400/70" />;
+}
+
+function ToolDetailModal({
+  item,
+  onClose
+}: {
+  item: Extract<FeedItem, { kind: 'tool' }>;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  const description = inputDescription(item.input);
   const badgeVariant =
     item.status === 'running'
       ? 'default'
       : item.status === 'error'
         ? 'danger'
         : 'success';
-  const description = inputDescription(item.input);
 
-  return (
-    <Card className="max-w-[680px] p-3 text-[13px]">
-      <div className="flex items-start gap-2">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 font-medium">
-          <Wrench size={14} className="text-[var(--accent)]" />
-          <span className="font-mono">{item.name}</span>
+  // Portal to <body>: an ancestor uses transform/filter, which would otherwise
+  // trap a fixed-position overlay and let overflow clipping hide it.
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <Card
+        className="flex max-h-[80vh] w-full max-w-[560px] flex-col overflow-hidden p-0 text-[13px]"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-3">
+          <Wrench size={14} className="shrink-0 text-[var(--accent)]" />
+          <div className="min-w-0 flex-1">
+            <div className="font-medium text-[var(--foreground)]">
+              {labelFor(item.name)}
+            </div>
+            <div className="truncate font-mono text-[11px] text-[var(--muted-foreground)]">
+              {item.name}
+            </div>
+          </div>
           <Badge variant={badgeVariant}>{item.status}</Badge>
-        </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <DetailIconButton
-            active={expanded === 'input'}
-            label="Show input"
-            onClick={() =>
-              setExpanded(expanded === 'input' ? null : 'input')
-            }
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={onClose}
+            className="ml-1 text-[var(--muted-foreground)] transition hover:text-[var(--foreground)]"
           >
-            <FileInput size={14} />
-          </DetailIconButton>
-          {item.result && (
-            <DetailIconButton
-              active={expanded === 'result'}
-              label="Show result"
-              onClick={() =>
-                setExpanded(expanded === 'result' ? null : 'result')
-              }
-            >
-              <FileText size={14} />
-            </DetailIconButton>
+            <X size={16} />
+          </button>
+        </div>
+        <div className="min-h-0 flex-1 space-y-3 overflow-auto p-4">
+          {description && (
+            <p className="text-[12px] text-[var(--muted-foreground)]">
+              {description}
+            </p>
           )}
+          <div>
+            <div className="mb-1 text-[12px] font-medium text-[var(--muted-foreground)]">
+              Input
+            </div>
+            <pre className="overflow-auto rounded-md border border-[var(--border)] bg-[var(--background)] p-2 text-[12px] text-[var(--muted-foreground)]">
+              {pretty(item.input)}
+            </pre>
+          </div>
+          <div>
+            <div className="mb-1 text-[12px] font-medium text-[var(--muted-foreground)]">
+              Result
+            </div>
+            <pre className="overflow-auto rounded-md border border-[var(--border)] bg-[var(--background)] p-2 text-[12px] text-[var(--muted-foreground)]">
+              {item.result
+                ? item.result.length > 4000
+                  ? `${item.result.slice(0, 4000)}\n...`
+                  : item.result
+                : item.status === 'running'
+                  ? 'Running…'
+                  : '(no result)'}
+            </pre>
+          </div>
         </div>
-      </div>
-      {description && (
-        <div className="mt-1.5 text-[12px] text-[var(--muted-foreground)]">
-          {description}
-        </div>
-      )}
-      <DetailBlock label="Input" open={expanded === 'input'}>
-        <pre className="max-h-48 overflow-auto border-t border-[var(--border)] p-2 text-[12px] text-[var(--muted-foreground)]">
-          {pretty(item.input)}
-        </pre>
-      </DetailBlock>
-      {item.result && (
-        <DetailBlock label="Result" open={expanded === 'result'}>
-          <pre className="max-h-48 overflow-auto border-t border-[var(--border)] p-2 text-[12px] text-[var(--muted-foreground)]">
-            {item.result.length > 1500
-              ? `${item.result.slice(0, 1500)}\n...`
-              : item.result}
-          </pre>
-        </DetailBlock>
-      )}
-    </Card>
+      </Card>
+    </div>,
+    document.body
+  );
+}
+
+function ToolRow({ item }: { item: Extract<FeedItem, { kind: 'tool' }> }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        title="View details"
+        className="group flex max-w-[680px] items-center gap-2 self-start rounded-md px-2 py-1 text-left text-[13px] text-[var(--muted-foreground)] transition hover:bg-[var(--secondary)] hover:text-[var(--foreground)]"
+      >
+        <ToolStatusIcon status={item.status} />
+        <span className="truncate">{labelFor(item.name)}</span>
+      </button>
+      {open && <ToolDetailModal item={item} onClose={() => setOpen(false)} />}
+    </>
   );
 }
 
@@ -516,7 +573,7 @@ function Item({
         </Card>
       );
     case 'tool':
-      return <ToolCard item={item} />;
+      return <ToolRow item={item} />;
     case 'permission':
       return (
         hasQuestions(item.input) ? (
@@ -539,10 +596,13 @@ export function ChatPanel({
   send,
   answerPermission,
   interrupt,
-  onBack
+  onBack,
+  onClose,
+  autoFocusInput = false
 }: Props) {
   const [input, setInput] = useState('');
   const feedRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const shouldStickToBottomRef = useRef(true);
 
   const scrollToBottom = () => {
@@ -553,6 +613,12 @@ export function ChatPanel({
   useEffect(() => {
     if (shouldStickToBottomRef.current) scrollToBottom();
   }, [state.feed, state.streaming]);
+
+  useEffect(() => {
+    if (!autoFocusInput) return;
+    const id = window.setTimeout(() => inputRef.current?.focus(), 120);
+    return () => window.clearTimeout(id);
+  }, [autoFocusInput]);
 
   const submit = () => {
     const text = input.trim();
@@ -566,8 +632,9 @@ export function ChatPanel({
     <div className="flex h-full min-h-0 min-w-0 flex-col border-r border-[var(--border)] bg-[var(--panel)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
         {onBack && (
-          <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back">
+          <Button variant="ghost" onClick={onBack} aria-label="Back to dataset" className="px-2">
             <ArrowLeft />
+            Dataset
           </Button>
         )}
         <h1 className="text-[15px] font-semibold text-[var(--foreground)]">
@@ -583,6 +650,12 @@ export function ChatPanel({
           {state.status}
         </span>
         <span className="flex-1" />
+        {onClose && (
+          <Button variant="default" size="sm" onClick={onClose} aria-label="Hide chat">
+            <X />
+            Hide chat
+          </Button>
+        )}
         <Button variant="danger" onClick={interrupt}>
           Stop
         </Button>
@@ -610,6 +683,7 @@ export function ChatPanel({
 
       <footer className="flex gap-2 border-t border-[var(--border)] p-3">
         <Textarea
+          ref={inputRef}
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => {

@@ -5,6 +5,15 @@ import { SessionPage } from '@/pages/SessionPage';
 import { SettingsPage } from '@/settings/SettingsPage';
 import { DEFAULT_THEME, isThemeId, type ThemeId } from '@/lib/themes';
 
+export interface ProviderSettings {
+  provider: 'claude' | 'openrouter' | 'azure';
+  openRouterModel: string;
+  openRouterApiKey: string;
+  azureEndpoint: string;
+  azureModel: string;
+  azureApiKey: string;
+}
+
 type View =
   | { name: 'home' }
   | { name: 'dataset'; datasetId: string }
@@ -17,11 +26,50 @@ function App() {
     const stored = window.localStorage.getItem('energyops-theme');
     return isThemeId(stored) ? stored : DEFAULT_THEME;
   });
+  const [providerSettings, setProviderSettings] = useState<ProviderSettings>(() => ({
+    provider:
+      window.localStorage.getItem('energyops-provider') === 'openrouter' ||
+      window.localStorage.getItem('energyops-provider') === 'azure'
+        ? (window.localStorage.getItem('energyops-provider') as 'openrouter' | 'azure')
+        : 'claude',
+    openRouterModel:
+      window.localStorage.getItem('energyops-openrouter-model') ||
+      'anthropic/claude-sonnet-4',
+    openRouterApiKey: window.localStorage.getItem('energyops-openrouter-key') || '',
+    azureEndpoint:
+      window.localStorage.getItem('energyops-azure-endpoint') ||
+      'https://ai-cosmos886082229905.openai.azure.com/openai/responses?api-version=2025-04-01-preview',
+    azureModel: window.localStorage.getItem('energyops-azure-model') || 'gpt-5.4',
+    azureApiKey: window.localStorage.getItem('energyops-azure-key') || ''
+  }));
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     window.localStorage.setItem('energyops-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    window.localStorage.setItem('energyops-provider', providerSettings.provider);
+    window.localStorage.setItem(
+      'energyops-openrouter-model',
+      providerSettings.openRouterModel
+    );
+    window.localStorage.setItem('energyops-azure-endpoint', providerSettings.azureEndpoint);
+    window.localStorage.setItem('energyops-azure-model', providerSettings.azureModel);
+    if (providerSettings.openRouterApiKey) {
+      window.localStorage.setItem(
+        'energyops-openrouter-key',
+        providerSettings.openRouterApiKey
+      );
+    } else {
+      window.localStorage.removeItem('energyops-openrouter-key');
+    }
+    if (providerSettings.azureApiKey) {
+      window.localStorage.setItem('energyops-azure-key', providerSettings.azureApiKey);
+    } else {
+      window.localStorage.removeItem('energyops-azure-key');
+    }
+  }, [providerSettings]);
 
   let content;
   if (settingsOpen) {
@@ -29,6 +77,8 @@ function App() {
       <SettingsPage
         theme={theme}
         onThemeChange={setTheme}
+        providerSettings={providerSettings}
+        onProviderSettingsChange={setProviderSettings}
         onBack={() => setSettingsOpen(false)}
       />
     );
@@ -43,6 +93,7 @@ function App() {
     content = (
       <DatasetPage
         datasetId={view.datasetId}
+        providerSettings={providerSettings}
         onBack={() => setView({ name: 'home' })}
         onOpenSession={id =>
           setView({ name: 'session', sessionId: id, datasetId: view.datasetId })
@@ -53,6 +104,7 @@ function App() {
     content = (
       <SessionPage
         sessionId={view.sessionId}
+        providerSettings={providerSettings}
         onBack={() => setView({ name: 'dataset', datasetId: view.datasetId })}
         onOpenSettings={() => setSettingsOpen(true)}
       />

@@ -13,7 +13,10 @@ import {
 } from '@anthropic-ai/claude-agent-sdk';
 import { Bus } from './bus.js';
 import { makeEoTools } from './tools/index.js';
+import { AzureResponsesRunner } from './azure-responses-runner.js';
+import { OpenRouterRunner } from './openrouter-runner.js';
 import { SYSTEM_PROMPT } from './prompt.js';
+import type { ServerEvent } from './types.js';
 import {
   insertSession,
   setSdkSessionId,
@@ -22,8 +25,21 @@ import {
   deleteSessionRow,
   touchSession,
   getDecisions,
+  appendSessionEvent,
+  getSessionEvents,
   type SessionRow
 } from './db/memory.js';
+
+export type AgentProvider = 'claude' | 'openrouter' | 'azure';
+
+export interface SessionOptions {
+  provider?: AgentProvider;
+  model?: string;
+  openRouterApiKey?: string;
+  azureApiKey?: string;
+  azureEndpoint?: string;
+  resume?: string | null;
+}
 
 export type PermissionAnswer =
   | { behavior: 'allow'; always?: boolean; updatedInput?: Record<string, unknown> }
@@ -54,7 +70,9 @@ function createInputQueue() {
 export class Session {
   readonly id: string;
   readonly datasetId: string;
-  readonly bus = new Bus();
+  readonly provider: AgentProvider;
+  readonly model: string | null;
+  readonly bus: Bus;
   sdkSessionId: string | null = null;
 
   private widgetSeq = 0;
@@ -65,11 +83,53 @@ export class Session {
     string,
     { resolve: (a: PermissionAnswer) => void; suggestions: PermissionUpdate[] }
   >();
-  private handle: ReturnType<typeof query>;
+  private handle: ReturnType<typeof query> | null = null;
+  private openRouter: OpenRouterRunner | null = null;
+  private azure: AzureResponsesRunner | null = null;
+  private activeTurn = false;
 
-  constructor(id: string, datasetId: string, resume?: string) {
+  constructor(id: string, datasetId: string, options: SessionOptions = {}) {
     this.id = id;
     this.datasetId = datasetId;
+    this.provider = options.provider ?? 'claude';
+    this.model = options.model ?? null;
+    this.bus = new Bus(getSessionEvents(id), event =>
+      appendSessionEvent(this.id, event)
+    );
+    this.bus.subscribe(event => {
+      if (
+        event.kind === 'agent' &&
+        event.event.type === 'turn_complete'
+      ) {
+        this.activeTurn = false;
+      } else if (event.kind === 'error' || event.kind === 'credential_needed') {
+        this.activeTurn = false;
+      }
+    });
+
+    if (this.provider === 'openrouter') {
+      this.openRouter = new OpenRouterRunner({
+        id,
+        datasetId,
+        model: this.model ?? 'anthropic/claude-sonnet-4',
+        apiKey: options.openRouterApiKey,
+        bus: this.bus,
+        nextWidgetId: () => `w${++this.widgetSeq}`
+      });
+      return;
+    }
+    if (this.provider === 'azure') {
+      this.azure = new AzureResponsesRunner({
+        id,
+        datasetId,
+        endpoint: options.azureEndpoint ?? '',
+        model: this.model ?? 'gpt-5.4',
+        apiKey: options.azureApiKey,
+        bus: this.bus,
+        nextWidgetId: () => `w${++this.widgetSeq}`
+      });
+      return;
+    }
 
     const tools = makeEoTools({
       datasetId,
@@ -84,13 +144,14 @@ export class Session {
         mcpServers: { eo: tools },
         includePartialMessages: true,
         canUseTool: this.canUseTool,
-        ...(resume ? { resume } : {})
+        ...(options.resume ? { resume: options.resume } : {})
       }
     });
     void this.pump();
   }
 
   private pump = async (): Promise<void> => {
+    if (!this.handle) return;
     try {
       for await (const message of this.handle) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,9 +160,13 @@ export class Session {
           this.sdkSessionId = m.session_id;
           setSdkSessionId(this.id, m.session_id);
         }
+        if (m?.type === 'result') {
+          this.activeTurn = false;
+        }
         this.bus.broadcast({ kind: 'sdk', message });
       }
     } catch (err) {
+      this.activeTurn = false;
       this.bus.broadcast({ kind: 'error', error: String(err) });
     }
   };
@@ -137,8 +202,18 @@ export class Session {
     this.pendingContext.push(text);
   }
 
-  send(text: string): void {
+  send(
+    text: string,
+    credentials?: {
+      openRouterApiKey?: string;
+      azureApiKey?: string;
+      azureEndpoint?: string;
+      azureModel?: string;
+    }
+  ): void {
     touchSession(this.id);
+    this.activeTurn = true;
+    this.bus.broadcast({ kind: 'agent', event: { type: 'user_message', text } });
 
     const prefix: string[] = [];
     if (this.firstMessage) {
@@ -163,12 +238,40 @@ export class Session {
       ? `[Context]\n${prefix.join('\n\n')}\n\n${text}`
       : text;
 
-    this.inputQueue.push({
-      type: 'user',
-      message: { role: 'user', content },
-      parent_tool_use_id: null,
-      session_id: ''
+    if (this.provider === 'openrouter') {
+      this.openRouter?.send(content, credentials?.openRouterApiKey);
+    } else if (this.provider === 'azure') {
+      this.azure?.send(content, credentials);
+    } else {
+      this.inputQueue.push({
+        type: 'user',
+        message: { role: 'user', content },
+        parent_tool_use_id: null,
+        session_id: ''
+      });
+    }
+  }
+
+  setProviderCredentials(credentials: {
+    openRouterApiKey?: string;
+    azureApiKey?: string;
+    azureEndpoint?: string;
+    azureModel?: string;
+  }): void {
+    this.openRouter?.setApiKey(credentials.openRouterApiKey);
+    this.azure?.setCredentials({
+      apiKey: credentials.azureApiKey,
+      endpoint: credentials.azureEndpoint,
+      model: credentials.azureModel
     });
+  }
+
+  markTurnComplete(): void {
+    this.activeTurn = false;
+  }
+
+  isActive(): boolean {
+    return this.activeTurn;
   }
 
   respondPermission(id: string, answer: PermissionAnswer): boolean {
@@ -179,7 +282,13 @@ export class Session {
   }
 
   async interrupt(): Promise<void> {
-    await this.handle.interrupt();
+    if (this.provider === 'openrouter') {
+      await this.openRouter?.interrupt();
+    } else if (this.provider === 'azure') {
+      await this.azure?.interrupt();
+    } else {
+      await this.handle?.interrupt();
+    }
   }
 }
 
@@ -187,10 +296,20 @@ export class Session {
 
 const live = new Map<string, Session>();
 
-export function createSession(datasetId: string, name: string): Session {
+export function createSession(
+  datasetId: string,
+  name: string,
+  options: SessionOptions = {}
+): Session {
   const id = randomUUID();
-  insertSession({ id, dataset_id: datasetId, name });
-  const s = new Session(id, datasetId);
+  insertSession({
+    id,
+    dataset_id: datasetId,
+    name,
+    provider: options.provider ?? 'claude',
+    model: options.model ?? null
+  });
+  const s = new Session(id, datasetId, options);
   live.set(id, s);
   return s;
 }
@@ -201,9 +320,31 @@ export function getSession(id: string): Session | undefined {
   if (existing) return existing;
   const row = getSessionRow(id);
   if (!row) return undefined;
-  const s = new Session(id, row.dataset_id, row.sdk_session_id ?? undefined);
+  const s = new Session(id, row.dataset_id, {
+    provider: row.provider ?? 'claude',
+    model: row.model ?? undefined,
+    resume: row.sdk_session_id ?? undefined
+  });
   live.set(id, s);
   return s;
+}
+
+export function getLiveSession(id: string): Session | undefined {
+  return live.get(id);
+}
+
+export function getSessionSnapshot(id: string):
+  | { row: SessionRow; live: boolean; events: ServerEvent[] }
+  | undefined {
+  const row = getSessionRow(id);
+  if (!row) return undefined;
+  const existing = live.get(id);
+  const active = existing?.isActive() ?? false;
+  return {
+    row,
+    live: active,
+    events: active ? [] : getSessionEvents(id)
+  };
 }
 
 export function listSessionRows(datasetId: string): SessionRow[] {

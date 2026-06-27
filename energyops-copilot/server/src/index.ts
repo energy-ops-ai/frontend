@@ -35,30 +35,43 @@ import {
 import {
   createSession,
   deleteSession,
+  getLiveSession,
   getSession,
+  getSessionSnapshot,
   listSessionRows,
+  type AgentProvider,
   type Session
 } from './session.js';
 import { DEFAULT_ANALYSIS_PROMPT } from './prompt.js';
 
 if (!process.env.CLAUDE_CODE_OAUTH_TOKEN && !process.env.ANTHROPIC_API_KEY) {
-  console.error(
-    'No credentials found. Run `claude setup-token` and put CLAUDE_CODE_OAUTH_TOKEN in server/.env'
+  console.warn(
+    'Claude credentials not found. Claude sessions will fail until CLAUDE_CODE_OAUTH_TOKEN or ANTHROPIC_API_KEY is set; OpenRouter sessions can still run with a user key.'
   );
-  process.exit(1);
 }
 
 const PORT = Number(process.env.PORT ?? 3460);
 const app = new Hono();
 app.use('*', cors());
 
-function sseForBus(c: Context, bus: Bus) {
+function sseForBus(c: Context, session: Session) {
   return streamSSE(c, async stream => {
-    for (const event of bus.getHistory()) {
+    await stream.writeSSE({
+      data: JSON.stringify({
+        kind: 'agent',
+        event: {
+          type: 'meta',
+          provider: session.provider,
+          model: session.model ?? undefined,
+          sessionId: session.sdkSessionId ?? session.id
+        }
+      })
+    });
+    for (const event of session.bus.getHistory()) {
       await stream.writeSSE({ data: JSON.stringify(event) });
     }
     let chain: Promise<unknown> = Promise.resolve();
-    const unsubscribe = bus.subscribe(event => {
+    const unsubscribe = session.bus.subscribe(event => {
       chain = chain.then(() =>
         stream.writeSSE({ data: JSON.stringify(event) }).catch(() => {})
       );
@@ -166,31 +179,88 @@ app.get('/datasets/:id/tables/:table/rows', async c => {
   });
 });
 
+app.get('/datasets/:id/annotations', c => {
+  const id = c.req.param('id');
+  if (!listDatasets().some(d => d.id === id)) return c.json([], 404);
+  const kind = c.req.query('kind') as AnnotationKind | undefined;
+  const annotationId = c.req.query('id');
+  return c.json(getAnnotations({ datasetId: id, kind, id: annotationId }));
+});
+
+app.get('/datasets/:id/decisions', c => {
+  const id = c.req.param('id');
+  if (!listDatasets().some(d => d.id === id)) return c.json([], 404);
+  return c.json(getDecisions({ datasetId: id }));
+});
+
 app.post('/datasets/:id/sessions', async c => {
   const datasetId = c.req.param('id');
   if (!listDatasets().some(d => d.id === datasetId)) {
     return c.json({ error: 'unknown dataset' }, 404);
   }
   const body = await c.req
-    .json<{ prompt?: string; name?: string; range?: { from?: string; to?: string } }>()
+    .json<{
+      prompt?: string;
+      name?: string;
+      range?: { from?: string; to?: string };
+      provider?: AgentProvider;
+      model?: string;
+      openRouterApiKey?: string;
+      azureEndpoint?: string;
+      azureApiKey?: string;
+    }>()
     .catch(
       () =>
         ({}) as {
           prompt?: string;
           name?: string;
           range?: { from?: string; to?: string };
+          provider?: AgentProvider;
+          model?: string;
+          openRouterApiKey?: string;
+          azureEndpoint?: string;
+          azureApiKey?: string;
         }
     );
-  const session = createSession(datasetId, body.name?.trim() || deriveName(body.prompt));
+  const provider =
+    body.provider === 'openrouter' || body.provider === 'azure'
+      ? body.provider
+      : 'claude';
+  const model =
+    body.model?.trim() ||
+    (provider === 'openrouter'
+      ? 'anthropic/claude-sonnet-4'
+      : provider === 'azure'
+        ? 'gpt-5.4'
+        : null);
+  const session = createSession(datasetId, body.name?.trim() || deriveName(body.prompt), {
+    provider,
+    model: model ?? undefined,
+    openRouterApiKey: body.openRouterApiKey,
+    azureEndpoint: body.azureEndpoint,
+    azureApiKey: body.azureApiKey
+  });
   const initialPrompt = body.prompt?.trim() ? body.prompt : DEFAULT_ANALYSIS_PROMPT;
-  session.send(withAnalysisRange(initialPrompt, body.range));
+  session.send(withAnalysisRange(initialPrompt, body.range), {
+    openRouterApiKey: body.openRouterApiKey,
+    azureEndpoint: body.azureEndpoint,
+    azureApiKey: body.azureApiKey,
+    azureModel: model ?? undefined
+  });
   return c.json({ id: session.id });
 });
 
 app.get('/sessions/:id/events', c => {
-  const s = getSession(c.req.param('id'));
-  if (!s) return c.text('no such session', 404);
-  return sseForBus(c, s.bus);
+  const s = getLiveSession(c.req.param('id'));
+  if (!s) return c.text('session is not live', 409);
+  if (!s.isActive()) return c.text('session is not active', 409);
+  return sseForBus(c, s);
+});
+
+app.get('/sessions/:id/snapshot', c => {
+  const snapshot = getSessionSnapshot(c.req.param('id'));
+  if (!snapshot) return c.json({ error: 'no such session' }, 404);
+  return c.json(snapshot);
 });
 
 app.delete('/sessions/:id', async c => {
@@ -201,8 +271,29 @@ app.delete('/sessions/:id', async c => {
 app.post('/sessions/:id/message', async c => {
   const s = getSession(c.req.param('id'));
   if (!s) return c.json({ error: 'no such session' }, 404);
-  const { text } = await c.req.json<{ text?: string }>();
-  if (typeof text === 'string' && text.trim()) s.send(text);
+  const { text, openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
+    text?: string;
+    openRouterApiKey?: string;
+    azureEndpoint?: string;
+    azureApiKey?: string;
+    azureModel?: string;
+  }>();
+  if (typeof text === 'string' && text.trim()) {
+    s.send(text, { openRouterApiKey, azureEndpoint, azureApiKey, azureModel });
+  }
+  return c.json({ ok: true });
+});
+
+app.post('/sessions/:id/provider-credentials', async c => {
+  const s = getSession(c.req.param('id'));
+  if (!s) return c.json({ error: 'no such session' }, 404);
+  const { openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
+    openRouterApiKey?: string;
+    azureEndpoint?: string;
+    azureApiKey?: string;
+    azureModel?: string;
+  }>();
+  s.setProviderCredentials({ openRouterApiKey, azureEndpoint, azureApiKey, azureModel });
   return c.json({ ok: true });
 });
 
@@ -330,7 +421,7 @@ function defaultSession(): Session | undefined {
 app.get('/events', c => {
   const s = defaultSession();
   if (!s) return c.text('no datasets found', 404);
-  return sseForBus(c, s.bus);
+  return sseForBus(c, s);
 });
 app.post('/message', async c => {
   const { text } = await c.req.json<{ text?: string }>();

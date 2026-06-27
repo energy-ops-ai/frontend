@@ -1,14 +1,26 @@
-import { ArrowLeft, Check, MonitorCog } from 'lucide-react';
+import { ArrowLeft, Check, KeyRound, MonitorCog } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { THEMES, type ThemeId } from '@/lib/themes';
+import type { ProviderSettings } from '@/App';
 
 interface Props {
   theme: ThemeId;
   onThemeChange: (theme: ThemeId) => void;
+  providerSettings: ProviderSettings;
+  onProviderSettingsChange: (settings: ProviderSettings) => void;
   onBack: () => void;
 }
 
-export function SettingsPage({ theme, onThemeChange, onBack }: Props) {
+export function SettingsPage({
+  theme,
+  onThemeChange,
+  providerSettings,
+  onProviderSettingsChange,
+  onBack
+}: Props) {
+  const updateProvider = (patch: Partial<ProviderSettings>) =>
+    onProviderSettingsChange({ ...providerSettings, ...patch });
+
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--background)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
@@ -21,6 +33,109 @@ export function SettingsPage({ theme, onThemeChange, onBack }: Props) {
 
       <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
         <section className="max-w-4xl">
+          <div className="mb-8">
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold text-[var(--foreground)]">Agent Provider</h2>
+              <p className="mt-1 text-sm text-[var(--muted-foreground)]">
+                Claude is the default runtime. OpenRouter uses your browser-stored key for new and resumed sessions.
+              </p>
+            </div>
+
+            <Card className="p-4">
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                  Provider
+                  <select
+                    value={providerSettings.provider}
+                    onChange={e =>
+                      updateProvider({
+                        provider:
+                          e.target.value === 'openrouter' ||
+                          e.target.value === 'azure'
+                            ? e.target.value
+                            : 'claude'
+                      })
+                    }
+                    className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                  >
+                    <option value="claude">Claude Agent SDK</option>
+                    <option value="openrouter">OpenRouter</option>
+                    <option value="azure">Azure AI Foundry</option>
+                  </select>
+                </label>
+                {providerSettings.provider === 'openrouter' && (
+                  <label className="flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    OpenRouter model
+                    <input
+                      value={providerSettings.openRouterModel}
+                      onChange={e => updateProvider({ openRouterModel: e.target.value })}
+                      placeholder="anthropic/claude-sonnet-4"
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                )}
+                {providerSettings.provider === 'azure' && (
+                  <label className="flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    Azure deployment/model
+                    <input
+                      value={providerSettings.azureModel}
+                      onChange={e => updateProvider({ azureModel: e.target.value })}
+                      placeholder="gpt-5.4"
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                )}
+              </div>
+              {providerSettings.provider === 'openrouter' && (
+                <>
+                  <label className="mt-4 flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    <span className="flex items-center gap-1.5">
+                      <KeyRound size={14} /> OpenRouter API key
+                    </span>
+                    <input
+                      type="password"
+                      value={providerSettings.openRouterApiKey}
+                      onChange={e => updateProvider({ openRouterApiKey: e.target.value })}
+                      placeholder="sk-or-..."
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                  <p className="mt-2 text-[12px] text-[var(--muted-foreground)]">
+                    Stored in this browser's localStorage. The server receives it only for OpenRouter requests and does not save it.
+                  </p>
+                </>
+              )}
+              {providerSettings.provider === 'azure' && (
+                <>
+                  <label className="mt-4 flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    Azure Responses endpoint
+                    <input
+                      value={providerSettings.azureEndpoint}
+                      onChange={e => updateProvider({ azureEndpoint: e.target.value })}
+                      placeholder="https://...openai.azure.com/openai/responses?api-version=2025-04-01-preview"
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                  <label className="mt-4 flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    <span className="flex items-center gap-1.5">
+                      <KeyRound size={14} /> Azure API key
+                    </span>
+                    <input
+                      type="password"
+                      value={providerSettings.azureApiKey}
+                      onChange={e => updateProvider({ azureApiKey: e.target.value })}
+                      placeholder="Azure OpenAI key"
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                  <p className="mt-2 text-[12px] text-[var(--muted-foreground)]">
+                    Stored in this browser's localStorage. The server receives it only for Azure requests and does not save it.
+                  </p>
+                </>
+              )}
+            </Card>
+          </div>
+
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-[var(--foreground)]">Appearance</h2>
             <p className="mt-1 text-sm text-[var(--muted-foreground)]">

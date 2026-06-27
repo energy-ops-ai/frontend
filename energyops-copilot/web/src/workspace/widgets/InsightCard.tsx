@@ -29,6 +29,45 @@ const SEVERITY: Record<
 
 const stop = (e: React.MouseEvent) => e.stopPropagation();
 
+function DecisionButton({
+  icon,
+  title,
+  desc,
+  variant = 'default',
+  onClick,
+  disabled
+}: {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+  variant?: 'default' | 'primary';
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  const styles =
+    variant === 'primary'
+      ? 'border-[var(--primary)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:opacity-90'
+      : 'border-[var(--border)] bg-[var(--background)] text-[var(--foreground)] hover:border-[var(--primary)]';
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex flex-col items-start gap-0.5 rounded-md border px-2.5 py-2 text-left transition disabled:opacity-50 ${styles}`}
+    >
+      <span className="flex items-center gap-1.5 text-[13px] font-medium">
+        {icon}
+        {title}
+      </span>
+      <span
+        className={`text-[11px] ${variant === 'primary' ? 'opacity-90' : 'text-[var(--muted-foreground)]'}`}
+      >
+        {desc}
+      </span>
+    </button>
+  );
+}
+
 export function InsightCard({
   id,
   spec,
@@ -52,6 +91,18 @@ export function InsightCard({
   const [pending, setPending] = useState<null | 'override' | 'dismiss'>(null);
   const [rationale, setRationale] = useState('');
   const [busy, setBusy] = useState(false);
+  const [asked, setAsked] = useState(false);
+
+  const explain = async () => {
+    setAsked(true);
+    await fetch(`/sessions/${sessionId}/message`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: `Explain the insight "${spec.title}" in more depth: the most likely root cause, what to verify next, and whether anything similar has happened before.`
+      })
+    }).catch(() => {});
+  };
 
   useEffect(() => {
     getSimilarDecisions(sessionId, spec.relatedNodeIds ?? [], spec.title)
@@ -186,25 +237,40 @@ export function InsightCard({
             </div>
           )}
 
-          {/* Decision actions */}
-          <div className="mt-3" onClick={stop}>
+          {/* Decision */}
+          <div className="mt-4 border-t border-[var(--border)] pt-3" onClick={stop}>
             {decidedBadge ? (
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[12px] text-[var(--muted-foreground)]">
+                  Your decision:
+                </span>
                 <Badge variant={decidedBadge.variant}>{decidedBadge.label}</Badge>
                 {decided?.rationale && (
                   <span className="text-[12px] text-[var(--muted-foreground)]">
-                    {decided.rationale}
+                    — {decided.rationale}
                   </span>
                 )}
+                <span className="flex-1" />
+                <button
+                  onClick={explain}
+                  className="text-[12px] text-[var(--accent)] hover:underline"
+                >
+                  {asked ? 'Asked ↗' : 'Explain ↗'}
+                </button>
               </div>
             ) : pending ? (
               <div className="flex flex-col gap-2">
+                <div className="text-[12px] text-[var(--muted-foreground)]">
+                  {pending === 'override'
+                    ? 'What is your call instead, and why? (saved as the decision)'
+                    : 'Why is this not actionable? (false alarm, known, expected…)'}
+                </div>
                 <Textarea
                   autoFocus
                   rows={2}
                   value={rationale}
                   onChange={e => setRationale(e.target.value)}
-                  placeholder={`Why are you ${pending === 'override' ? 'overriding' : 'dismissing'} this? (required)`}
+                  placeholder={pending === 'override' ? 'Your reasoning…' : 'Reason…'}
                 />
                 <div className="flex justify-end gap-2">
                   <Button size="sm" variant="ghost" onClick={() => setPending(null)}>
@@ -216,22 +282,47 @@ export function InsightCard({
                     disabled={busy || !rationale.trim()}
                     onClick={() => submit(pending, rationale.trim())}
                   >
-                    Save
+                    Save decision
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-2">
-                <Button size="sm" variant="primary" disabled={busy} onClick={() => submit('accept')}>
-                  <Check size={14} /> Accept
-                </Button>
-                <Button size="sm" variant="default" onClick={() => setPending('override')}>
-                  <Pencil size={14} /> Override
-                </Button>
-                <Button size="sm" variant="default" onClick={() => setPending('dismiss')}>
-                  <X size={14} /> Dismiss
-                </Button>
-              </div>
+              <>
+                <div className="mb-2 text-[12px] text-[var(--muted-foreground)]">
+                  <span className="font-medium text-[var(--foreground)]">
+                    Your call
+                  </span>{' '}
+                  — saved as a decision the copilot recalls next time.
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <DecisionButton
+                    icon={<Check size={15} />}
+                    title="Accept"
+                    desc="Agree & act on it"
+                    variant="primary"
+                    disabled={busy}
+                    onClick={() => submit('accept')}
+                  />
+                  <DecisionButton
+                    icon={<Pencil size={15} />}
+                    title="Override"
+                    desc="My call differs"
+                    onClick={() => setPending('override')}
+                  />
+                  <DecisionButton
+                    icon={<X size={15} />}
+                    title="Dismiss"
+                    desc="Not an issue"
+                    onClick={() => setPending('dismiss')}
+                  />
+                </div>
+                <button
+                  onClick={explain}
+                  className="mt-2 text-[12px] text-[var(--accent)] hover:underline"
+                >
+                  {asked ? 'Asked the copilot ↗' : 'Explain in more depth ↗'}
+                </button>
+              </>
             )}
           </div>
         </div>

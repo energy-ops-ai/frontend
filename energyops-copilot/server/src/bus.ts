@@ -6,11 +6,19 @@ import type { ServerEvent } from './types.js';
 type Listener = (event: ServerEvent) => void;
 
 export class Bus {
-  private history: ServerEvent[] = [];
+  private history: ServerEvent[];
   private listeners = new Set<Listener>();
+
+  constructor(
+    initialHistory: ServerEvent[] = [],
+    private readonly onBroadcast?: (event: ServerEvent) => void
+  ) {
+    this.history = [...initialHistory];
+  }
 
   broadcast = (event: ServerEvent): void => {
     this.history.push(event);
+    this.onBroadcast?.(event);
     for (const listener of this.listeners) listener(event);
   };
 

@@ -16,7 +16,7 @@ Workflow:
 
 Refining widgets: each render tool returns a widget id. When the operator asks to CHANGE a widget already shown (e.g. "highlight the 17th on that chart", "show only the north loop"), re-render with replaceId set to that widget's id so it updates in place instead of creating a duplicate. Use remove_widget to delete a widget, or remove_widget with id "all" to clear the workspace.
 
-Datasets vary: anomaly timing, location, and root cause are things you discover, never assume. Keep prose concise; let the widgets carry the detail. Be explicit about what is measured vs inferred vs missing.`;
+Datasets vary: anomaly timing, location, and root cause are things you discover, never assume. Keep prose concise; let the widgets carry the detail. Your final chat message is shown as a small "last thought" card, so make it a very short activity summary like "Analyzed topology and found 3 insights." Avoid repeating evidence already shown in insight cards. Be explicit about what is measured vs inferred vs missing.`;
 
 // Sent when an operator starts a session without typing a prompt.
 export const DEFAULT_ANALYSIS_PROMPT =
