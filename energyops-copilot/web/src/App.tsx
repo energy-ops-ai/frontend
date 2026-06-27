@@ -21,7 +21,7 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="grid h-screen grid-cols-[minmax(380px,460px)_1fr] bg-[var(--background)] text-[var(--foreground)]">
+    <div className="grid h-dvh min-h-0 min-w-0 grid-cols-[minmax(380px,460px)_1fr] grid-rows-[minmax(0,1fr)] overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
       <ChatPanel
         state={state}
         send={send}
@@ -38,6 +38,13 @@ function App() {
         <Workspace
           widgets={state.widgets}
           onOpenSettings={() => setPage('settings')}
+          onInsightAction={(action, _id, title) =>
+            send(
+              action === 'accept'
+                ? `I accept the insight "${title}". Please note this decision and the current system context.`
+                : `I'm dismissing the insight "${title}" — it isn't actionable right now.`
+            )
+          }
         />
       )}
     </div>

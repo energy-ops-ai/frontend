@@ -148,14 +148,33 @@ function reduceEvent(state: AgentState, event: ServerEvent): AgentState {
   switch (event.kind) {
     case 'sdk':
       return reduceSdk(state, event.message);
-    case 'widget':
-      return { ...state, widgets: [...state.widgets, event.widget] };
+    case 'widget': {
+      // Upsert: reusing an id replaces the widget in place (refinement);
+      // a new id appends.
+      const exists = state.widgets.some(w => w.id === event.widget.id);
+      return {
+        ...state,
+        widgets: exists
+          ? state.widgets.map(w =>
+              w.id === event.widget.id ? event.widget : w
+            )
+          : [...state.widgets, event.widget]
+      };
+    }
     case 'widget_update':
       return {
         ...state,
         widgets: state.widgets.map(w =>
           w.id === event.id ? ({ ...w, ...event.patch } as Widget) : w
         )
+      };
+    case 'widget_remove':
+      return {
+        ...state,
+        widgets:
+          event.id === 'all'
+            ? []
+            : state.widgets.filter(w => w.id !== event.id)
       };
     case 'permission_request':
       return {

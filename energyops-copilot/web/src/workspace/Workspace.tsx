@@ -2,11 +2,20 @@ import { LayoutDashboard, Settings } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { TopologyWidget } from './widgets/TopologyWidget';
 import { ChartWidget } from './widgets/ChartWidget';
+import { InsightCard } from './widgets/InsightCard';
+import { DataQualityWidget } from './widgets/DataQualityWidget';
+import { WidgetFrame } from './WidgetFrame';
 import type {
   NodeStatus,
   StateSummarySpec,
   Widget
 } from '@shared/types';
+
+type InsightAction = (
+  action: 'accept' | 'reject',
+  id: string,
+  title: string
+) => void;
 
 const STATUS_COLOR: Record<NodeStatus, string> = {
   ok: 'text-emerald-400',
@@ -51,7 +60,13 @@ function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
   );
 }
 
-function WidgetView({ widget }: { widget: Widget }) {
+function WidgetView({
+  widget,
+  onInsightAction
+}: {
+  widget: Widget;
+  onInsightAction?: InsightAction;
+}) {
   switch (widget.type) {
     case 'state_summary':
       return <StateSummaryWidget spec={widget.spec} />;
@@ -59,29 +74,26 @@ function WidgetView({ widget }: { widget: Widget }) {
       return <TopologyWidget spec={widget.spec} />;
     case 'chart':
       return <ChartWidget spec={widget.spec} />;
-    default:
+    case 'data_quality':
+      return <DataQualityWidget spec={widget.spec} />;
+    case 'insight_card':
       return (
-        <Card className="p-4">
-          <div className="text-sm font-semibold text-[var(--foreground)]">
-            {widget.type} widget
-          </div>
-          <pre className="mt-2 max-h-64 overflow-auto rounded-md bg-[var(--background)] p-2 text-[12px] text-[var(--muted-foreground)]">
-            {JSON.stringify(widget.spec, null, 2)}
-          </pre>
-        </Card>
+        <InsightCard id={widget.id} spec={widget.spec} onAction={onInsightAction} />
       );
   }
 }
 
 export function Workspace({
   widgets,
-  onOpenSettings
+  onOpenSettings,
+  onInsightAction
 }: {
   widgets: Widget[];
   onOpenSettings: () => void;
+  onInsightAction?: InsightAction;
 }) {
   return (
-    <div className="flex h-full flex-col bg-[var(--background)]">
+    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--background)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
         <LayoutDashboard size={15} className="text-[var(--muted-foreground)]" />
         <span className="text-[14px] font-medium text-[var(--foreground)]">
@@ -102,14 +114,16 @@ export function Workspace({
       </header>
 
       {widgets.length === 0 ? (
-        <div className="flex flex-1 items-center justify-center p-8 text-center text-sm text-[var(--muted-foreground)]">
+        <div className="flex min-h-0 flex-1 items-center justify-center overflow-y-auto overscroll-contain p-8 text-center text-sm text-[var(--muted-foreground)]">
           Widgets the copilot assembles - topology, charts, insights - appear
           here.
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain p-4">
           {widgets.map(w => (
-            <WidgetView key={w.id} widget={w} />
+            <WidgetFrame key={w.id} widgetId={w.id}>
+              <WidgetView widget={w} onInsightAction={onInsightAction} />
+            </WidgetFrame>
           ))}
         </div>
       )}

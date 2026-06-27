@@ -134,6 +134,9 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
           nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={false}
+          zoomOnScroll={false}
+          panOnScroll={false}
+          preventScrolling={false}
         >
           <Background color="var(--border)" gap={18} />
           <Controls showInteractive={false} />

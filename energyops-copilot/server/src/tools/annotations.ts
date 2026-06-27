@@ -10,7 +10,14 @@ import {
   type AnnotationKind
 } from '../db/memory.js';
 
-const KIND = z.enum(['sensor', 'node', 'edge', 'subsystem', 'dataset']);
+const KIND = z.enum([
+  'sensor',
+  'node',
+  'edge',
+  'subsystem',
+  'dataset',
+  'widget'
+]);
 const jsonText = (obj: unknown) => ({
   content: [{ type: 'text' as const, text: JSON.stringify(obj, null, 2) }]
 });

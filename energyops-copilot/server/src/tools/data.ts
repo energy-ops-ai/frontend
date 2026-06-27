@@ -85,27 +85,40 @@ export const dataTools = [
 
   tool(
     'query_data',
-    'Run a read-only SQL query (DuckDB) over the dataset tables from describe_dataset. Use this to filter, aggregate, rank, and compare freely — e.g. rank sensors by peak deviation, pull a sensor\'s hourly series, compare branches. Results are row-capped; add your own ORDER BY / LIMIT for focus.',
+    'Run a read-only SQL query (DuckDB) for INSPECTION and AGGREGATION — e.g. rank sensors by deviation, compute stats, sample a few rows. Do NOT pull long raw series with this (it wastes context and gets truncated); to plot a full series use render_chart_from_query instead, which runs server-side. Results are row- and size-capped.',
     {
       sql: z.string().describe('A single read-only SELECT/WITH statement'),
       maxRows: z
         .number()
         .int()
         .positive()
-        .max(2000)
+        .max(1000)
         .optional()
-        .describe('Row cap (default 500)')
+        .describe('Row cap (default 200). Prefer aggregation over large row counts.')
     },
     async ({ sql, maxRows }) => {
       const duck = await getDuck();
       try {
-        const res = await duck.query(sql, maxRows ?? 500);
-        return jsonText({
-          columns: res.columns,
-          rowCount: res.rowCount,
-          truncated: res.truncated,
-          rows: res.rows
-        });
+        const res = await duck.query(sql, maxRows ?? 200);
+        // Compact output + hard character budget so a wide/long result can't
+        // blow past the SDK's tool-result token limit.
+        const MAX_CHARS = 40000;
+        let rows = res.rows;
+        let truncated = res.truncated;
+        let text = JSON.stringify({ columns: res.columns, rowCount: rows.length, truncated, rows });
+        if (text.length > MAX_CHARS) {
+          const keep = Math.max(1, Math.floor((rows.length * MAX_CHARS) / text.length));
+          rows = rows.slice(0, keep);
+          truncated = true;
+          text = JSON.stringify({
+            columns: res.columns,
+            rowCount: rows.length,
+            truncated,
+            note: 'Result trimmed to fit context. Aggregate in SQL, or use render_chart_from_query to plot a full series without returning rows.',
+            rows
+          });
+        }
+        return { content: [{ type: 'text' as const, text }] };
       } catch (err) {
         return {
           content: [{ type: 'text' as const, text: `Query error: ${String(err)}` }],

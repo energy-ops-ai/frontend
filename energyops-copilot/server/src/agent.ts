@@ -31,12 +31,15 @@ NEVER assume anything specific about the dataset. Datasets vary widely and can c
 
 Workflow:
 1. Call describe_dataset first to learn the tables, columns, populated fields, time ranges, and available topology diagrams.
-2. Explore with query_data (read-only SQL) — rank by deviation, pull series, compare parts of the system. Use get_topology / get_neighbors to understand structure and trace flow.
-3. Check get_annotations for operator knowledge about the entities involved, and ground your explanation in it.
-4. Assemble widgets that make it tangible: render_topology (highlight what matters), render_chart (the relevant traces), render_state_summary (key values). Prefer showing over telling.
-5. When the operator states a durable fact about a component, save it with set_annotation.
+2. Find what is unusual. scan_anomalies ranks where the data is behaving oddly (works even with no expected_value column); scan_data_quality flags gaps and stale/flatlined sensors. Use query_data (read-only SQL) for INSPECTION and AGGREGATION only — stats, rankings, a few sample rows. Do NOT pull long raw series into context with query_data; it wastes context and gets truncated. Use get_topology / get_neighbors to trace flow around what you find.
+3. Check get_annotations for operator knowledge about the entities involved, and ground your explanation in it. Always consider whether an apparent anomaly is actually a data-quality issue.
+4. Assemble widgets that make it tangible. To plot any sensor series, use render_chart_from_query (give it a SQL query; it runs server-side and the rows never come back to you) — this is the correct way to chart, NOT query_data + render_chart. Use render_chart only for small derived series you already computed. Also: render_topology (highlight what matters), render_state_summary (key values), render_data_quality (trust issues).
+5. Close with render_insight_card: the concise conclusion, evidence, recommended check/action, and a "have we seen this before?" question when relevant. This is the payoff — produce one whenever you reach a conclusion the operator should review or act on.
+6. When the operator states a durable fact about a component, save it with set_annotation.
 
-Keep prose concise; let the widgets carry the detail. Be explicit about what is measured vs inferred vs missing.`;
+Refining widgets: each render tool returns a widget id. When the operator asks to CHANGE a widget already shown (e.g. "highlight the 17th on that chart", "show only the north loop"), re-render with replaceId set to that widget's id so it updates in place instead of creating a duplicate. Use remove_widget to delete a widget, or remove_widget with id "all" to clear the workspace.
+
+Datasets vary: anomaly timing, location, and root cause are things you discover, never assume. Keep prose concise; let the widgets carry the detail. Be explicit about what is measured vs inferred vs missing.`;
 
 // ---------------------------------------------------------------------------
 // Streaming input queue: an async iterable the browser pushes messages onto

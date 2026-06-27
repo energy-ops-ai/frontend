@@ -106,6 +106,7 @@ export type ServerEvent =
   | { kind: 'sdk'; message: unknown }
   | { kind: 'widget'; widget: Widget }
   | { kind: 'widget_update'; id: string; patch: Partial<Widget> }
+  | { kind: 'widget_remove'; id: string } // id === 'all' clears the workspace
   | PermissionRequest
   | { kind: 'permission_resolved'; id: string; behavior: 'allow' | 'deny' }
   | { kind: 'error'; error: string };

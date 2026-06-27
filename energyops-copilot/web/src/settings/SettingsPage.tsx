@@ -10,7 +10,7 @@ interface Props {
 
 export function SettingsPage({ theme, onThemeChange, onBack }: Props) {
   return (
-    <div className="flex h-full flex-col bg-[var(--background)]">
+    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[var(--background)]">
       <header className="flex items-center gap-2 border-b border-[var(--border)] px-4 py-2.5">
         <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back to workspace">
           <ArrowLeft />
@@ -19,7 +19,7 @@ export function SettingsPage({ theme, onThemeChange, onBack }: Props) {
         <span className="text-sm font-medium text-[var(--foreground)]">Settings</span>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4">
+      <main className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
         <section className="max-w-4xl">
           <div className="mb-4">
             <h2 className="text-lg font-semibold text-[var(--foreground)]">Appearance</h2>

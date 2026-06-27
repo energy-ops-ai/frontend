@@ -23,7 +23,8 @@ export type AnnotationKind =
   | 'node'
   | 'edge'
   | 'subsystem'
-  | 'dataset';
+  | 'dataset'
+  | 'widget';
 
 export interface Annotation {
   target_kind: AnnotationKind;

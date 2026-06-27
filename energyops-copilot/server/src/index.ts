@@ -11,6 +11,11 @@ import { cors } from 'hono/cors';
 import { streamSSE } from 'hono/streaming';
 import { getHistory, subscribe } from './bus.js';
 import { sendMessage, respondPermission, interrupt } from './agent.js';
+import {
+  getAnnotations,
+  setAnnotation,
+  type AnnotationKind
+} from './db/memory.js';
 
 const PORT = Number(process.env.PORT ?? 3460);
 
@@ -69,6 +74,22 @@ app.post('/permission', async c => {
 app.post('/interrupt', async c => {
   await interrupt();
   return c.json({ ok: true });
+});
+
+// Operator annotations (descriptive knowledge layer) — UI write/read path.
+app.get('/annotations', c => {
+  const kind = c.req.query('kind') as AnnotationKind | undefined;
+  const id = c.req.query('id');
+  return c.json(getAnnotations({ kind, id }));
+});
+
+app.post('/annotation', async c => {
+  const { kind, id, text } = await c.req.json<{
+    kind: AnnotationKind;
+    id: string;
+    text: string;
+  }>();
+  return c.json(setAnnotation(kind, String(id), String(text ?? '')));
 });
 
 serve({ fetch: app.fetch, port: PORT }, info => {

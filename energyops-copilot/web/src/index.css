@@ -118,6 +118,7 @@ body {
   font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
   background: var(--background);
   color: var(--foreground);
+  overflow: hidden;
 }
 
 /* thin scrollbars for the chat + workspace columns */
