@@ -23,7 +23,6 @@ interface Props {
   state: AgentState;
   send: (text: string) => void;
   answerPermission: (id: string, answer: PermissionAnswer) => void;
-  interrupt: () => void;
   onBack?: () => void;
   onClose?: () => void;
   autoFocusInput?: boolean;
@@ -595,7 +594,6 @@ export function ChatPanel({
   state,
   send,
   answerPermission,
-  interrupt,
   onBack,
   onClose,
   autoFocusInput = false
@@ -656,9 +654,6 @@ export function ChatPanel({
             Hide chat
           </Button>
         )}
-        <Button variant="danger" onClick={interrupt}>
-          Stop
-        </Button>
       </header>
 
       <div

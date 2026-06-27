@@ -93,7 +93,7 @@ export function SessionPage({
   const [nodeChartOpen, setNodeChartOpen] = useState(false);
   const [chatDrawerWidth, setChatDrawerWidth] = useState(drawerWidth);
   const previousCompletedTurns = useRef<number | null>(null);
-  const { state, send, answerPermission, interrupt } = useAgentStream(sessionId, {
+  const { state, send, answerPermission } = useAgentStream(sessionId, {
     claudeApiKey:
       providerSettings.provider === 'claude'
         ? providerSettings.claudeApiKey
@@ -199,7 +199,6 @@ export function SessionPage({
               state={state}
               send={send}
               answerPermission={answerPermission}
-              interrupt={interrupt}
               onClose={() => setChatOpen(false)}
               autoFocusInput
             />
