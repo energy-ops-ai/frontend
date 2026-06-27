@@ -124,6 +124,20 @@ async function buildChartFromQuery(
 const textProp = { type: 'string' };
 const numberProp = { type: 'number' };
 const arrayProp = { type: 'array', items: {} };
+const stateItemSchema = objectSchema({
+  label: textProp,
+  value: { anyOf: [textProp, numberProp] },
+  unit: textProp,
+  status: textProp,
+  delta: numberProp,
+  comparison: textProp,
+  note: textProp
+});
+const stateSectionSchema = objectSchema({
+  title: textProp,
+  interpretation: textProp,
+  items: { type: 'array', items: stateItemSchema }
+});
 
 export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
   const { datasetId, sessionId } = ctx;
@@ -276,10 +290,31 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
     },
     {
       name: 'render_state_summary',
-      description: 'Render a compact KPI/state summary widget.',
-      parameters: objectSchema({ title: textProp, items: arrayProp, replaceId: textProp }, ['title', 'items']),
+      description: 'Render a Current Operating Snapshot, not a raw KPI dump. Use a clear verdict plus 2-4 grouped sections with only the values needed to explain whether the system is okay, what is driving the state, and what the operator should inspect next. Include comparisons/notes only when grounded in data. Legacy flat items are still accepted.',
+      parameters: objectSchema(
+        {
+          title: textProp,
+          observedAt: textProp,
+          verdict: objectSchema({ label: textProp, status: textProp, detail: textProp }),
+          sections: { type: 'array', items: stateSectionSchema },
+          items: { type: 'array', items: stateItemSchema },
+          replaceId: textProp
+        },
+        ['title']
+      ),
       execute: async input => {
-        const spec: StateSummarySpec = { title: str(input.title, 'State'), items: Array.isArray(input.items) ? (input.items as StateSummarySpec['items']) : [] };
+        const spec: StateSummarySpec = {
+          title: str(input.title, 'Current Operating Snapshot'),
+          observedAt: str(input.observedAt) || undefined,
+          verdict:
+            input.verdict && typeof input.verdict === 'object'
+              ? (input.verdict as StateSummarySpec['verdict'])
+              : undefined,
+          sections: Array.isArray(input.sections)
+            ? (input.sections as StateSummarySpec['sections'])
+            : undefined,
+          items: Array.isArray(input.items) ? (input.items as StateSummarySpec['items']) : []
+        };
         const id = emitWidget(ctx, { id: newId(), type: 'state_summary', spec }, str(input.replaceId) || undefined);
         return `Rendered state summary "${spec.title}" as widget ${id}.`;
       }

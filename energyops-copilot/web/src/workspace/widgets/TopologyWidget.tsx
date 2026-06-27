@@ -128,12 +128,14 @@ export function TopologyWidget({
   spec,
   onNodeClick,
   selectionHighlight,
-  fill = false
+  fill = false,
+  scrollZoom = false
 }: {
   spec: TopologySpec;
   onNodeClick?: (nodeId: string) => void;
   selectionHighlight?: string[];
   fill?: boolean;
+  scrollZoom?: boolean;
 }) {
   const { nodes, edges } = useMemo(() => {
     const highlight = new Set(spec.highlight ?? []);
@@ -198,9 +200,9 @@ export function TopologyWidget({
           nodesDraggable={false}
           nodesConnectable={false}
           elementsSelectable={false}
-          zoomOnScroll={false}
+          zoomOnScroll={scrollZoom}
           panOnScroll={false}
-          preventScrolling={false}
+          preventScrolling={scrollZoom}
           onNodeClick={(_, n) => onNodeClick?.(n.id)}
         >
           <Background color="var(--border)" gap={18} />

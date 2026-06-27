@@ -37,6 +37,7 @@ import {
   deleteSession,
   getLiveSession,
   getSession,
+  getSessionWithOptions,
   getSessionSnapshot,
   listSessionRows,
   type AgentProvider,
@@ -205,6 +206,7 @@ app.post('/datasets/:id/sessions', async c => {
       range?: { from?: string; to?: string };
       provider?: AgentProvider;
       model?: string;
+      claudeApiKey?: string;
       openRouterApiKey?: string;
       azureEndpoint?: string;
       azureApiKey?: string;
@@ -217,6 +219,7 @@ app.post('/datasets/:id/sessions', async c => {
           range?: { from?: string; to?: string };
           provider?: AgentProvider;
           model?: string;
+          claudeApiKey?: string;
           openRouterApiKey?: string;
           azureEndpoint?: string;
           azureApiKey?: string;
@@ -236,12 +239,15 @@ app.post('/datasets/:id/sessions', async c => {
   const session = createSession(datasetId, body.name?.trim() || deriveName(body.prompt), {
     provider,
     model: model ?? undefined,
+    claudeApiKey: body.claudeApiKey,
     openRouterApiKey: body.openRouterApiKey,
     azureEndpoint: body.azureEndpoint,
     azureApiKey: body.azureApiKey
   });
   const initialPrompt = body.prompt?.trim() ? body.prompt : DEFAULT_ANALYSIS_PROMPT;
   session.send(withAnalysisRange(initialPrompt, body.range), {
+    claudeApiKey: body.claudeApiKey,
+    claudeModel: model ?? undefined,
     openRouterApiKey: body.openRouterApiKey,
     azureEndpoint: body.azureEndpoint,
     azureApiKey: body.azureApiKey,
@@ -269,31 +275,55 @@ app.delete('/sessions/:id', async c => {
 });
 
 app.post('/sessions/:id/message', async c => {
-  const s = getSession(c.req.param('id'));
-  if (!s) return c.json({ error: 'no such session' }, 404);
-  const { text, openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
+  const { text, claudeApiKey, claudeModel, openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
     text?: string;
+    claudeApiKey?: string;
+    claudeModel?: string;
     openRouterApiKey?: string;
     azureEndpoint?: string;
     azureApiKey?: string;
     azureModel?: string;
   }>();
+  const s = getSessionWithOptions(c.req.param('id'), {
+    claudeApiKey,
+    model: claudeModel
+  });
+  if (!s) return c.json({ error: 'no such session' }, 404);
   if (typeof text === 'string' && text.trim()) {
-    s.send(text, { openRouterApiKey, azureEndpoint, azureApiKey, azureModel });
+    s.send(text, {
+      claudeApiKey,
+      claudeModel,
+      openRouterApiKey,
+      azureEndpoint,
+      azureApiKey,
+      azureModel
+    });
   }
   return c.json({ ok: true });
 });
 
 app.post('/sessions/:id/provider-credentials', async c => {
-  const s = getSession(c.req.param('id'));
-  if (!s) return c.json({ error: 'no such session' }, 404);
-  const { openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
+  const { claudeApiKey, claudeModel, openRouterApiKey, azureEndpoint, azureApiKey, azureModel } = await c.req.json<{
+    claudeApiKey?: string;
+    claudeModel?: string;
     openRouterApiKey?: string;
     azureEndpoint?: string;
     azureApiKey?: string;
     azureModel?: string;
   }>();
-  s.setProviderCredentials({ openRouterApiKey, azureEndpoint, azureApiKey, azureModel });
+  const s = getSessionWithOptions(c.req.param('id'), {
+    claudeApiKey,
+    model: claudeModel
+  });
+  if (!s) return c.json({ error: 'no such session' }, 404);
+  s.setProviderCredentials({
+    claudeApiKey,
+    claudeModel,
+    openRouterApiKey,
+    azureEndpoint,
+    azureApiKey,
+    azureModel
+  });
   return c.json({ ok: true });
 });
 

@@ -9,7 +9,13 @@ import { WidgetFrame } from './WidgetFrame';
 import { WorkspaceKpiStrip } from './WorkspaceKpiStrip';
 import { useDecisions } from '@/lib/useDecisions';
 import { getSeries, type Decision } from '@/lib/api';
-import type { ChartSpec, NodeStatus, StateSummarySpec, Widget } from '@shared/types';
+import type {
+  ChartSpec,
+  NodeStatus,
+  StateSummaryItem,
+  StateSummarySpec,
+  Widget
+} from '@shared/types';
 
 type TopoWidget = Extract<Widget, { type: 'topology' }>;
 type InsightWidget = Extract<Widget, { type: 'insight_card' }>;
@@ -27,34 +33,126 @@ const STATUS_COLOR: Record<NodeStatus, string> = {
   missing: 'text-fuchsia-400'
 };
 
+const STATUS_DOT: Record<NodeStatus, string> = {
+  ok: 'bg-emerald-400',
+  warn: 'bg-amber-400',
+  alert: 'bg-red-400',
+  stale: 'bg-[var(--muted-foreground)]',
+  inferred: 'bg-sky-400',
+  missing: 'bg-fuchsia-400'
+};
+
+function StateMetric({ item }: { item: StateSummaryItem }) {
+  return (
+    <div className="min-w-0 rounded-md border border-[var(--border)] bg-[var(--background)] px-3 py-2.5">
+      <div className="flex min-w-0 items-start justify-between gap-2">
+        <div className="min-w-0 text-[11px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
+          {item.label}
+        </div>
+        {item.status ? (
+          <span
+            className={`mt-1 h-2 w-2 shrink-0 rounded-full ${STATUS_DOT[item.status]}`}
+            aria-label={item.status}
+            title={item.status}
+          />
+        ) : null}
+      </div>
+      <div
+        className={`mt-1 truncate text-lg font-semibold ${
+          item.status ? STATUS_COLOR[item.status] : 'text-[var(--foreground)]'
+        }`}
+      >
+        {item.value}
+        {item.unit ? (
+          <span className="ml-1 text-xs font-normal text-[var(--muted-foreground)]">
+            {item.unit}
+          </span>
+        ) : null}
+      </div>
+      {item.comparison ? (
+        <div className="mt-0.5 text-[12px] text-[var(--card-foreground)]">
+          {item.comparison}
+        </div>
+      ) : null}
+      {item.note ? (
+        <div className="mt-1 text-[12px] leading-snug text-[var(--muted-foreground)]">
+          {item.note}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
+  const sections =
+    spec.sections && spec.sections.length > 0
+      ? spec.sections
+      : spec.items?.length > 0
+        ? [{ title: 'Key values', items: spec.items }]
+        : [];
+
   return (
     <Card className="p-4">
-      <div className="mb-3 text-sm font-semibold text-[var(--foreground)]">
-        {spec.title}
-      </div>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {spec.items.map((it, i) => (
-          <div
-            key={i}
-            className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-3"
-          >
-            <div className="text-[11px] uppercase tracking-wide text-[var(--muted-foreground)]">
-              {it.label}
+      <div className="mb-3 flex min-w-0 flex-wrap items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-[var(--foreground)]">
+            {spec.title}
+          </div>
+          {spec.observedAt ? (
+            <div className="mt-0.5 text-[12px] text-[var(--muted-foreground)]">
+              {spec.observedAt}
             </div>
-            <div
-              className={`mt-1 text-lg font-semibold ${
-                it.status ? STATUS_COLOR[it.status] : 'text-[var(--foreground)]'
-              }`}
-            >
-              {it.value}
-              {it.unit ? (
-                <span className="ml-1 text-xs text-[var(--muted-foreground)]">
-                  {it.unit}
-                </span>
+          ) : null}
+        </div>
+      </div>
+
+      {spec.verdict ? (
+        <div className="mb-4 rounded-md border border-[var(--border)] bg-[var(--secondary)] px-3 py-2.5">
+          <div className="flex items-start gap-2">
+            {spec.verdict.status ? (
+              <span
+                className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${STATUS_DOT[spec.verdict.status]}`}
+              />
+            ) : null}
+            <div className="min-w-0">
+              <div
+                className={`text-[13px] font-semibold ${
+                  spec.verdict.status
+                    ? STATUS_COLOR[spec.verdict.status]
+                    : 'text-[var(--foreground)]'
+                }`}
+              >
+                {spec.verdict.label}
+              </div>
+              {spec.verdict.detail ? (
+                <div className="mt-1 text-[12px] leading-relaxed text-[var(--muted-foreground)]">
+                  {spec.verdict.detail}
+                </div>
               ) : null}
             </div>
           </div>
+        </div>
+      ) : null}
+
+      <div className="space-y-4">
+        {sections.map((section, i) => (
+          <section key={`${section.title}-${i}`} className="min-w-0">
+            <div className="mb-2 flex min-w-0 items-baseline justify-between gap-2">
+              <div className="text-[12px] font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">
+                {section.title}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {section.items.map((it, idx) => (
+                <StateMetric key={`${it.label}-${idx}`} item={it} />
+              ))}
+            </div>
+            {section.interpretation ? (
+              <div className="mt-2 text-[12px] leading-relaxed text-[var(--card-foreground)]">
+                {section.interpretation}
+              </div>
+            ) : null}
+          </section>
         ))}
       </div>
     </Card>
@@ -216,6 +314,7 @@ export function Workspace({
                   spec={activeTopology.spec}
                   onNodeClick={selectNode}
                   selectionHighlight={selectedNodeIds}
+                  scrollZoom
                   fill
                 />
               ) : (

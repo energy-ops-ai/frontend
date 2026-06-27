@@ -58,15 +58,30 @@ export interface ChartSpec {
   markBands?: { from: string; to: string; label?: string }[];
 }
 
+export interface StateSummaryItem {
+  label: string;
+  value: string | number;
+  unit?: string;
+  status?: NodeStatus;
+  delta?: number;
+  comparison?: string;
+  note?: string;
+}
+
 export interface StateSummarySpec {
   title: string;
-  items: {
+  observedAt?: string;
+  verdict?: {
     label: string;
-    value: string | number;
-    unit?: string;
     status?: NodeStatus;
-    delta?: number;
+    detail?: string;
+  };
+  sections?: {
+    title: string;
+    interpretation?: string;
+    items: StateSummaryItem[];
   }[];
+  items: StateSummaryItem[];
 }
 
 export interface DataQualitySpec {
@@ -130,5 +145,5 @@ export type ServerEvent =
   | { kind: 'widget_remove'; id: string } // id === 'all' clears the workspace
   | PermissionRequest
   | { kind: 'permission_resolved'; id: string; behavior: 'allow' | 'deny' }
-  | { kind: 'credential_needed'; provider: 'openrouter' | 'azure'; message: string }
+  | { kind: 'credential_needed'; provider: 'claude' | 'openrouter' | 'azure'; message: string }
   | { kind: 'error'; error: string };

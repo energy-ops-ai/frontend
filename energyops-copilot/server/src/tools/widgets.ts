@@ -17,6 +17,21 @@ import type {
 } from '../types.js';
 
 const STATUS = z.enum(['ok', 'warn', 'alert', 'stale', 'inferred', 'missing']);
+const stateSummaryItem = z.object({
+  label: z.string(),
+  value: z.union([z.string(), z.number()]),
+  unit: z.string().optional(),
+  status: STATUS.optional(),
+  delta: z.number().optional(),
+  comparison: z
+    .string()
+    .optional()
+    .describe('Short comparison context, e.g. "+0.6 kWh vs expected" or "largest visible zone load"'),
+  note: z
+    .string()
+    .optional()
+    .describe('One concise operator-facing meaning, only when grounded in queried data')
+});
 
 const topoNode = z.object({
   id: z.string(),
@@ -269,22 +284,41 @@ export function widgetTools(ctx: ToolContext) {
 
     tool(
       'render_state_summary',
-      'Render a compact grid of key state values (KPIs) in the workspace — current operating values, setpoints, notable deviations. Set a status per item to colour it.',
+      'Render a Current Operating Snapshot, not a raw KPI dump. Use it to answer: are we okay, what is driving the state, and what should the operator inspect next? Prefer a clear verdict plus 2-4 grouped sections with only the values needed to support that verdict. Include comparisons/notes when grounded in data. Legacy flat items are still accepted.',
       {
         title: z.string(),
-        items: z.array(
-          z.object({
-            label: z.string(),
-            value: z.union([z.string(), z.number()]),
-            unit: z.string().optional(),
+        observedAt: z.string().optional().describe('Timestamp or range label for this snapshot'),
+        verdict: z
+          .object({
+            label: z.string().describe('One-line operator verdict, e.g. "Balanced supply, north branch carrying the load"'),
             status: STATUS.optional(),
-            delta: z.number().optional()
+            detail: z.string().optional().describe('One short sentence explaining why the verdict follows from the values')
           })
-        ),
+          .optional(),
+        sections: z
+          .array(
+            z.object({
+              title: z.string(),
+              interpretation: z.string().optional().describe('Short meaning of this group, not a restatement of the numbers'),
+              items: z.array(stateSummaryItem).min(1).max(5)
+            })
+          )
+          .optional()
+          .describe('Grouped values such as Supply / Demand, Branch Load, Zone Demand, and Drivers'),
+        items: z
+          .array(stateSummaryItem)
+          .optional()
+          .describe('Fallback flat list for old KPI-style summaries; prefer sections for new snapshots'),
         replaceId: z.string().optional().describe(REPLACE_ID_DESC)
       },
       async input => {
-        const spec: StateSummarySpec = { title: input.title, items: input.items };
+        const spec: StateSummarySpec = {
+          title: input.title,
+          observedAt: input.observedAt,
+          verdict: input.verdict,
+          sections: input.sections,
+          items: input.items ?? []
+        };
         const id = emitWidget(
           ctx,
           { id: newId(), type: 'state_summary', spec },

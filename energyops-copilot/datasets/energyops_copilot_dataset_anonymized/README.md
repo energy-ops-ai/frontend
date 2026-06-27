@@ -10,7 +10,7 @@ Anonymization performed:
 - preserved source metadata semantics while rewriting and pseudonymizing source area/location/tag values
 - added conservative location roles and role-based location groups where source location text is classifiable
 - removed import provenance and metadata timestamps
-- shifted timestamps to a synthetic time window
+- preserved source timestamps by default; optional synthetic timestamp shifting is available in the script
 - scaled meter values by medium-specific factors to preserve trends without exposing raw magnitudes
 - regenerated graph text from anonymized diagrams
 

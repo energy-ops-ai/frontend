@@ -8,6 +8,7 @@ import {
   ClipboardList,
   ExternalLink,
   GitFork,
+  Loader2,
   MessageSquarePlus,
   Play,
   Sparkles,
@@ -97,8 +98,10 @@ export function DatasetPage({
       const nextDataset = ds.find(d => d.id === datasetId) ?? null;
       setDataset(nextDataset);
       if (nextDataset?.startDate) {
-        setRangeFrom(nextDataset.startDate);
-        if (nextDataset.days && nextDataset.days > 0) {
+        setRangeFrom(nextDataset.defaultStartDate ?? nextDataset.startDate);
+        if (nextDataset.defaultEndDate) {
+          setRangeTo(nextDataset.defaultEndDate);
+        } else if (nextDataset.days && nextDataset.days > 0) {
           const end = new Date(`${nextDataset.startDate}T00:00:00`);
           end.setDate(end.getDate() + nextDataset.days - 1);
           setRangeTo(end.toISOString().slice(0, 10));
@@ -214,6 +217,7 @@ export function DatasetPage({
   };
 
   const start = async () => {
+    if (starting) return;
     setStarting(true);
     try {
       const id = await startSession(
@@ -228,7 +232,7 @@ export function DatasetPage({
           ? providerSettings.openRouterModel
           : providerSettings.provider === 'azure'
             ? providerSettings.azureModel
-            : undefined,
+            : providerSettings.claudeModel,
         providerSettings.provider === 'openrouter'
           ? providerSettings.openRouterApiKey
           : undefined,
@@ -237,10 +241,13 @@ export function DatasetPage({
           : undefined,
         providerSettings.provider === 'azure'
           ? providerSettings.azureApiKey
+          : undefined,
+        providerSettings.provider === 'claude'
+          ? providerSettings.claudeApiKey
           : undefined
       );
       onOpenSession(id);
-    } finally {
+    } catch {
       setStarting(false);
     }
   };
@@ -321,6 +328,7 @@ export function DatasetPage({
                     <input
                       type="date"
                       value={rangeFrom}
+                      min={dataset?.startDate || undefined}
                       max={rangeTo || undefined}
                       onChange={e => setRangeFrom(e.target.value)}
                       className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
@@ -334,6 +342,7 @@ export function DatasetPage({
                       type="date"
                       value={rangeTo}
                       min={rangeFrom || undefined}
+                      max={dataset?.endDate || undefined}
                       onChange={e => setRangeTo(e.target.value)}
                       className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
                     />
@@ -347,7 +356,7 @@ export function DatasetPage({
                         ? `OpenRouter · ${providerSettings.openRouterModel || 'model not set'}`
                         : providerSettings.provider === 'azure'
                           ? `Azure · ${providerSettings.azureModel || 'deployment not set'}`
-                        : 'Claude Agent SDK'}
+                          : `Claude · ${providerSettings.claudeModel || 'model not set'}`}
                     </span>
                   </div>
                   <Button variant="primary" onClick={start} disabled={starting}>
@@ -725,6 +734,24 @@ export function DatasetPage({
           )}
         </div>
       </main>
+
+      <AnimatePresence>
+        {starting && (
+          <motion.div
+            key="starting-analysis"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-3 bg-[var(--background)] px-6 text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.16 }}
+          >
+            <Loader2 size={34} className="animate-spin text-[var(--primary)]" />
+            <div className="text-lg font-semibold text-[var(--foreground)]">
+              Analyzing system
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {deleteTarget && (

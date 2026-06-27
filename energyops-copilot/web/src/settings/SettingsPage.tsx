@@ -37,7 +37,7 @@ export function SettingsPage({
             <div className="mb-4">
               <h2 className="text-lg font-semibold text-[var(--foreground)]">Agent Provider</h2>
               <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-                Claude is the default runtime. OpenRouter uses your browser-stored key for new and resumed sessions.
+                Claude is the default runtime. Provider keys are stored in this browser and sent only with matching requests.
               </p>
             </div>
 
@@ -50,6 +50,7 @@ export function SettingsPage({
                     onChange={e =>
                       updateProvider({
                         provider:
+                          e.target.value === 'claude' ||
                           e.target.value === 'openrouter' ||
                           e.target.value === 'azure'
                             ? e.target.value
@@ -63,6 +64,17 @@ export function SettingsPage({
                     <option value="azure">Azure AI Foundry</option>
                   </select>
                 </label>
+                {providerSettings.provider === 'claude' && (
+                  <label className="flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    Claude model
+                    <input
+                      value={providerSettings.claudeModel}
+                      onChange={e => updateProvider({ claudeModel: e.target.value })}
+                      placeholder="claude-sonnet-4-5-20250929"
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                )}
                 {providerSettings.provider === 'openrouter' && (
                   <label className="flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
                     OpenRouter model
@@ -86,6 +98,25 @@ export function SettingsPage({
                   </label>
                 )}
               </div>
+              {providerSettings.provider === 'claude' && (
+                <>
+                  <label className="mt-4 flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">
+                    <span className="flex items-center gap-1.5">
+                      <KeyRound size={14} /> Claude API key
+                    </span>
+                    <input
+                      type="password"
+                      value={providerSettings.claudeApiKey}
+                      onChange={e => updateProvider({ claudeApiKey: e.target.value })}
+                      placeholder="sk-ant-..."
+                      className="h-9 rounded-md border border-[var(--input)] bg-[var(--background)] px-3 font-mono text-[13px] text-[var(--foreground)] outline-none focus:border-[var(--ring)]"
+                    />
+                  </label>
+                  <p className="mt-2 text-[12px] text-[var(--muted-foreground)]">
+                    Stored in this browser's localStorage. The server receives it as ANTHROPIC_API_KEY only for Claude requests and does not save it.
+                  </p>
+                </>
+              )}
               {providerSettings.provider === 'openrouter' && (
                 <>
                   <label className="mt-4 flex flex-col gap-1.5 text-[12px] font-medium text-[var(--muted-foreground)]">

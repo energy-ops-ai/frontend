@@ -9,7 +9,10 @@ export interface DatasetInfo {
   sensors?: number;
   diagrams?: number;
   startDate?: string;
+  endDate?: string;
   days?: number;
+  defaultStartDate?: string;
+  defaultEndDate?: string;
 }
 
 export interface SessionRow {
@@ -112,7 +115,8 @@ export async function startSession(
   model?: string,
   openRouterApiKey?: string,
   azureEndpoint?: string,
-  azureApiKey?: string
+  azureApiKey?: string,
+  claudeApiKey?: string
 ): Promise<string> {
   const res = await fetch(`/datasets/${datasetId}/sessions`, {
     method: 'POST',
@@ -124,7 +128,8 @@ export async function startSession(
       model,
       openRouterApiKey,
       azureEndpoint,
-      azureApiKey
+      azureApiKey,
+      claudeApiKey
     })
   });
   const { id } = (await res.json()) as { id: string };
@@ -139,6 +144,8 @@ export async function deleteSession(sessionId: string): Promise<void> {
 export async function postProviderCredentials(
   sessionId: string,
   credentials: {
+    claudeApiKey?: string;
+    claudeModel?: string;
     openRouterApiKey?: string;
     azureEndpoint?: string;
     azureApiKey?: string;

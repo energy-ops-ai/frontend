@@ -1,5 +1,5 @@
 {
-  "created_at_utc": "2026-06-27T12:51:20Z",
+  "created_at_utc": "2026-06-27T18:58:53Z",
   "source": "anonymized_live_export",
   "diagram_ids": [
     "diagram_001",
@@ -16,8 +16,8 @@
     "diagram_012"
   ],
   "time_window": {
-    "start": "2026-01-01 00:00:00",
-    "end": "2026-01-29 00:00:00"
+    "start": "2026-05-30 19:00:00",
+    "end": "2026-06-27 19:00:00"
   },
   "counts": {
     "diagrams": 12,
@@ -25,7 +25,7 @@
     "selected_sensors": 4675,
     "sensor_attributes": 52769,
     "sensor_external_refs": 4561,
-    "hourly_sensor_rows": 1042726,
+    "hourly_sensor_rows": 1048652,
     "document_records": 0,
     "downloaded_documents": 0,
     "reference_assets": 0

@@ -35,6 +35,7 @@ export type AgentProvider = 'claude' | 'openrouter' | 'azure';
 export interface SessionOptions {
   provider?: AgentProvider;
   model?: string;
+  claudeApiKey?: string;
   openRouterApiKey?: string;
   azureApiKey?: string;
   azureEndpoint?: string;
@@ -145,6 +146,10 @@ export class Session {
         mcpServers: { eo: tools },
         includePartialMessages: true,
         canUseTool: this.canUseTool,
+        ...(this.model ? { model: this.model } : {}),
+        ...(options.claudeApiKey
+          ? { env: { ...process.env, ANTHROPIC_API_KEY: options.claudeApiKey } }
+          : {}),
         ...(options.resume ? { resume: options.resume } : {})
       }
     });
@@ -206,6 +211,8 @@ export class Session {
   send(
     text: string,
     credentials?: {
+      claudeApiKey?: string;
+      claudeModel?: string;
       openRouterApiKey?: string;
       azureApiKey?: string;
       azureEndpoint?: string;
@@ -254,6 +261,8 @@ export class Session {
   }
 
   setProviderCredentials(credentials: {
+    claudeApiKey?: string;
+    claudeModel?: string;
     openRouterApiKey?: string;
     azureApiKey?: string;
     azureEndpoint?: string;
@@ -317,13 +326,21 @@ export function createSession(
 
 /** Get a live session, resuming it from the store (SDK `resume`) if needed. */
 export function getSession(id: string): Session | undefined {
+  return getSessionWithOptions(id);
+}
+
+export function getSessionWithOptions(
+  id: string,
+  options: Pick<SessionOptions, 'claudeApiKey' | 'model'> = {}
+): Session | undefined {
   const existing = live.get(id);
   if (existing) return existing;
   const row = getSessionRow(id);
   if (!row) return undefined;
   const s = new Session(id, row.dataset_id, {
     provider: row.provider ?? 'claude',
-    model: row.model ?? undefined,
+    model: options.model ?? row.model ?? undefined,
+    claudeApiKey: options.claudeApiKey,
     resume: row.sdk_session_id ?? undefined
   });
   live.set(id, s);

@@ -40,7 +40,7 @@ function LastThoughtCard({
         exit={{ opacity: 0, y: 10, scale: 0.94 }}
         layoutId="last-thought-card"
         transition={{ duration: 0.28, ease: 'easeOut' }}
-        className="absolute bottom-5 left-5 z-30 flex size-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel-strong)] text-[var(--accent)] shadow-[0_8px_24px_rgb(0_0_0/0.22)] [border-style:var(--border-style)] hover:border-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
+        className="absolute bottom-5 left-16 z-30 flex size-12 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--panel-strong)] text-[var(--accent)] shadow-[0_8px_24px_rgb(0_0_0/0.22)] [border-style:var(--border-style)] hover:border-[var(--accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:left-20"
         aria-label="Open chat"
         title="Open chat"
       >
@@ -50,7 +50,7 @@ function LastThoughtCard({
   }
 
   return (
-    <div className="absolute bottom-5 left-5 z-30 w-[min(460px,calc(100%-2.5rem))]">
+    <div className="absolute bottom-5 left-16 right-5 z-30 max-w-[460px] sm:left-20">
       <motion.button
         type="button"
         onClick={onOpen}
@@ -94,6 +94,14 @@ export function SessionPage({
   const [chatDrawerWidth, setChatDrawerWidth] = useState(drawerWidth);
   const previousCompletedTurns = useRef<number | null>(null);
   const { state, send, answerPermission, interrupt } = useAgentStream(sessionId, {
+    claudeApiKey:
+      providerSettings.provider === 'claude'
+        ? providerSettings.claudeApiKey
+        : undefined,
+    claudeModel:
+      providerSettings.provider === 'claude'
+        ? providerSettings.claudeModel
+        : undefined,
     openRouterApiKey:
       providerSettings.provider === 'openrouter'
         ? providerSettings.openRouterApiKey

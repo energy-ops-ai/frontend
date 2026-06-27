@@ -158,11 +158,16 @@ function reduceEvent(state: AgentState, event: ServerEvent): AgentState {
     case 'agent': {
       const ev = event.event;
       switch (ev.type) {
-        case 'user_message':
+        case 'user_message': {
+          const last = state.feed[state.feed.length - 1];
+          if (state.working && last?.kind === 'user' && last.text === ev.text) {
+            return state;
+          }
           return {
             ...state,
             feed: [...state.feed, { kind: 'user', id: uid(), text: ev.text }]
           };
+        }
         case 'meta':
           return {
             ...state,
@@ -309,6 +314,7 @@ type Action =
   | { type: 'event'; event: ServerEvent }
   | { type: 'snapshot'; events: ServerEvent[] }
   | { type: 'user'; text: string }
+  | { type: 'send_error' }
   | { type: 'status'; text: string }
   | { type: 'reset' };
 
@@ -333,6 +339,12 @@ function reducer(state: AgentState, action: Action): AgentState {
         status: 'working…',
         feed: [...state.feed, { kind: 'user', id: uid(), text: action.text }]
       };
+    case 'send_error':
+      return {
+        ...state,
+        working: false,
+        status: 'message failed'
+      };
     case 'status':
       return { ...state, status: action.text };
   }
@@ -348,6 +360,8 @@ export interface PermissionAnswer {
 export function useAgentStream(
   sessionId: string,
   options: {
+    claudeApiKey?: string;
+    claudeModel?: string;
     openRouterApiKey?: string;
     azureEndpoint?: string;
     azureApiKey?: string;
@@ -407,8 +421,10 @@ export function useAgentStream(
   }, [sessionId, openStream]);
 
   useEffect(() => {
-    if (options.openRouterApiKey || options.azureApiKey) {
+    if (options.claudeApiKey || options.openRouterApiKey || options.azureApiKey) {
       void postProviderCredentials(sessionId, {
+        claudeApiKey: options.claudeApiKey,
+        claudeModel: options.claudeModel,
         openRouterApiKey: options.openRouterApiKey,
         azureEndpoint: options.azureEndpoint,
         azureApiKey: options.azureApiKey,
@@ -417,6 +433,8 @@ export function useAgentStream(
     }
   }, [
     sessionId,
+    options.claudeApiKey,
+    options.claudeModel,
     options.openRouterApiKey,
     options.azureEndpoint,
     options.azureApiKey,
@@ -425,21 +443,31 @@ export function useAgentStream(
 
   const send = useCallback(
     async (text: string, openRouterApiKey = options.openRouterApiKey) => {
-      await fetch(`/sessions/${sessionId}/message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          text,
-          openRouterApiKey,
-          azureEndpoint: options.azureEndpoint,
-          azureApiKey: options.azureApiKey,
-          azureModel: options.azureModel
-        })
-      });
-      openStream();
+      dispatch({ type: 'user', text });
+      try {
+        const res = await fetch(`/sessions/${sessionId}/message`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text,
+            claudeApiKey: options.claudeApiKey,
+            claudeModel: options.claudeModel,
+            openRouterApiKey,
+            azureEndpoint: options.azureEndpoint,
+            azureApiKey: options.azureApiKey,
+            azureModel: options.azureModel
+          })
+        });
+        if (!res.ok) throw new Error(`Message failed (${res.status})`);
+        openStream();
+      } catch {
+        dispatch({ type: 'send_error' });
+      }
     },
     [
       sessionId,
+      options.claudeApiKey,
+      options.claudeModel,
       options.openRouterApiKey,
       options.azureEndpoint,
       options.azureApiKey,

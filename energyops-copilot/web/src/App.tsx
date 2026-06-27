@@ -7,6 +7,8 @@ import { DEFAULT_THEME, isThemeId, type ThemeId } from '@/lib/themes';
 
 export interface ProviderSettings {
   provider: 'claude' | 'openrouter' | 'azure';
+  claudeModel: string;
+  claudeApiKey: string;
   openRouterModel: string;
   openRouterApiKey: string;
   azureEndpoint: string;
@@ -29,9 +31,17 @@ function App() {
   const [providerSettings, setProviderSettings] = useState<ProviderSettings>(() => ({
     provider:
       window.localStorage.getItem('energyops-provider') === 'openrouter' ||
-      window.localStorage.getItem('energyops-provider') === 'azure'
-        ? (window.localStorage.getItem('energyops-provider') as 'openrouter' | 'azure')
+      window.localStorage.getItem('energyops-provider') === 'azure' ||
+      window.localStorage.getItem('energyops-provider') === 'claude'
+        ? (window.localStorage.getItem('energyops-provider') as
+            | 'claude'
+            | 'openrouter'
+            | 'azure')
         : 'claude',
+    claudeModel:
+      window.localStorage.getItem('energyops-claude-model') ||
+      'claude-sonnet-4-5-20250929',
+    claudeApiKey: window.localStorage.getItem('energyops-claude-key') || '',
     openRouterModel:
       window.localStorage.getItem('energyops-openrouter-model') ||
       'anthropic/claude-sonnet-4',
@@ -54,8 +64,14 @@ function App() {
       'energyops-openrouter-model',
       providerSettings.openRouterModel
     );
+    window.localStorage.setItem('energyops-claude-model', providerSettings.claudeModel);
     window.localStorage.setItem('energyops-azure-endpoint', providerSettings.azureEndpoint);
     window.localStorage.setItem('energyops-azure-model', providerSettings.azureModel);
+    if (providerSettings.claudeApiKey) {
+      window.localStorage.setItem('energyops-claude-key', providerSettings.claudeApiKey);
+    } else {
+      window.localStorage.removeItem('energyops-claude-key');
+    }
     if (providerSettings.openRouterApiKey) {
       window.localStorage.setItem(
         'energyops-openrouter-key',
