@@ -72,6 +72,9 @@ if (sessionCols.length && !sessionCols.some(c => c.name === 'provider')) {
 if (sessionCols.length && !sessionCols.some(c => c.name === 'model')) {
   db.exec('ALTER TABLE sessions ADD COLUMN model TEXT');
 }
+if (sessionCols.length && !sessionCols.some(c => c.name === 'include_previous_knowledge')) {
+  db.exec('ALTER TABLE sessions ADD COLUMN include_previous_knowledge INTEGER NOT NULL DEFAULT 1');
+}
 
 const currentAnnCols = db.prepare('PRAGMA table_info(annotations)').all() as {
   name: string;
@@ -170,6 +173,7 @@ export interface SessionRow {
   sdk_session_id: string | null;
   provider: 'claude' | 'openrouter' | 'azure';
   model: string | null;
+  include_previous_knowledge: number;
   created_at: string;
   updated_at: string;
 }
@@ -180,17 +184,20 @@ export function insertSession(row: {
   name: string;
   provider?: 'claude' | 'openrouter' | 'azure';
   model?: string | null;
+  includePreviousKnowledge?: boolean;
 }): SessionRow {
   const now = new Date().toISOString();
   db.prepare(
-    `INSERT INTO sessions (id, dataset_id, name, sdk_session_id, provider, model, created_at, updated_at)
-     VALUES (?, ?, ?, NULL, ?, ?, ?, ?)`
+    `INSERT INTO sessions
+       (id, dataset_id, name, sdk_session_id, provider, model, include_previous_knowledge, created_at, updated_at)
+     VALUES (?, ?, ?, NULL, ?, ?, ?, ?, ?)`
   ).run(
     row.id,
     row.dataset_id,
     row.name,
     row.provider ?? 'claude',
     row.model ?? null,
+    row.includePreviousKnowledge === false ? 0 : 1,
     now,
     now
   );

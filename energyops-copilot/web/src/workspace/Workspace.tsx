@@ -42,6 +42,21 @@ const STATUS_DOT: Record<NodeStatus, string> = {
   missing: 'bg-fuchsia-400'
 };
 
+function formatObservedAt(value: string) {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return value;
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short'
+  }).format(new Date(timestamp));
+}
+
 function StateMetric({ item }: { item: StateSummaryItem }) {
   return (
     <div className="min-w-0 rounded-md border border-[var(--border)] bg-[var(--background)] px-3 py-2.5">
@@ -100,7 +115,7 @@ function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
           </div>
           {spec.observedAt ? (
             <div className="mt-0.5 text-[12px] text-[var(--muted-foreground)]">
-              {spec.observedAt}
+              {formatObservedAt(spec.observedAt)}
             </div>
           ) : null}
         </div>
@@ -116,11 +131,7 @@ function StateSummaryWidget({ spec }: { spec: StateSummarySpec }) {
             ) : null}
             <div className="min-w-0">
               <div
-                className={`text-[13px] font-semibold ${
-                  spec.verdict.status
-                    ? STATUS_COLOR[spec.verdict.status]
-                    : 'text-[var(--foreground)]'
-                }`}
+                className="text-[13px] font-semibold text-[var(--foreground)]"
               >
                 {spec.verdict.label}
               </div>
@@ -215,7 +226,11 @@ export function Workspace({
   const [selectedInsightId, setSelectedInsightId] = useState<string | null>(null);
   const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const [activeTopo, setActiveTopo] = useState(0);
-  const [drawer, setDrawer] = useState<ChartSpec | null>(null);
+  const [drawer, setDrawer] = useState<{
+    spec: ChartSpec;
+    nodeId: string;
+    nodeLabel: string;
+  } | null>(null);
 
   const cardRefs = useRef(new Map<string, HTMLDivElement>());
 
@@ -255,7 +270,15 @@ export function Workspace({
     const node = activeTopology?.spec.nodes.find(n => n.id === nodeId);
     if (node?.sensorId != null) {
       const spec = await getSeries(sessionId, node.sensorId).catch(() => null);
-      setDrawer(spec ?? null);
+      setDrawer(
+        spec
+          ? {
+              spec,
+              nodeId,
+              nodeLabel: node.label
+            }
+          : null
+      );
     }
   };
 
@@ -311,6 +334,7 @@ export function Workspace({
             <div className="min-h-0 flex-1 p-3">
               {activeTopology ? (
                 <TopologyWidget
+                  key={activeTopology.id}
                   spec={activeTopology.spec}
                   onNodeClick={selectNode}
                   selectionHighlight={selectedNodeIds}
@@ -334,7 +358,17 @@ export function Workspace({
                     <X />
                   </Button>
                 </div>
-                <ChartWidget spec={drawer} height={180} bare />
+                <ChartWidget
+                  spec={drawer.spec}
+                  height={180}
+                  bare
+                  selectionTarget={{
+                    sessionId,
+                    targetId: `node-chart:${drawer.nodeId}`,
+                    relatedNodeIds: [drawer.nodeId],
+                    label: drawer.nodeLabel
+                  }}
+                />
               </div>
             )}
           </div>

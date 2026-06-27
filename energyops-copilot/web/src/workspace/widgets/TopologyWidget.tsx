@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   ReactFlow,
   Background,
   Controls,
   MarkerType,
+  useNodesInitialized,
+  useReactFlow,
   type Edge,
   type Node
 } from 'reactflow';
@@ -124,6 +126,28 @@ function toNode(
   };
 }
 
+function FitViewWhenReady({ fitKey }: { fitKey: string }) {
+  const reactFlow = useReactFlow();
+  const nodesInitialized = useNodesInitialized();
+
+  useEffect(() => {
+    if (!nodesInitialized) return;
+    let frame = window.requestAnimationFrame(() => {
+      void reactFlow.fitView({ padding: 0.14, duration: 120 });
+    });
+    const timeout = window.setTimeout(() => {
+      void reactFlow.fitView({ padding: 0.14, duration: 120 });
+    }, 120);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+  }, [fitKey, nodesInitialized, reactFlow]);
+
+  return null;
+}
+
 export function TopologyWidget({
   spec,
   onNodeClick,
@@ -184,6 +208,10 @@ export function TopologyWidget({
     }));
     return { nodes: ns, edges: es };
   }, [spec, selectionHighlight, onNodeClick]);
+  const fitKey = useMemo(
+    () => `${spec.title}:${nodes.map(n => n.id).join(',')}:${edges.length}`,
+    [spec.title, nodes, edges.length]
+  );
 
   return (
     <Card className={`flex flex-col overflow-hidden p-0 ${fill ? 'h-full' : ''}`}>
@@ -195,6 +223,7 @@ export function TopologyWidget({
           nodes={nodes}
           edges={edges}
           fitView
+          fitViewOptions={{ padding: 0.14 }}
           maxZoom={Infinity}
           proOptions={{ hideAttribution: true }}
           nodesDraggable={false}
@@ -207,6 +236,7 @@ export function TopologyWidget({
         >
           <Background color="var(--border)" gap={18} />
           <Controls showInteractive={false} />
+          <FitViewWhenReady fitKey={fitKey} />
         </ReactFlow>
       </div>
     </Card>

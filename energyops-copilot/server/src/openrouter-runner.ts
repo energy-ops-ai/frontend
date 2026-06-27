@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { SYSTEM_PROMPT } from './prompt.js';
+import { getSystemPrompt } from './prompt.js';
 import { makeOpenRouterTools, type OpenRouterTool } from './openrouter-tools.js';
 import type { Bus } from './bus.js';
 import type { ToolContext } from './tools/context.js';
@@ -28,6 +28,7 @@ export interface OpenRouterRunnerOptions {
   model: string;
   apiKey?: string;
   bus: Bus;
+  includePreviousKnowledge?: boolean;
   nextWidgetId: () => string;
 }
 
@@ -64,6 +65,7 @@ export class OpenRouterRunner {
     const ctx: ToolContext = {
       datasetId: options.datasetId,
       sessionId: options.id,
+      includePreviousKnowledge: options.includePreviousKnowledge !== false,
       broadcast: options.bus.broadcast,
       nextWidgetId: options.nextWidgetId
     };
@@ -71,7 +73,7 @@ export class OpenRouterRunner {
     this.messages = [
       {
         role: 'system',
-        content: `${SYSTEM_PROMPT}\n\nYou have access to EnergyOps tools. Use them to inspect the dataset and render workspace widgets. Prefer describe_dataset first.`
+        content: `${getSystemPrompt(options.includePreviousKnowledge !== false)}\n\nYou have access to EnergyOps tools. Use them to inspect the dataset and render workspace widgets. Prefer describe_dataset first.`
       }
     ];
     this.bus.broadcast({

@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { SYSTEM_PROMPT } from './prompt.js';
+import { getSystemPrompt } from './prompt.js';
 import { makeOpenRouterTools, type OpenRouterTool } from './openrouter-tools.js';
 import type { Bus } from './bus.js';
 import type { ToolContext } from './tools/context.js';
@@ -11,6 +11,7 @@ interface AzureResponsesRunnerOptions {
   apiKey?: string;
   model: string;
   bus: Bus;
+  includePreviousKnowledge?: boolean;
   nextWidgetId: () => string;
 }
 
@@ -21,7 +22,8 @@ interface FunctionCall {
   arguments: string;
 }
 
-const defaultInstructions = `${SYSTEM_PROMPT}\n\nYou have access to EnergyOps tools. Use them to inspect the dataset and render workspace widgets. Prefer describe_dataset first.`;
+const buildInstructions = (includePreviousKnowledge: boolean) =>
+  `${getSystemPrompt(includePreviousKnowledge)}\n\nYou have access to EnergyOps tools. Use them to inspect the dataset and render workspace widgets. Prefer describe_dataset first.`;
 
 const resultText = (value: unknown): string =>
   typeof value === 'string' ? value : JSON.stringify(value);
@@ -42,6 +44,7 @@ export class AzureResponsesRunner {
   private model: string;
   private readonly bus: Bus;
   private readonly tools: OpenRouterTool[];
+  private readonly instructions: string;
   private abort?: AbortController;
   private busy = false;
   private previousResponseId: string | null = null;
@@ -52,9 +55,11 @@ export class AzureResponsesRunner {
     this.endpoint = options.endpoint;
     this.model = options.model;
     this.bus = options.bus;
+    this.instructions = buildInstructions(options.includePreviousKnowledge !== false);
     const ctx: ToolContext = {
       datasetId: options.datasetId,
       sessionId: options.id,
+      includePreviousKnowledge: options.includePreviousKnowledge !== false,
       broadcast: options.bus.broadcast,
       nextWidgetId: options.nextWidgetId
     };
@@ -189,7 +194,7 @@ export class AzureResponsesRunner {
     this.abort = new AbortController();
     const body: Record<string, unknown> = {
       model: this.model,
-      instructions: defaultInstructions,
+      instructions: this.instructions,
       input,
       stream: true,
       tools: this.tools.map(tool => ({

@@ -18,6 +18,19 @@ Refining widgets: each render tool returns a widget id. When the operator asks t
 
 Datasets vary: anomaly timing, location, and root cause are things you discover, never assume. Keep prose concise; let the widgets carry the detail. Your final chat message is shown as a small "last thought" card, so make it a very short activity summary like "Analyzed topology and found 3 insights." Avoid repeating evidence already shown in insight cards. Be explicit about what is measured vs inferred vs missing.`;
 
+export function getSystemPrompt(includePreviousKnowledge = true): string {
+  if (includePreviousKnowledge) return SYSTEM_PROMPT;
+  return SYSTEM_PROMPT
+    .replace(
+      '3. Check get_annotations for operator knowledge about the entities involved, and ground your explanation in it. Always consider whether an apparent anomaly is actually a data-quality issue.',
+      '3. Previous knowledge is disabled for this analysis. Do not use saved annotations, saved decisions, or prior operator memory; base the analysis only on the dataset, topology, current chat, and tool results available in this session. Always consider whether an apparent anomaly is actually a data-quality issue.'
+    )
+    .replace(
+      ' Add a "have we seen this before?" question when relevant.',
+      ' Do not add a "have we seen this before?" question.'
+    );
+}
+
 // Sent when an operator starts a session without typing a prompt.
 export const DEFAULT_ANALYSIS_PROMPT =
   'Give me a general analysis of this system: explain how it is laid out, show the topology, surface anything unusual or any data-quality issues, and finish with the key insight I should know.';

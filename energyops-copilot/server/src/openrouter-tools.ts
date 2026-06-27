@@ -35,7 +35,8 @@ const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : u
 const strArray = (v: unknown) => (Array.isArray(v) ? v.filter(x => typeof x === 'string') : undefined);
 const numArray = (v: unknown) => (Array.isArray(v) ? v.filter(x => typeof x === 'number') : undefined);
 
-function enrichNodes(datasetId: string, nodes: TopoNode[]) {
+function enrichNodes(datasetId: string, nodes: TopoNode[], includePreviousKnowledge = true) {
+  if (!includePreviousKnowledge) return nodes;
   const ann = annotationsBySensor(datasetId);
   return nodes.map(n => ({
     ...n,
@@ -141,9 +142,10 @@ const stateSectionSchema = objectSchema({
 
 export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
   const { datasetId, sessionId } = ctx;
+  const includePreviousKnowledge = ctx.includePreviousKnowledge !== false;
   const newId = () => ctx.nextWidgetId();
 
-  return [
+  const tools: OpenRouterTool[] = [
     {
       name: 'describe_dataset',
       description: 'Inspect available tables, columns, row counts, time ranges, and topology diagrams. Call this first.',
@@ -174,7 +176,9 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
     },
     {
       name: 'get_topology',
-      description: 'Get a topology diagram with nodes and edges. Omit diagram_id for the default.',
+      description: includePreviousKnowledge
+        ? 'Get a topology diagram with nodes and edges. Omit diagram_id for the default. Operator annotations are merged onto nodes.'
+        : 'Get a topology diagram with nodes and edges. Omit diagram_id for the default.',
       parameters: objectSchema({ diagram_id: textProp }),
       execute: async input => {
         const diagram = getDiagram(datasetId, str(input.diagram_id) || undefined);
@@ -182,7 +186,7 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
         return json({
           id: diagram.id,
           name: diagram.name,
-          nodes: enrichNodes(datasetId, diagram.nodes),
+          nodes: enrichNodes(datasetId, diagram.nodes, includePreviousKnowledge),
           edges: diagram.edges,
           available: listDiagrams(datasetId)
         });
@@ -200,7 +204,11 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
           ? (str(input.direction) as 'up' | 'down' | 'both')
           : 'both';
         const sub = neighbors(datasetId, str(input.diagram_id) || undefined, str(input.node_id), num(input.depth) ?? 1, direction);
-        return json({ node_id: str(input.node_id), nodes: enrichNodes(datasetId, sub.nodes), edges: sub.edges });
+        return json({
+          node_id: str(input.node_id),
+          nodes: enrichNodes(datasetId, sub.nodes, includePreviousKnowledge),
+          edges: sub.edges
+        });
       }
     },
     {
@@ -235,7 +243,9 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
     },
     {
       name: 'render_topology',
-      description: 'Render a topology graph in the workspace. Use from_diagram plus highlight/statuses, or provide nodes and edges.',
+      description: includePreviousKnowledge
+        ? 'Render a topology graph in the workspace. Use from_diagram plus highlight/statuses, or provide nodes and edges. Operator annotations are merged in automatically.'
+        : 'Render a topology graph in the workspace. Use from_diagram plus highlight/statuses, or provide nodes and edges.',
       parameters: objectSchema({ title: textProp, from_diagram: textProp, nodes: arrayProp, edges: arrayProp, highlight: arrayProp, statuses: arrayProp, collapsedGroups: arrayProp, replaceId: textProp }, ['title']),
       execute: async input => {
         let nodes = Array.isArray(input.nodes) ? (input.nodes as TopologySpec['nodes']) : [];
@@ -265,8 +275,10 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
           );
           nodes = nodes.map(n => (byId.has(n.id) ? { ...n, status: byId.get(n.id) } : n));
         }
-        const ann = annotationsBySensor(datasetId);
-        nodes = nodes.map(n => (n.sensorId !== undefined && ann.has(n.sensorId) ? { ...n, annotation: ann.get(n.sensorId) } : n));
+        if (includePreviousKnowledge) {
+          const ann = annotationsBySensor(datasetId);
+          nodes = nodes.map(n => (n.sensorId !== undefined && ann.has(n.sensorId) ? { ...n, annotation: ann.get(n.sensorId) } : n));
+        }
         const spec: TopologySpec = {
           title: str(input.title, 'Topology'),
           nodes,
@@ -399,4 +411,7 @@ export function makeOpenRouterTools(ctx: ToolContext): OpenRouterTool[] {
         )
     }
   ];
+  return includePreviousKnowledge
+    ? tools
+    : tools.filter(tool => tool.name !== 'get_annotations');
 }

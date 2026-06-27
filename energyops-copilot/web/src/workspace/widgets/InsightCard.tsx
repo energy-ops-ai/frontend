@@ -87,7 +87,7 @@ export function InsightCard({
 }) {
   const sev = SEVERITY[spec.severity];
   const [precedent, setPrecedent] = useState<Decision[]>([]);
-  const [showChart, setShowChart] = useState(false);
+  const [showChart, setShowChart] = useState(true);
   const [pending, setPending] = useState<null | 'override' | 'dismiss'>(null);
   const [rationale, setRationale] = useState('');
   const [busy, setBusy] = useState(false);

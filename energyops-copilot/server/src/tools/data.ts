@@ -20,6 +20,7 @@ const jsonText = (obj: unknown) => ({
 
 export function dataTools(ctx: ToolContext) {
   const { datasetId } = ctx;
+  const includePreviousKnowledge = ctx.includePreviousKnowledge !== false;
 
   async function describeDataset() {
     const duck = await getDuck(datasetId);
@@ -70,6 +71,7 @@ export function dataTools(ctx: ToolContext) {
   }
 
   function enrichNodes(nodes: TopoNode[]) {
+    if (!includePreviousKnowledge) return nodes;
     const ann = annotationsBySensor(datasetId);
     return nodes.map(n => ({
       ...n,
@@ -138,7 +140,9 @@ export function dataTools(ctx: ToolContext) {
 
     tool(
       'get_topology',
-      'Get a topology diagram that ships with the dataset (nodes with id/label/sensorId/role/branch/position, plus edges). Omit diagram_id for the default. Operator annotations are merged onto nodes. Pass the result to render_topology to visualise it.',
+      includePreviousKnowledge
+        ? 'Get a topology diagram that ships with the dataset (nodes with id/label/sensorId/role/branch/position, plus edges). Omit diagram_id for the default. Operator annotations are merged onto nodes. Pass the result to render_topology to visualise it.'
+        : 'Get a topology diagram that ships with the dataset (nodes with id/label/sensorId/role/branch/position, plus edges). Omit diagram_id for the default. Pass the result to render_topology to visualise it.',
       { diagram_id: z.string().optional() },
       async ({ diagram_id }) => {
         const diagram = getDiagram(datasetId, diagram_id);

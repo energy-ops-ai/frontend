@@ -15,7 +15,7 @@ import { Bus } from './bus.js';
 import { makeEoTools } from './tools/index.js';
 import { AzureResponsesRunner } from './azure-responses-runner.js';
 import { OpenRouterRunner } from './openrouter-runner.js';
-import { SYSTEM_PROMPT } from './prompt.js';
+import { getSystemPrompt } from './prompt.js';
 import type { ServerEvent } from './types.js';
 import {
   insertSession,
@@ -39,6 +39,7 @@ export interface SessionOptions {
   openRouterApiKey?: string;
   azureApiKey?: string;
   azureEndpoint?: string;
+  includePreviousKnowledge?: boolean;
   resume?: string | null;
 }
 
@@ -73,6 +74,7 @@ export class Session {
   readonly datasetId: string;
   readonly provider: AgentProvider;
   readonly model: string | null;
+  readonly includePreviousKnowledge: boolean;
   readonly bus: Bus;
   sdkSessionId: string | null = null;
 
@@ -94,6 +96,7 @@ export class Session {
     this.datasetId = datasetId;
     this.provider = options.provider ?? 'claude';
     this.model = options.model ?? null;
+    this.includePreviousKnowledge = options.includePreviousKnowledge !== false;
     this.bus = new Bus(getSessionEvents(id), event =>
       appendSessionEvent(this.id, event)
     );
@@ -115,6 +118,7 @@ export class Session {
         model: this.model ?? 'anthropic/claude-sonnet-4',
         apiKey: options.openRouterApiKey,
         bus: this.bus,
+        includePreviousKnowledge: this.includePreviousKnowledge,
         nextWidgetId: () => `w${++this.widgetSeq}`
       });
       return;
@@ -127,6 +131,7 @@ export class Session {
         model: this.model ?? 'gpt-5.4',
         apiKey: options.azureApiKey,
         bus: this.bus,
+        includePreviousKnowledge: this.includePreviousKnowledge,
         nextWidgetId: () => `w${++this.widgetSeq}`
       });
       return;
@@ -135,6 +140,7 @@ export class Session {
     const tools = makeEoTools({
       datasetId,
       sessionId: id,
+      includePreviousKnowledge: this.includePreviousKnowledge,
       broadcast: this.bus.broadcast,
       nextWidgetId: () => `w${++this.widgetSeq}`
     });
@@ -142,7 +148,7 @@ export class Session {
     this.handle = query({
       prompt: this.inputQueue,
       options: {
-        systemPrompt: { type: 'preset', preset: 'claude_code', append: SYSTEM_PROMPT },
+        systemPrompt: { type: 'preset', preset: 'claude_code', append: getSystemPrompt(this.includePreviousKnowledge) },
         mcpServers: { eo: tools },
         includePartialMessages: true,
         canUseTool: this.canUseTool,
@@ -226,19 +232,23 @@ export class Session {
     const prefix: string[] = [];
     if (this.firstMessage) {
       this.firstMessage = false;
-      const prior = getDecisions({ datasetId: this.datasetId, limit: 10 });
-      if (prior.length) {
-        const lines = prior.map(
-          d =>
-            `- ${d.decision_type} "${d.insight_title}"${d.rationale ? `: ${d.rationale}` : ''}`
-        );
-        prefix.push(
-          `Prior operator decisions for this dataset (most recent first):\n${lines.join('\n')}`
-        );
+      if (this.includePreviousKnowledge) {
+        const prior = getDecisions({ datasetId: this.datasetId, limit: 10 });
+        if (prior.length) {
+          const lines = prior.map(
+            d =>
+              `- ${d.decision_type} "${d.insight_title}"${d.rationale ? `: ${d.rationale}` : ''}`
+          );
+          prefix.push(
+            `Prior operator decisions for this dataset (most recent first):\n${lines.join('\n')}`
+          );
+        }
       }
     }
-    if (this.pendingContext.length) {
+    if (this.includePreviousKnowledge && this.pendingContext.length) {
       prefix.push(...this.pendingContext);
+      this.pendingContext = [];
+    } else if (!this.includePreviousKnowledge) {
       this.pendingContext = [];
     }
 
@@ -317,7 +327,8 @@ export function createSession(
     dataset_id: datasetId,
     name,
     provider: options.provider ?? 'claude',
-    model: options.model ?? null
+    model: options.model ?? null,
+    includePreviousKnowledge: options.includePreviousKnowledge
   });
   const s = new Session(id, datasetId, options);
   live.set(id, s);
@@ -341,6 +352,7 @@ export function getSessionWithOptions(
     provider: row.provider ?? 'claude',
     model: options.model ?? row.model ?? undefined,
     claudeApiKey: options.claudeApiKey,
+    includePreviousKnowledge: row.include_previous_knowledge !== 0,
     resume: row.sdk_session_id ?? undefined
   });
   live.set(id, s);

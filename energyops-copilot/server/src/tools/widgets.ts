@@ -130,12 +130,15 @@ async function buildChartFromQuery(
 
 export function widgetTools(ctx: ToolContext) {
   const { datasetId } = ctx;
+  const includePreviousKnowledge = ctx.includePreviousKnowledge !== false;
   const newId = () => ctx.nextWidgetId();
 
   return [
     tool(
       'render_topology',
-      'Render a topology graph in the workspace. Easiest path: pass `from_diagram` (a diagram id from get_topology) to seed all nodes/edges/positions, then use `highlight` and `statuses` to spotlight or flag nodes. For a simplified/custom view, pass your own `nodes` and `edges` instead. Operator annotations are merged in automatically.',
+      includePreviousKnowledge
+        ? 'Render a topology graph in the workspace. Easiest path: pass `from_diagram` (a diagram id from get_topology) to seed all nodes/edges/positions, then use `highlight` and `statuses` to spotlight or flag nodes. For a simplified/custom view, pass your own `nodes` and `edges` instead. Operator annotations are merged in automatically.'
+        : 'Render a topology graph in the workspace. Easiest path: pass `from_diagram` (a diagram id from get_topology) to seed all nodes/edges/positions, then use `highlight` and `statuses` to spotlight or flag nodes. For a simplified/custom view, pass your own `nodes` and `edges` instead.',
       {
         title: z.string(),
         from_diagram: z
@@ -183,12 +186,14 @@ export function widgetTools(ctx: ToolContext) {
           );
         }
 
-        const annById = annotationsBySensor(datasetId);
-        nodes = nodes.map(n =>
-          n.sensorId !== undefined && annById.has(n.sensorId)
-            ? { ...n, annotation: annById.get(n.sensorId) }
-            : n
-        );
+        if (includePreviousKnowledge) {
+          const annById = annotationsBySensor(datasetId);
+          nodes = nodes.map(n =>
+            n.sensorId !== undefined && annById.has(n.sensorId)
+              ? { ...n, annotation: annById.get(n.sensorId) }
+              : n
+          );
+        }
 
         const spec: TopologySpec = {
           title: input.title,

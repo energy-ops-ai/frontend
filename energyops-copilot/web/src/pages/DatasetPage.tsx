@@ -83,6 +83,7 @@ export function DatasetPage({
   const [prompt, setPrompt] = useState('');
   const [rangeFrom, setRangeFrom] = useState('');
   const [rangeTo, setRangeTo] = useState('');
+  const [includePreviousKnowledge, setIncludePreviousKnowledge] = useState(true);
   const [starting, setStarting] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<SessionRow | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -244,7 +245,8 @@ export function DatasetPage({
           : undefined,
         providerSettings.provider === 'claude'
           ? providerSettings.claudeApiKey
-          : undefined
+          : undefined,
+        includePreviousKnowledge
       );
       onOpenSession(id);
     } catch {
@@ -348,7 +350,7 @@ export function DatasetPage({
                     />
                   </label>
                 </div>
-                <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                   <div className="text-[12px] text-[var(--muted-foreground)]">
                     Provider:{' '}
                     <span className="font-medium text-[var(--foreground)]">
@@ -359,6 +361,17 @@ export function DatasetPage({
                           : `Claude · ${providerSettings.claudeModel || 'model not set'}`}
                     </span>
                   </div>
+                  <label className="flex items-center gap-2 text-[12px]">
+                    <input
+                      type="checkbox"
+                      checked={includePreviousKnowledge}
+                      onChange={e => setIncludePreviousKnowledge(e.target.checked)}
+                      className="h-4 w-4 rounded border border-[var(--input)] accent-[var(--primary)]"
+                    />
+                    <span className="font-medium text-[var(--foreground)]">
+                      Include previous knowledge
+                    </span>
+                  </label>
                   <Button variant="primary" onClick={start} disabled={starting}>
                     <Play size={15} /> {starting ? 'Starting…' : 'Start analysis'}
                   </Button>

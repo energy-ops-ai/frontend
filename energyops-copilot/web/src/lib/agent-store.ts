@@ -314,6 +314,7 @@ type Action =
   | { type: 'event'; event: ServerEvent }
   | { type: 'snapshot'; events: ServerEvent[] }
   | { type: 'user'; text: string }
+  | { type: 'live_start' }
   | { type: 'send_error' }
   | { type: 'status'; text: string }
   | { type: 'reset' };
@@ -345,6 +346,12 @@ function reducer(state: AgentState, action: Action): AgentState {
         working: false,
         status: 'message failed'
       };
+    case 'live_start':
+      return {
+        ...state,
+        working: true,
+        status: 'working...'
+      };
     case 'status':
       return { ...state, status: action.text };
   }
@@ -371,6 +378,16 @@ export function useAgentStream(
   const [state, dispatch] = useReducer(reducer, initialState);
   const esRef = useRef<EventSource | null>(null);
 
+  const restoreSnapshot = useCallback(async () => {
+    const snapshot = await getSessionSnapshot(sessionId);
+    if (!snapshot.live) {
+      dispatch({ type: 'reset' });
+      dispatch({ type: 'snapshot', events: snapshot.events });
+      return true;
+    }
+    return false;
+  }, [sessionId]);
+
   const openStream = useCallback(() => {
     if (esRef.current) return;
     // The SSE endpoint replays the FULL history on connect and then streams
@@ -379,9 +396,9 @@ export function useAgentStream(
     // already-hydrated snapshot — which doubled tool cards (duplicate React
     // keys) and desynced widgets (the topology "disappearing").
     dispatch({ type: 'reset' });
+    dispatch({ type: 'live_start' });
     const es = new EventSource(`/sessions/${sessionId}/events`);
     esRef.current = es;
-    es.onopen = () => dispatch({ type: 'status', text: 'ready' });
     es.onmessage = e => {
       if (!e.data) return;
       dispatch({ type: 'event', event: JSON.parse(e.data) as ServerEvent });
@@ -389,9 +406,13 @@ export function useAgentStream(
     es.onerror = () => {
       es.close();
       esRef.current = null;
-      dispatch({ type: 'status', text: 'stream disconnected' });
+      void restoreSnapshot()
+        .then(restored => {
+          if (!restored) dispatch({ type: 'status', text: 'stream disconnected' });
+        })
+        .catch(() => dispatch({ type: 'status', text: 'stream disconnected' }));
     };
-  }, [sessionId]);
+  }, [sessionId, restoreSnapshot]);
 
   useEffect(() => {
     dispatch({ type: 'reset' });

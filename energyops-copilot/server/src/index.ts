@@ -210,6 +210,7 @@ app.post('/datasets/:id/sessions', async c => {
       openRouterApiKey?: string;
       azureEndpoint?: string;
       azureApiKey?: string;
+      includePreviousKnowledge?: boolean;
     }>()
     .catch(
       () =>
@@ -223,6 +224,7 @@ app.post('/datasets/:id/sessions', async c => {
           openRouterApiKey?: string;
           azureEndpoint?: string;
           azureApiKey?: string;
+          includePreviousKnowledge?: boolean;
         }
     );
   const provider =
@@ -242,7 +244,8 @@ app.post('/datasets/:id/sessions', async c => {
     claudeApiKey: body.claudeApiKey,
     openRouterApiKey: body.openRouterApiKey,
     azureEndpoint: body.azureEndpoint,
-    azureApiKey: body.azureApiKey
+    azureApiKey: body.azureApiKey,
+    includePreviousKnowledge: body.includePreviousKnowledge !== false
   });
   const initialPrompt = body.prompt?.trim() ? body.prompt : DEFAULT_ANALYSIS_PROMPT;
   session.send(withAnalysisRange(initialPrompt, body.range), {
@@ -412,11 +415,13 @@ app.post('/sessions/:id/decision', async c => {
     impact: body.impact ?? null
   });
   // Make the agent aware on its next turn (no tool call needed).
-  s.noteDecision(
-    `Operator decision on insight "${decision.insight_title}": ${decisionType}` +
-      (decision.rationale ? ` — ${decision.rationale}` : '') +
-      '.'
-  );
+  if (s.includePreviousKnowledge) {
+    s.noteDecision(
+      `Operator decision on insight "${decision.insight_title}": ${decisionType}` +
+        (decision.rationale ? ` — ${decision.rationale}` : '') +
+        '.'
+    );
+  }
   return c.json(decision);
 });
 

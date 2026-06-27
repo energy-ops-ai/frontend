@@ -22,6 +22,7 @@ export interface SessionRow {
   sdk_session_id: string | null;
   provider?: 'claude' | 'openrouter' | 'azure';
   model?: string | null;
+  include_previous_knowledge?: number;
   created_at: string;
   updated_at: string;
 }
@@ -107,6 +108,19 @@ export const getTableRows = (
 export const getDatasetAnnotations = (datasetId: string) =>
   getJSON<Annotation[]>(`/datasets/${datasetId}/annotations`);
 
+export async function postAnnotation(
+  sessionId: string,
+  body: { kind: AnnotationKind; id: string; text: string }
+): Promise<Annotation> {
+  const res = await fetch(`/sessions/${sessionId}/annotation`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`annotation -> ${res.status}`);
+  return res.json() as Promise<Annotation>;
+}
+
 export async function startSession(
   datasetId: string,
   prompt?: string,
@@ -116,7 +130,8 @@ export async function startSession(
   openRouterApiKey?: string,
   azureEndpoint?: string,
   azureApiKey?: string,
-  claudeApiKey?: string
+  claudeApiKey?: string,
+  includePreviousKnowledge?: boolean
 ): Promise<string> {
   const res = await fetch(`/datasets/${datasetId}/sessions`, {
     method: 'POST',
@@ -129,7 +144,8 @@ export async function startSession(
       openRouterApiKey,
       azureEndpoint,
       azureApiKey,
-      claudeApiKey
+      claudeApiKey,
+      includePreviousKnowledge
     })
   });
   const { id } = (await res.json()) as { id: string };

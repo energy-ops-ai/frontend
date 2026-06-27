@@ -9,14 +9,16 @@ import { annotationTools } from './annotations.js';
 import type { ToolContext } from './context.js';
 
 export function makeEoTools(ctx: ToolContext) {
+  const tools = [
+    ...dataTools(ctx),
+    ...scanTools(ctx),
+    ...widgetTools(ctx),
+    ...(ctx.includePreviousKnowledge === false ? [] : annotationTools(ctx))
+  ];
+
   return createSdkMcpServer({
     name: 'eo',
     version: '0.3.0',
-    tools: [
-      ...dataTools(ctx),
-      ...scanTools(ctx),
-      ...widgetTools(ctx),
-      ...annotationTools(ctx)
-    ]
+    tools
   });
 }
