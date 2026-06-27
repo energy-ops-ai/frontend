@@ -31,6 +31,32 @@ const fmtTick = (v: string) => {
   return m ? `${m[1]}-${m[2]} ${m[3]}:00` : v;
 };
 
+// Compute a y-axis domain that hugs the data instead of anchoring at 0.
+// Padding scales with the data's spread (standard deviation) so flat series
+// stay tight and volatile series get more breathing room.
+function axisDomain(
+  spec: ChartSpec,
+  axisId: 'left' | 'right'
+): [number, number] | undefined {
+  const values: number[] = [];
+  for (const s of spec.series) {
+    if ((s.axis ?? 'left') !== axisId) continue;
+    for (const v of s.data) if (typeof v === 'number' && isFinite(v)) values.push(v);
+  }
+  if (values.length === 0) return undefined;
+
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const mean = values.reduce((a, b) => a + b, 0) / values.length;
+  const variance =
+    values.reduce((a, b) => a + (b - mean) ** 2, 0) / values.length;
+  const std = Math.sqrt(variance);
+
+  // Pad by a fraction of the spread; fall back to a sliver when the series is flat.
+  const pad = std > 0 ? std * 0.4 : Math.max(Math.abs(max) * 0.02, 1);
+  return [min - pad, max + pad];
+}
+
 function seriesElement(
   s: ChartSpec['series'][number],
   i: number,
@@ -95,6 +121,9 @@ export function ChartWidget({
   const fallback: ChartType = spec.chartType ?? 'line';
   const hasRight = spec.series.some(s => s.axis === 'right');
   const axisTick = { fill: 'var(--muted-foreground)', fontSize: 11 };
+  // Bar charts read best from a zero baseline; only tighten line/area/scatter.
+  const leftDomain = fallback === 'bar' ? undefined : axisDomain(spec, 'left');
+  const rightDomain = fallback === 'bar' ? undefined : axisDomain(spec, 'right');
 
   const chart = (
     <div style={{ height }}>
@@ -107,9 +136,22 @@ export function ChartWidget({
             tick={axisTick}
             minTickGap={32}
           />
-          <YAxis yAxisId="left" tick={axisTick} width={48} />
+          <YAxis
+            yAxisId="left"
+            tick={axisTick}
+            width={48}
+            domain={leftDomain ?? ['auto', 'auto']}
+            allowDataOverflow={false}
+          />
           {hasRight && (
-            <YAxis yAxisId="right" orientation="right" tick={axisTick} width={48} />
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tick={axisTick}
+              width={48}
+              domain={rightDomain ?? ['auto', 'auto']}
+              allowDataOverflow={false}
+            />
           )}
           <Tooltip
             contentStyle={{
