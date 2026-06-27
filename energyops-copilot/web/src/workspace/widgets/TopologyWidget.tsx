@@ -45,7 +45,10 @@ function layout(spec: TopologySpec): Node[] {
   dagre.layout(g);
   return spec.nodes.map(n => {
     const p = g.node(n.id);
-    return toNode(n, p ? { x: p.x - NODE_W / 2, y: p.y - NODE_H / 2 } : undefined);
+    return toNode(
+      n,
+      p ? { x: p.x - NODE_W / 2, y: p.y - NODE_H / 2 } : undefined
+    );
   });
 }
 
@@ -53,7 +56,7 @@ function toNode(
   n: TopologySpec['nodes'][number],
   pos?: { x: number; y: number }
 ): Node {
-  const highlighted = false; // set below via highlight set
+  const highlighted = false;
   const status = n.status;
   return {
     id: n.id,
@@ -69,19 +72,19 @@ function toNode(
             </div>
           )}
           {n.annotation && (
-            <div style={{ fontSize: 10, color: '#fbbf24' }}>📝 note</div>
+            <div style={{ fontSize: 10, color: 'var(--accent)' }}>note</div>
           )}
         </div>
       )
     },
     style: {
       width: NODE_W,
-      background: status ? STATUS_BG[status] : '#27272a',
-      color: '#e5e5e5',
-      border: `1px solid ${status ? STATUS_BORDER[status] : '#3f3f46'}`,
+      background: status ? STATUS_BG[status] : 'var(--secondary)',
+      color: 'var(--foreground)',
+      border: `1px solid ${status ? STATUS_BORDER[status] : 'var(--border)'}`,
       borderRadius: 8,
       padding: 6,
-      boxShadow: highlighted ? '0 0 0 2px #d97757' : undefined
+      boxShadow: highlighted ? '0 0 0 2px var(--accent)' : undefined
     },
     sourcePosition: 'right' as never,
     targetPosition: 'left' as never
@@ -95,7 +98,7 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
       highlight.has(node.id)
         ? {
             ...node,
-            style: { ...node.style, boxShadow: '0 0 0 2px #d97757' }
+            style: { ...node.style, boxShadow: '0 0 0 2px var(--accent)' }
           }
         : node
     );
@@ -105,16 +108,21 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
       target: e.target,
       label: e.label,
       animated: e.emphasis,
-      style: { stroke: e.emphasis ? '#d97757' : '#52525b' },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#52525b' },
-      labelStyle: { fill: '#a1a1aa', fontSize: 10 }
+      style: {
+        stroke: e.emphasis ? 'var(--accent)' : 'var(--muted-foreground)'
+      },
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        color: 'var(--muted-foreground)'
+      },
+      labelStyle: { fill: 'var(--muted-foreground)', fontSize: 10 }
     }));
     return { nodes: ns, edges: es };
   }, [spec]);
 
   return (
-    <Card className="p-0 overflow-hidden">
-      <div className="border-b border-neutral-700/60 px-4 py-2.5 text-sm font-semibold text-neutral-200">
+    <Card className="overflow-hidden p-0">
+      <div className="border-b border-[var(--border)] px-4 py-2.5 text-sm font-semibold text-[var(--foreground)]">
         {spec.title}
       </div>
       <div style={{ height: 360 }}>
@@ -127,7 +135,7 @@ export function TopologyWidget({ spec }: { spec: TopologySpec }) {
           nodesConnectable={false}
           elementsSelectable={false}
         >
-          <Background color="#3f3f46" gap={18} />
+          <Background color="var(--border)" gap={18} />
           <Controls showInteractive={false} />
         </ReactFlow>
       </div>

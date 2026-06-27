@@ -13,7 +13,14 @@ import {
 import type { ChartSpec } from '@shared/types';
 import { Card } from '@/components/ui';
 
-const COLORS = ['#d97757', '#0ea5e9', '#10b981', '#f59e0b', '#a78bfa', '#f472b6'];
+const COLORS = [
+  'var(--chart-1)',
+  'var(--chart-2)',
+  'var(--chart-3)',
+  'var(--chart-4)',
+  'var(--chart-5)',
+  '#f472b6'
+];
 
 const fmtTick = (v: string) => {
   // Shorten ISO timestamps to "MM-DD HH:00"; leave other labels as-is.
@@ -34,10 +41,10 @@ export function ChartWidget({ spec }: { spec: ChartSpec }) {
 
   return (
     <Card className="p-4">
-      <div className="mb-2 text-sm font-semibold text-neutral-200">
+      <div className="mb-2 text-sm font-semibold text-[var(--foreground)]">
         {spec.title}
         {spec.unit ? (
-          <span className="ml-2 text-xs font-normal text-neutral-500">
+          <span className="ml-2 text-xs font-normal text-[var(--muted-foreground)]">
             ({spec.unit})
           </span>
         ) : null}
@@ -45,18 +52,18 @@ export function ChartWidget({ spec }: { spec: ChartSpec }) {
       <div style={{ height: 280 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
-            <CartesianGrid stroke="#27272a" strokeDasharray="3 3" />
+            <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
             <XAxis
               dataKey="x"
               tickFormatter={fmtTick}
-              tick={{ fill: '#a1a1aa', fontSize: 11 }}
+              tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
               minTickGap={32}
             />
-            <YAxis tick={{ fill: '#a1a1aa', fontSize: 11 }} width={48} />
+            <YAxis tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }} width={48} />
             <Tooltip
               contentStyle={{
-                background: '#18181b',
-                border: '1px solid #3f3f46',
+                background: 'var(--panel-strong)',
+                border: '1px solid var(--border)',
                 borderRadius: 8,
                 fontSize: 12
               }}
@@ -68,9 +75,9 @@ export function ChartWidget({ spec }: { spec: ChartSpec }) {
                 key={i}
                 x1={b.from}
                 x2={b.to}
-                fill="#d97757"
+                fill="var(--accent)"
                 fillOpacity={0.12}
-                label={{ value: b.label, fill: '#d97757', fontSize: 11 }}
+                label={{ value: b.label, fill: 'var(--accent)', fontSize: 11 }}
               />
             ))}
             {spec.series.map((s, i) => (

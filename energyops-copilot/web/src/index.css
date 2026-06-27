@@ -2,7 +2,109 @@
 
 :root {
   color-scheme: dark;
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --card: #18181b99;
+  --card-foreground: #f4f4f5;
+  --popover: #18181b;
+  --popover-foreground: #f4f4f5;
+  --primary: #d97757;
+  --primary-foreground: #ffffff;
+  --secondary: #27272a;
+  --secondary-foreground: #f4f4f5;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
   --accent: #d97757;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #3f3f46;
+  --input: #3f3f46;
+  --ring: #d97757;
+  --chart-1: #d97757;
+  --chart-2: #0ea5e9;
+  --chart-3: #10b981;
+  --chart-4: #f59e0b;
+  --chart-5: #a78bfa;
+  --panel: #18181b66;
+  --panel-strong: #18181b;
+}
+
+[data-theme='grid'] {
+  --background: #080b12;
+  --foreground: #e5edf7;
+  --card: #111827cc;
+  --card-foreground: #e5edf7;
+  --primary: #38bdf8;
+  --primary-foreground: #04111d;
+  --secondary: #1f2937;
+  --secondary-foreground: #e5edf7;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #38bdf8;
+  --destructive: #f43f5e;
+  --border: #374151;
+  --input: #374151;
+  --ring: #38bdf8;
+  --chart-1: #38bdf8;
+  --chart-2: #22c55e;
+  --chart-3: #f97316;
+  --chart-4: #c084fc;
+  --chart-5: #f472b6;
+  --panel: #11182799;
+  --panel-strong: #111827;
+}
+
+[data-theme='field'] {
+  --background: #0d120b;
+  --foreground: #edf7e5;
+  --card: #1a2417cc;
+  --card-foreground: #edf7e5;
+  --primary: #84cc16;
+  --primary-foreground: #142006;
+  --secondary: #273321;
+  --secondary-foreground: #edf7e5;
+  --muted: #273321;
+  --muted-foreground: #aebca7;
+  --accent: #84cc16;
+  --destructive: #ef4444;
+  --border: #3d4a35;
+  --input: #3d4a35;
+  --ring: #84cc16;
+  --chart-1: #84cc16;
+  --chart-2: #06b6d4;
+  --chart-3: #f59e0b;
+  --chart-4: #fb7185;
+  --chart-5: #a78bfa;
+  --panel: #1a241799;
+  --panel-strong: #1a2417;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+  --background: #f8fafc;
+  --foreground: #111827;
+  --card: #ffffffd9;
+  --card-foreground: #111827;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #e5e7eb;
+  --secondary-foreground: #111827;
+  --muted: #e5e7eb;
+  --muted-foreground: #64748b;
+  --accent: #2563eb;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #cbd5e1;
+  --input: #cbd5e1;
+  --ring: #2563eb;
+  --chart-1: #2563eb;
+  --chart-2: #059669;
+  --chart-3: #d97706;
+  --chart-4: #7c3aed;
+  --chart-5: #db2777;
+  --panel: #ffffffb3;
+  --panel-strong: #ffffff;
 }
 
 html,
@@ -14,6 +116,8 @@ body,
 body {
   margin: 0;
   font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 /* thin scrollbars for the chat + workspace columns */
