@@ -1,3 +1,7 @@
 .env
 .venv
 node_modules
+track1Dataset
+energyops_copilot_dataset_anonymized
+others
+dist

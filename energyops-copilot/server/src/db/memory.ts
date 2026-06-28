@@ -3,8 +3,11 @@
 
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import Database from 'better-sqlite3';
 import type { ServerEvent } from '../types.js';
+import { datasetDir } from './datasets.js';
 
 const DB_PATH = process.env.MEMORY_DB
   ? process.env.MEMORY_DB
@@ -133,12 +136,50 @@ export function setAnnotation(
   return row;
 }
 
+// One-time seed of operator knowledge shipped with a dataset. If the dataset
+// folder has an annotations.json and no annotations exist yet for it, load them.
+// Additive and idempotent: never overwrites annotations a user has since added.
+const seededDatasets = new Set<string>();
+const countStmt = db.prepare(
+  'SELECT count(*) AS n FROM annotations WHERE dataset_id = ?'
+);
+
+function ensureAnnotationsSeeded(datasetId: string): void {
+  if (seededDatasets.has(datasetId)) return;
+  seededDatasets.add(datasetId);
+  const dir = datasetDir(datasetId);
+  if (!dir) return;
+  const file = path.join(dir, 'annotations.json');
+  if (!existsSync(file)) return;
+  if (Number((countStmt.get(datasetId) as { n: number }).n) > 0) return;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(readFileSync(file, 'utf8'));
+  } catch {
+    return;
+  }
+  if (!Array.isArray(parsed)) return;
+  for (const raw of parsed) {
+    const a = raw as Partial<Annotation> & { target_kind?: string };
+    if (!a?.target_kind || a.target_id == null || !a.text) continue;
+    upsertStmt.run({
+      dataset_id: datasetId,
+      target_kind: a.target_kind,
+      target_id: String(a.target_id),
+      text: String(a.text),
+      source_session_id: null,
+      updated_at: a.updated_at ?? new Date().toISOString()
+    });
+  }
+}
+
 export function getAnnotations(filter: {
   datasetId: string;
   kind?: AnnotationKind;
   id?: string;
 }): Annotation[] {
   const { datasetId, kind, id } = filter;
+  ensureAnnotationsSeeded(datasetId);
   if (kind && id) {
     return db
       .prepare(

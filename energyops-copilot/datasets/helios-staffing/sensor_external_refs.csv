@@ -1,0 +1,25 @@
+sensor_id,source,external_id,external_key,label
+950001,helios-track1,HELIOS-950001,operative_need,Operative staffing need (realized)
+950002,helios-track1,HELIOS-950002,total_staffing,Total on-site staffing
+950010,helios-track1,HELIOS-950010,picks_volume,Picks volume
+950011,helios-track1,HELIOS-950011,outbound_volume,Outbound pallets volume
+950012,helios-track1,HELIOS-950012,inbound_volume,Inbound pallets volume
+951001,helios-track1,HELIOS-951001,unloading,Unloading — planned
+951002,helios-track1,HELIOS-951002,receiving,Receiving — planned
+951003,helios-track1,HELIOS-951003,putaway,Putaway — planned
+951004,helios-track1,HELIOS-951004,picking,Picking — planned
+951005,helios-track1,HELIOS-951005,staging,Staging — planned
+951006,helios-track1,HELIOS-951006,loading,Loading — planned
+951007,helios-track1,HELIOS-951007,replenishment_relocation,Replenishment / relocation — planned
+951008,helios-track1,HELIOS-951008,transit_drivers,Transit drivers — planned
+951009,helios-track1,HELIOS-951009,yard_shunting,Yard shunting — planned
+951010,helios-track1,HELIOS-951010,team_leads,Team leads — planned
+951011,helios-track1,HELIOS-951011,pick_qa,Pick QA — planned
+951012,helios-track1,HELIOS-951012,co_packing_line,Co-Packing line — planned
+951013,helios-track1,HELIOS-951013,vna_replenishment,VNA replenishment — planned
+951014,helios-track1,HELIOS-951014,returns_qc,Returns / QC — planned
+951015,helios-track1,HELIOS-951015,aisle_maintenance,Aisle maintenance — planned
+952001,helios-track1,HELIOS-952001,control_room,Control room — planned
+952002,helios-track1,HELIOS-952002,outbound_office,Outbound office — planned
+952003,helios-track1,HELIOS-952003,inbound_office,Inbound office — planned
+952004,helios-track1,HELIOS-952004,inventory,Inventory — planned

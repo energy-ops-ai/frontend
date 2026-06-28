@@ -1,0 +1,25 @@
+sensor_id,name,unit,cumulative,energy_type,role,branch,description
+950001,Operative staffing need (realized),person-days,False,,demand,demand,Realized operative person-days (= total on-site minus the constant 8 admin desks). Scoring target. expected_value is the optimiser-planned operative total.
+950002,Total on-site staffing,person-days,False,,demand,demand,Realized total on-site person-days (operative + 8 admin). expected_value is the planned total (planned operative + 8).
+950010,Picks volume,picks,False,,driver,driver,"Outbound pick lines. value = realized, expected_value = forecast."
+950011,Outbound pallets volume,pallets,False,,driver,driver,"Outbound full pallets. value = realized, expected_value = forecast."
+950012,Inbound pallets volume,pallets,False,,driver,driver,"Inbound pallets received. value = realized, expected_value = forecast."
+951001,Unloading — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Unloading (the standing weekly plan).
+951002,Receiving — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Receiving (the standing weekly plan).
+951003,Putaway — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Putaway (the standing weekly plan).
+951004,Picking — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Picking (the standing weekly plan).
+951005,Staging — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Staging (the standing weekly plan).
+951006,Loading — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Loading (the standing weekly plan).
+951007,Replenishment / relocation — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Replenishment / relocation (the standing weekly plan).
+951008,Transit drivers — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Transit drivers (the standing weekly plan).
+951009,Yard shunting — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Yard shunting (the standing weekly plan).
+951010,Team leads — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Team leads (the standing weekly plan).
+951011,Pick QA — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Pick QA (the standing weekly plan).
+951012,Co-Packing line — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Co-Packing line (the standing weekly plan).
+951013,VNA replenishment — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for VNA replenishment (the standing weekly plan).
+951014,Returns / QC — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Returns / QC (the standing weekly plan).
+951015,Aisle maintenance — planned,person-days,False,,plan,operative,Optimiser-recommended person-days for Aisle maintenance (the standing weekly plan).
+952001,Control room — planned,person-days,False,,plan,admin,"Planned person-days for Control room (admin desk; constant, excluded from scoring)."
+952002,Outbound office — planned,person-days,False,,plan,admin,"Planned person-days for Outbound office (admin desk; constant, excluded from scoring)."
+952003,Inbound office — planned,person-days,False,,plan,admin,"Planned person-days for Inbound office (admin desk; constant, excluded from scoring)."
+952004,Inventory — planned,person-days,False,,plan,admin,"Planned person-days for Inventory (admin desk; constant, excluded from scoring)."

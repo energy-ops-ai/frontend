@@ -1,0 +1,47 @@
+{
+  "created_at_utc": "2026-06-28T07:53:10.922Z",
+  "source": "helios-track1-staffing",
+  "scenario": "helios_staffing_rhein_main",
+  "start_date": "2026-05-18",
+  "time_window": {
+    "start": "2026-05-18",
+    "end": "2026-10-02"
+  },
+  "site": "Helios Logistics — DC Rhein-Main",
+  "unit": "operative person-days",
+  "narrative": "Daily warehouse staffing at Helios Logistics — DC Rhein-Main. Each weekday has a realized operative staffing need and an optimiser-recommended plan per activity. The question is where the plan over- or under-staffed reality: overstaffing wastes full wage, understaffing is cheap until it crosses the SLA tolerance and then penalties explode (see cost_model). Volume drivers (picks, inbound/outbound pallets) carry forecast vs. realized. The decision log holds messy, unverified planner notes about which activities behave unlike the optimiser assumes.",
+  "cost_model": {
+    "_comment": "Asymmetric cost of a staffing decision, per operative person-day, in EUR. Admin desks (a constant 8 person-days/day) are excluded from scoring — you always staff them. The scoring target each day is the realized operative need (= PRESENT_TOTAL - 8). See README.md section 'How decisions are scored' and SOLUTION/scoring.py for the reference implementation.",
+    "currency": "EUR",
+    "regular_cost_per_person_day": 230,
+    "overstaffing": {
+      "_comment": "Planned > needed: surplus people are paid but idle. Full wage wasted, no premium.",
+      "idle_cost_per_person_day": 230
+    },
+    "understaffing": {
+      "_comment": "Planned < needed: the work still has to ship. The shortfall is covered by overtime / temp labour at a premium. A small shortfall is absorbed by the standing crew (cheap — only the premium); past the SLA tolerance, late trucks and missed carrier cut-offs trigger a steep penalty.",
+      "overtime_premium_pct": 18,
+      "sla_tolerance_person_days": 2,
+      "sla_penalty_per_person_day": 600
+    },
+    "scoring_note": "Excess cost vs. a perfect plan (planned == needed): overstaffing costs 230 EUR per surplus person-day; understaffing costs 41.4 EUR per short person-day (the 18% premium) PLUS 600 EUR per short person-day beyond the 2.0 tolerance. Consequence: trimming the optimiser's overstaffing pays off fast, but a small, deliberate undershoot is cheaper than a safe overshoot — until you cross the tolerance, where it explodes. Cut toward the truth, not past it."
+  },
+  "counts": {
+    "sensors": 24,
+    "diagrams": 1,
+    "hourly_sensor_rows": 2352,
+    "sensor_attributes": 91,
+    "sensor_external_refs": 24,
+    "annotations": 9
+  },
+  "files": {
+    "readme": "README.md",
+    "diagrams": "diagrams/",
+    "sensors": "sensors.csv",
+    "sensor_attributes": "sensor_attributes.csv",
+    "sensor_external_refs": "sensor_external_refs.csv",
+    "sensor_data_hourly": "sensor_data_hourly.csv",
+    "cost_model": "cost_model.csv",
+    "annotations": "annotations.json"
+  }
+}

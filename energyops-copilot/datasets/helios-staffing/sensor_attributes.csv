@@ -1,0 +1,92 @@
+sensor_id,attribute,value
+950001,group,demand
+950001,unit,person-days
+950001,role,demand
+950002,group,demand
+950002,unit,person-days
+950002,role,demand
+950010,group,driver
+950010,unit,picks
+950010,role,driver
+950011,group,driver
+950011,unit,pallets
+950011,role,driver
+950012,group,driver
+950012,unit,pallets
+950012,role,driver
+951001,group,operative
+951001,unit,person-days
+951001,activity,Unloading
+951001,role,plan
+951002,group,operative
+951002,unit,person-days
+951002,activity,Receiving
+951002,role,plan
+951003,group,operative
+951003,unit,person-days
+951003,activity,Putaway
+951003,role,plan
+951004,group,operative
+951004,unit,person-days
+951004,activity,Picking
+951004,role,plan
+951005,group,operative
+951005,unit,person-days
+951005,activity,Staging
+951005,role,plan
+951006,group,operative
+951006,unit,person-days
+951006,activity,Loading
+951006,role,plan
+951007,group,operative
+951007,unit,person-days
+951007,activity,Replenishment / relocation
+951007,role,plan
+951008,group,operative
+951008,unit,person-days
+951008,activity,Transit drivers
+951008,role,plan
+951009,group,operative
+951009,unit,person-days
+951009,activity,Yard shunting
+951009,role,plan
+951010,group,operative
+951010,unit,person-days
+951010,activity,Team leads
+951010,role,plan
+951011,group,operative
+951011,unit,person-days
+951011,activity,Pick QA
+951011,role,plan
+951012,group,operative
+951012,unit,person-days
+951012,activity,Co-Packing line
+951012,role,plan
+951013,group,operative
+951013,unit,person-days
+951013,activity,VNA replenishment
+951013,role,plan
+951014,group,operative
+951014,unit,person-days
+951014,activity,Returns / QC
+951014,role,plan
+951015,group,operative
+951015,unit,person-days
+951015,activity,Aisle maintenance
+951015,role,plan
+952001,group,admin
+952001,unit,person-days
+952001,activity,Control room
+952001,role,plan
+952002,group,admin
+952002,unit,person-days
+952002,activity,Outbound office
+952002,role,plan
+952003,group,admin
+952003,unit,person-days
+952003,activity,Inbound office
+952003,role,plan
+952004,group,admin
+952004,unit,person-days
+952004,activity,Inventory
+952004,role,plan
