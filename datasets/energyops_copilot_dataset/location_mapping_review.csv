@@ -1,0 +1,851 @@
+raw_lage,count,anonymized_location_group,location_role,review_status
+Heizzentrale,94,heating_plant_001,heating_plant,auto_mapped
+Technikzentrale  BHS,63,technical_center_001,technical_center,auto_mapped
+Technikzentrale,62,technical_center_002,technical_center,auto_mapped
+Keller,59,basement_001,basement,auto_mapped
+Ebene 99,56,level_area_001,level_area,auto_mapped
+Technikzentrale UBF,41,technical_center_003,technical_center,auto_mapped
+Trafostation 1/5,41,transformer_station_001,transformer_station,auto_mapped
+U 095,37,level_area_002,level_area,auto_mapped
+"Trafostation 4/5, Hauptverteilung",33,transformer_station_002,transformer_station,auto_mapped
+Kellergeschoss,32,basement_002,basement,auto_mapped
+an der Decke Tiefgarage,30,parking_area_001,parking_area,auto_mapped
+Kaeltezentrale,29,cooling_plant_001,cooling_plant,auto_mapped
+ZV-6130.1-99-177-AV,29,location_area_001,location_area,needs_review
+ZV2-6130.2-99-278-AV,29,location_area_002,location_area,needs_review
+"Trafostation 2/0, Hauptverteilung",28,transformer_station_003,transformer_station,auto_mapped
+ZV1-6130.2-99-278-AV,28,location_area_003,location_area,needs_review
+E 98 / NS-HV,27,electrical_distribution_001,electrical_distribution,auto_mapped
+"U.G., U 88",26,basement_003,basement,auto_mapped
+GHZ,25,location_area_004,location_area,needs_review
+Sanitärzentrale,22,water_plant_001,water_plant,auto_mapped
+Dampfuebergabe UBF,21,heating_plant_002,heating_plant,auto_mapped
+Trafostation VZM,21,transformer_station_004,transformer_station,auto_mapped
+Wasserzentrale,18,water_plant_002,water_plant,auto_mapped
+E99/NSHV,17,electrical_distribution_002,electrical_distribution,auto_mapped
+Eb.99 R 842.1 neben Heizung 7,16,heating_plant_003,heating_plant,auto_mapped
+GHV-6130.1-99-177-AV,16,electrical_distribution_003,electrical_distribution,auto_mapped
+6420.98.766,15,location_area_005,location_area,needs_review
+Berliner Str. 10,14,location_area_006,location_area,needs_review
+"E.98, Raum 815",14,level_area_003,level_area,auto_mapped
+Lueftungszentrale UBF,14,location_area_007,location_area,needs_review
+Raum 99.1171,14,location_area_008,location_area,needs_review
+Technikzentrale E99.731,14,technical_center_004,technical_center,auto_mapped
+Technikzentrale Eb.00.46g,14,technical_center_005,technical_center,auto_mapped
+Ebene 98,13,level_area_004,level_area,auto_mapped
+Eb99 R842b Heiz9 Zulaufanl.Apotheke,12,level_area_005,level_area,auto_mapped
+NSGV SV UFHK Teil1 F3,12,electrical_distribution_004,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil2 F4,12,electrical_distribution_005,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil3 F5,12,electrical_distribution_006,electrical_distribution,auto_mapped
+NSGV AV UFHK Teil1 F4,11,electrical_distribution_007,electrical_distribution,auto_mapped
+NSGV AV UFHK Teil3 F4,11,electrical_distribution_008,electrical_distribution,auto_mapped
+NSGV AV UFHK Teil3 F5,11,electrical_distribution_009,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil2 F3,11,electrical_distribution_010,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil3 F3,11,electrical_distribution_011,electrical_distribution,auto_mapped
+Technikzentrale R 99.804,11,technical_center_006,technical_center,auto_mapped
+Heizzentrale E99,10,heating_plant_004,heating_plant,auto_mapped
+NSGV AV UFHK Teil2 F4,10,electrical_distribution_012,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil3 F4,10,electrical_distribution_013,electrical_distribution,auto_mapped
+Ebene 99 / K16,9,level_area_006,level_area,auto_mapped
+Kältezentrale,9,cooling_plant_002,cooling_plant,auto_mapped
+6130.2 E99 /R278 AV,8,level_area_007,level_area,auto_mapped
+6206-B1 - 3.0G,8,location_area_009,location_area,needs_review
+"Ebene 99, R.101",8,level_area_008,level_area,auto_mapped
+GHV-6130.3-99-372-AV,8,electrical_distribution_014,electrical_distribution,auto_mapped
+Heizzentrale E98,8,heating_plant_005,heating_plant,auto_mapped
+NSGV AV UFHK Teil2 F5,8,electrical_distribution_015,electrical_distribution,auto_mapped
+Parkplatz,8,parking_area_002,parking_area,auto_mapped
+"Trafostation Akademiestrasse 4-8, Geb. 3060",8,transformer_station_005,transformer_station,auto_mapped
+Wäscherei E00,8,service_area_001,service_area,auto_mapped
+unter dem Becken,8,location_area_010,location_area,needs_review
+E98 / NSHV,7,electrical_distribution_016,electrical_distribution,auto_mapped
+Eb.99.701,7,level_area_009,level_area,auto_mapped
+Ebene 99 / 01,7,level_area_010,level_area,auto_mapped
+Ebene 99 / 106,7,level_area_011,level_area,auto_mapped
+Ebene 99 / R. 1.031,7,level_area_012,level_area,auto_mapped
+"Ebene99, R.101",7,level_area_013,level_area,auto_mapped
+Fuhrpark / E00 / Käfig,7,service_area_002,service_area,auto_mapped
+Heizzentrale E99.701,7,heating_plant_006,heating_plant,auto_mapped
+Heizzentrale KW Vert.,7,heating_plant_007,heating_plant,auto_mapped
+Heizzentrale re.neben Eing.,7,heating_plant_008,heating_plant,auto_mapped
+Kältezentrale E98,7,cooling_plant_003,cooling_plant,auto_mapped
+System,7,system_area_001,system_area,auto_mapped
+Technikraum Radiologie E98,7,technical_center_007,technical_center,auto_mapped
+Technikzentrale 1.O.G. / Dachzentrale,7,technical_center_008,technical_center,auto_mapped
+Technikzentrale F99.731,7,technical_center_009,technical_center,auto_mapped
+Technikzentrale Kälte,7,cooling_plant_004,cooling_plant,auto_mapped
+Technikzentrale Wasser/Wärme,7,heating_plant_009,heating_plant,auto_mapped
+Trinkwasserübergabe (Raum neben der Technikzentrale),7,water_plant_003,water_plant,auto_mapped
+6206-B2 - 4.OG,6,level_area_014,level_area,auto_mapped
+6410/99/Raum 905,6,location_area_011,location_area,needs_review
+E99 NSHV,6,electrical_distribution_017,electrical_distribution,auto_mapped
+Eb.99 R834A1 Heizzentrale 7 bei Dampfvert.,6,heating_plant_010,heating_plant,auto_mapped
+"Ebene 99, Heizraum",6,heating_plant_011,heating_plant,auto_mapped
+GHV-6130.3-99-372-AVFeld3,6,electrical_distribution_018,electrical_distribution,auto_mapped
+Haus i,6,location_area_012,location_area,needs_review
+Im Versorgungsgang zur Kopfklinik,6,location_area_013,location_area,needs_review
+"Kaeltezentrale, Geb.6111",6,cooling_plant_005,cooling_plant,auto_mapped
+Raum 9041.01.800,6,location_area_014,location_area,needs_review
+Technikzentrale Wasser+Wärme,6,heating_plant_012,heating_plant,auto_mapped
+Technikzentrale in Geb.6156,6,technical_center_010,technical_center,auto_mapped
+6130.1 Raum 99.1171,5,location_area_015,location_area,needs_review
+"6130.3 E99, Sanitärzentrale",5,water_plant_004,water_plant,auto_mapped
+EG,5,location_area_016,location_area,needs_review
+Eb.99 R.834A1 Heiz.9 Heizzentrale,5,heating_plant_013,heating_plant,auto_mapped
+"Eb.99, Schaltschrank H3",5,level_area_015,level_area,auto_mapped
+"Friedrich-Ebert -Anlage 6, Keller",5,basement_004,basement,auto_mapped
+GHV-6130.1-99-176-SV,5,electrical_distribution_019,electrical_distribution,auto_mapped
+GHV-6130.3-99-376-SV,5,electrical_distribution_020,electrical_distribution,auto_mapped
+GHVT,5,electrical_distribution_021,electrical_distribution,auto_mapped
+"Grabengasse 3, Keller",5,basement_005,basement,auto_mapped
+KG,5,basement_006,basement,auto_mapped
+Karrengang,5,service_area_003,service_area,auto_mapped
+"Kettengasse 12-16, Keller",5,basement_007,basement,auto_mapped
+"Marstallhof 1, Hauptvert.,Geb. 2020",5,electrical_distribution_022,electrical_distribution,auto_mapped
+NHV Cotta Haus,5,location_area_017,location_area,needs_review
+NSHV,5,electrical_distribution_023,electrical_distribution,auto_mapped
+Raum 9040.00.838,5,location_area_018,location_area,needs_review
+"Seminarstrasse 2, Keller",5,basement_008,basement,auto_mapped
+TW-Uebergabe,5,water_plant_005,water_plant,auto_mapped
+Technikzentrale Hz.Vert,5,technical_center_011,technical_center,auto_mapped
+Vorraum  vor der Heizzentrale OSP,5,heating_plant_014,heating_plant,auto_mapped
+Vosstrasse 2,5,location_area_019,location_area,needs_review
+Übergabe,5,water_plant_006,water_plant,auto_mapped
+1.U.G.,4,basement_009,basement,auto_mapped
+6206-B2 - 3.OG,4,level_area_016,level_area,auto_mapped
+6410/99/Raum 723,4,location_area_020,location_area,needs_review
+AWT,4,location_area_021,location_area,needs_review
+"Bergheimer Str.58, Ebene 98",4,level_area_017,level_area,auto_mapped
+E 98/Karrengang,4,service_area_004,service_area,auto_mapped
+E.98,4,level_area_018,level_area,auto_mapped
+E01,4,level_area_019,level_area,auto_mapped
+E98,4,level_area_020,level_area,auto_mapped
+"Ebene 98, X32-Y13",4,level_area_021,level_area,auto_mapped
+"Ebene 99, Wasserzentrale",4,water_plant_007,water_plant,auto_mapped
+"Friedrich-Ebert-Anlage 62, Geb.3131",4,location_area_022,location_area,needs_review
+GHV-6130.2-99-275-SV,4,electrical_distribution_024,electrical_distribution,auto_mapped
+GHZ Institut,4,location_area_023,location_area,needs_review
+"Karlstrasse 2, Keller",4,basement_010,basement,auto_mapped
+Lüftungszentrale,4,location_area_024,location_area,needs_review
+NSGV-AV,4,electrical_distribution_025,electrical_distribution,auto_mapped
+NSGV-SV,4,electrical_distribution_026,electrical_distribution,auto_mapped
+"Ploeck 57 A, Keller",4,basement_011,basement,auto_mapped
+Schacht unter Parkplatz1,4,parking_area_003,parking_area,auto_mapped
+Technikraum,4,technical_center_012,technical_center,auto_mapped
+Trinkwasser-Uebergabestation Einspeisung-Sued,4,water_plant_008,water_plant,auto_mapped
+U.G. U13,4,basement_012,basement,auto_mapped
+"U.G., U13",4,basement_013,basement,auto_mapped
+Unterstation 3,4,location_area_025,location_area,needs_review
+Vangerowstr 20. 2.UG Technikraum,4,technical_center_013,technical_center,auto_mapped
+"WohnGeb. , Brunnengasse 1,  Geb. 3012, E.G.",4,location_area_026,location_area,needs_review
+4Q1,3,location_area_027,location_area,needs_review
+99.751,3,location_area_028,location_area,needs_review
+99/842c,3,location_area_029,location_area,needs_review
+99/GROBVORRAT,3,location_area_030,location_area,needs_review
+"Augustinergasse 9, Geb. 2161",3,location_area_031,location_area,needs_review
+BHKW /Ebene 00,3,level_area_022,level_area,auto_mapped
+Bereich Trafostation Akadem.5,3,transformer_station_006,transformer_station,auto_mapped
+DG/Lüftungszentrale,3,location_area_032,location_area,needs_review
+Dampf und Heizungszentrale,3,heating_plant_015,heating_plant,auto_mapped
+E 00/Wäscherei,3,service_area_005,service_area,auto_mapped
+E 99 / Raum 842b,3,level_area_023,level_area,auto_mapped
+E.G.,3,location_area_033,location_area,needs_review
+E99,3,level_area_024,level_area,auto_mapped
+"E99, Technikraum",3,technical_center_014,technical_center,auto_mapped
+"Eb.99 , Raum 842c , Schaltschrank H6",3,level_area_025,level_area,auto_mapped
+Eb.99 Flur West neben Heizung 5,3,heating_plant_016,heating_plant,auto_mapped
+Ebene 99 / 2.03-Starkstomverteilung,3,level_area_026,level_area,auto_mapped
+"Ebene 99, R.120",3,level_area_027,level_area,auto_mapped
+GHV-6400-98-852-SV,3,electrical_distribution_027,electrical_distribution,auto_mapped
+"Haus zu Riesen, Hauptstr.52",3,location_area_034,location_area,needs_review
+"Heizraum 7020, Mönchhofstraße 12",3,heating_plant_017,heating_plant,auto_mapped
+Heizzentrale OSP,3,heating_plant_018,heating_plant,auto_mapped
+"Hoersaalgebaeude 6252, Hauptverteilung",3,electrical_distribution_028,electrical_distribution,auto_mapped
+Im Karrengang,3,service_area_006,service_area,auto_mapped
+"Mensa Station 2/3, Geb. 6304 1.U.G.",3,basement_014,basement,auto_mapped
+"Mineralogie/Petrogr. Inst.,  Hauptverteilung,Geb.  6236",3,electrical_distribution_029,electrical_distribution,auto_mapped
+NSHV Keller 3010,3,electrical_distribution_030,electrical_distribution,auto_mapped
+"NSHV-SV, Ebene 00",3,electrical_distribution_031,electrical_distribution,auto_mapped
+"Philosophenweg 12, 8011 in Werkstattgebaeude",3,location_area_035,location_area,needs_review
+"Plankengasse 1-3, U.G.",3,basement_015,basement,auto_mapped
+Ploeck 107,3,location_area_036,location_area,needs_review
+Raum 9034.03.117,3,location_area_037,location_area,needs_review
+Raum 9035.99.34,3,location_area_038,location_area,needs_review
+Raum 9043.01.801,3,location_area_039,location_area,needs_review
+Schacht,3,location_area_040,location_area,needs_review
+"Seminarstrasse 3, Keller",3,basement_016,basement,auto_mapped
+"Technikkeller, ISSW",3,basement_017,basement,auto_mapped
+Technikzentrale 1.O.G.,3,technical_center_015,technical_center,auto_mapped
+Technikzentrale E99,3,technical_center_016,technical_center,auto_mapped
+"Trafostation 1/5, E 99",3,transformer_station_007,transformer_station,auto_mapped
+"Trafostation 2/3, Mensa",3,transformer_station_008,transformer_station,auto_mapped
+Trafostation 2/6,3,transformer_station_009,transformer_station,auto_mapped
+Trafostation 4/5,3,transformer_station_010,transformer_station,auto_mapped
+"Trafostation Neue Universitat, Garabengasse 3-5, Geb. 2170",3,transformer_station_011,transformer_station,auto_mapped
+Waschsalon,3,location_area_041,location_area,needs_review
+Wasserzentrale E99,3,water_plant_009,water_plant,auto_mapped
+Übergabe Strom,3,water_plant_010,water_plant,auto_mapped
+1.196,2,location_area_042,location_area,needs_review
+11Q2,2,location_area_043,location_area,needs_review
+15Q1,2,location_area_044,location_area,needs_review
+2.0G,2,location_area_045,location_area,needs_review
+2.O.G. links,2,location_area_046,location_area,needs_review
+2.OGBT 2,2,location_area_047,location_area,needs_review
+3.OG,2,level_area_028,level_area,auto_mapped
+4320 /  E99 / Flur,2,level_area_029,level_area,auto_mapped
+6130.3 E99 an der Decke Tiefgarage,2,parking_area_004,parking_area,auto_mapped
+6130.3 Heizzentrale E99,2,heating_plant_019,heating_plant,auto_mapped
+6206,2,location_area_048,location_area,needs_review
+6206-B1-L,2,location_area_049,location_area,needs_review
+6276 I NSHV I E99,2,electrical_distribution_032,electrical_distribution,auto_mapped
+6410/99/Raum 731,2,location_area_050,location_area,needs_review
+6410/99/Raum 916,2,location_area_051,location_area,needs_review
+6411/98/Raum 220,2,location_area_052,location_area,needs_review
+6420.98.770,2,location_area_053,location_area,needs_review
+6420.98.790,2,location_area_054,location_area,needs_review
+6670/E99/ NSHV,2,electrical_distribution_033,electrical_distribution,auto_mapped
+"Akademiestrasse 3, Keller",2,basement_018,basement,auto_mapped
+"Augustinergasse 2, Keller",2,basement_019,basement,auto_mapped
+"Augustinergasse 7, 2.O.G., Geb. 2140",2,location_area_055,location_area,needs_review
+"Augustinergasse 9, Keller",2,basement_020,basement,auto_mapped
+"Bauteil A, Ebene 00 Technik",2,level_area_030,level_area,auto_mapped
+"Blumenstr.8 , K.G.",2,location_area_056,location_area,needs_review
+D.G.,2,location_area_057,location_area,needs_review
+"E 00, HauptFlur Ost",2,level_area_031,level_area,auto_mapped
+E 98 / MSP,2,level_area_032,level_area,auto_mapped
+E 98 Kältezentrale,2,cooling_plant_006,cooling_plant,auto_mapped
+E 98 Sanitär/Heizungszentrale,2,heating_plant_020,heating_plant,auto_mapped
+"E 99, Luftungszentrale (Kellerloch)",2,basement_021,basement,auto_mapped
+"E 99, Trafostation VZM",2,transformer_station_012,transformer_station,auto_mapped
+"E 99, Zentrale Syncotron",2,level_area_033,level_area,auto_mapped
+E.98 Raum 8.10,2,level_area_034,level_area,auto_mapped
+E.99 R 842.2 Klimazentrale,2,level_area_035,level_area,auto_mapped
+E.99 R834 A1 Heizzentrale,2,heating_plant_021,heating_plant,auto_mapped
+"E.99, U 095",2,level_area_036,level_area,auto_mapped
+E00 / Technikraum,2,technical_center_017,technical_center,auto_mapped
+E00/ R539,2,level_area_037,level_area,auto_mapped
+E99 I NSHV,2,electrical_distribution_034,electrical_distribution,auto_mapped
+"E99, Sanitärzentrale",2,water_plant_011,water_plant,auto_mapped
+E99. 002 I NSHV,2,electrical_distribution_035,electrical_distribution,auto_mapped
+Eb.99 Flur neben Heizung 2,2,heating_plant_022,heating_plant,auto_mapped
+"Eb.99, R.103 Sanitärzentrale",2,water_plant_012,water_plant,auto_mapped
+"Ebene 01,BT1/ Flurspange vor Casino-Ausgang",2,level_area_038,level_area,auto_mapped
+"Ebene 98, AWT",2,level_area_039,level_area,auto_mapped
+"Ebene 98, Heizraum",2,heating_plant_023,heating_plant,auto_mapped
+"Ebene 98, X14-Y32",2,level_area_040,level_area,auto_mapped
+"Ebene 98, X19-Y30,Heiz.C1 Schrank",2,level_area_041,level_area,auto_mapped
+Ebene 99 / R.1.031,2,level_area_042,level_area,auto_mapped
+Ebene 99 / R1.031,2,level_area_043,level_area,auto_mapped
+"Ebene 99, Heizzentrale",2,heating_plant_024,heating_plant,auto_mapped
+"Ebene 99, Karrengang, TW-Uebergabe DKFZ",2,water_plant_013,water_plant,auto_mapped
+"Ebene 99, R.103, San.Zentr.",2,level_area_044,level_area,auto_mapped
+"Ebene 99, R.649, Luft Zentr.Heiz.D2 Schrank",2,level_area_045,level_area,auto_mapped
+"Ebene 99, R.U21",2,level_area_046,level_area,auto_mapped
+"Ebene 99, Raum 103  Sanitärzentrale",2,water_plant_014,water_plant,auto_mapped
+"Ebene 99, Raum 103, Sanitärzentrale",2,water_plant_015,water_plant,auto_mapped
+"Ebene 99, U23",2,level_area_047,level_area,auto_mapped
+F99.905,2,level_area_048,level_area,auto_mapped
+Friedrich Ebert Anlage 17,2,location_area_058,location_area,needs_review
+"Friedrich Ebert Platz 2, Keller",2,basement_022,basement,auto_mapped
+Friedrich-Ebert-Anlage 4,2,location_area_059,location_area,needs_review
+"Friedrich-Ebert-Platz 2, Geb. 3080",2,location_area_060,location_area,needs_review
+"Gasraum Tiefkeller, Geb. 6270",2,basement_023,basement,auto_mapped
+"Geb.2805,Treppenabgang Keller Nord Institut Königstuhl 11",2,basement_024,basement,auto_mapped
+"Gebäude 2100, Technikraum",2,technical_center_018,technical_center,auto_mapped
+"Grabengasse 1, Geb. 2090",2,location_area_061,location_area,needs_review
+"GundolfStr.15/ BerlinerStr. 48, Schacht an hinteren Eingang",2,location_area_062,location_area,needs_review
+Hauptstrasse 242,2,location_area_063,location_area,needs_review
+"Hauptstrasse 52, Keller",2,basement_025,basement,auto_mapped
+"Hautklinik, Bettenstation, Geb.  4350",2,location_area_064,location_area,needs_review
+Heizzentrale / Ebene 3,2,heating_plant_025,heating_plant,auto_mapped
+Heizzentrale VZM,2,heating_plant_026,heating_plant,auto_mapped
+"INF 700, Schacht hinter dem Sportplatz",2,location_area_065,location_area,needs_review
+"Institut fuer Rechtsmedizin, Geb. 4020, E.G.",2,location_area_066,location_area,needs_review
+"Karlstrasse 16, Keller",2,basement_026,basement,auto_mapped
+Kesselhaus,2,location_area_067,location_area,needs_review
+"Kisselgasse 1, Keller",2,basement_027,basement,auto_mapped
+"Marstallhof 4, Keller",2,basement_028,basement,auto_mapped
+NSGV AV UFHK Teil1 F1,2,electrical_distribution_036,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil1 F1,2,electrical_distribution_037,electrical_distribution,auto_mapped
+NSHV SV,2,electrical_distribution_038,electrical_distribution,auto_mapped
+"Philosophenweg 19, Keller",2,basement_029,basement,auto_mapped
+"Ploeck 55, Keller",2,basement_030,basement,auto_mapped
+"Ploeck 79, Keller",2,basement_031,basement,auto_mapped
+"Psychiatrie, ehem.Neurolog.Klinik, Geb. 4200",2,location_area_068,location_area,needs_review
+Raum 9032.04.120,2,location_area_069,location_area,needs_review
+Raum 9037.00.08,2,location_area_070,location_area,needs_review
+Raum 9038.02.504,2,location_area_071,location_area,needs_review
+Raum 9050.01.1.11,2,location_area_072,location_area,needs_review
+Raum 99.1172,2,location_area_073,location_area,needs_review
+"Sanitärzentrale , Warmwasseraufbereitung",2,water_plant_016,water_plant,auto_mapped
+Schacht C2 Ebene 98 / X31-Y27,2,level_area_049,level_area,auto_mapped
+Schaltschrank Heizzentrale VZM,2,heating_plant_027,heating_plant,auto_mapped
+"Schulgasse 6, Keller",2,basement_032,basement,auto_mapped
+"Seminarstr. 3, Geb. 2210, 2.O.G.",2,location_area_074,location_area,needs_review
+"Seminarstrasse 4, Keller",2,basement_033,basement,auto_mapped
+"Technik-Zentrale, R.2.02",2,location_area_075,location_area,needs_review
+Technikzentrale 2,2,technical_center_019,technical_center,auto_mapped
+"Technikzentrale, Haus neben Bellini",2,technical_center_020,technical_center,auto_mapped
+Tiefkeller ISSW,2,basement_034,basement,auto_mapped
+"Tiefkeller ISSW, INF 700",2,basement_035,basement,auto_mapped
+Total Energie 826.1,2,location_area_076,location_area,needs_review
+Trafostation,2,transformer_station_013,transformer_station,auto_mapped
+"Trafostation  Hauptstr.207-209, Geb 1010",2,transformer_station_014,transformer_station,auto_mapped
+Trafostation Cotta Haus,2,transformer_station_015,transformer_station,auto_mapped
+"Trafostation Neue Universitat, Grabengasse 3-5, Geb. 2170",2,transformer_station_016,transformer_station,auto_mapped
+Trinkwasseruebergaberaum 1.U.G.,2,water_plant_017,water_plant,auto_mapped
+Umkehr Osmose,2,location_area_077,location_area,needs_review
+VZM / Kopfklinik,2,location_area_078,location_area,needs_review
+Versorgungsgang E98,2,level_area_050,level_area,auto_mapped
+"Vosstrasse 2, Ebene 99, Heizraum",2,heating_plant_028,heating_plant,auto_mapped
+"Vosstrasse 2, Keller",2,basement_036,basement,auto_mapped
+Wasserzentrale 9016.01.016,2,water_plant_018,water_plant,auto_mapped
+"Zuluftzentrale, VZM, Geb,6670",2,location_area_079,location_area,needs_review
+Zählerraum im Karrengang VZM-Chirurgie,2,service_area_007,service_area,auto_mapped
+im Keller,2,basement_037,basement,auto_mapped
+01 WE 4101,1,location_area_080,location_area,needs_review
+01 WE 4102,1,location_area_081,location_area,needs_review
+01 WE 4103,1,location_area_082,location_area,needs_review
+01 WE 4104,1,location_area_083,location_area,needs_review
+01 WE 4105,1,location_area_084,location_area,needs_review
+01 WE 4106,1,location_area_085,location_area,needs_review
+01 WE 4107,1,location_area_086,location_area,needs_review
+08 WE 4856,1,location_area_087,location_area,needs_review
+08 WE 4857,1,location_area_088,location_area,needs_review
+08 WE 4858,1,location_area_089,location_area,needs_review
+08 WE 4859,1,location_area_090,location_area,needs_review
+08 WE 4860,1,location_area_091,location_area,needs_review
+08 WE 4861,1,location_area_092,location_area,needs_review
+08 WE 4862,1,location_area_093,location_area,needs_review
+08 WE 4863,1,location_area_094,location_area,needs_review
+1. OG Links,1,level_area_051,level_area,auto_mapped
+1. OG mitte Uni,1,level_area_052,level_area,auto_mapped
+1.OG,1,level_area_053,level_area,auto_mapped
+11Q1-Lüftung,1,location_area_095,location_area,needs_review
+11Q3,1,location_area_096,location_area,needs_review
+11Q5 GHZ,1,location_area_097,location_area,needs_review
+13Q2,1,location_area_098,location_area,needs_review
+13Q4,1,location_area_099,location_area,needs_review
+13Q5,1,location_area_100,location_area,needs_review
+13Q6,1,location_area_101,location_area,needs_review
+13Q7,1,location_area_102,location_area,needs_review
+13Q8,1,location_area_103,location_area,needs_review
+13Q9 GHZ,1,location_area_104,location_area,needs_review
+15Q2,1,location_area_105,location_area,needs_review
+15Q7,1,location_area_106,location_area,needs_review
+15Q8,1,location_area_107,location_area,needs_review
+15Q9,1,location_area_108,location_area,needs_review
+16Q3,1,location_area_109,location_area,needs_review
+16Q6,1,location_area_110,location_area,needs_review
+18Q1,1,location_area_111,location_area,needs_review
+18Q2,1,location_area_112,location_area,needs_review
+18Q3,1,location_area_113,location_area,needs_review
+18Q4-Lüftung,1,location_area_114,location_area,needs_review
+18Q6-Lüftung,1,location_area_115,location_area,needs_review
+18Q7 AV Reserve,1,location_area_116,location_area,needs_review
+1Q1,1,location_area_117,location_area,needs_review
+1Q11,1,location_area_118,location_area,needs_review
+1Q2 - Lüftung,1,location_area_119,location_area,needs_review
+1Q3,1,location_area_120,location_area,needs_review
+1Q6-Lüftung,1,location_area_121,location_area,needs_review
+1Q7 GHZ,1,location_area_122,location_area,needs_review
+1Q7-Bioquant,1,location_area_123,location_area,needs_review
+2.OG - UV 2,1,level_area_054,level_area,auto_mapped
+2.OG - UV 2.2,1,level_area_055,level_area,auto_mapped
+2.OG UV 2.3,1,level_area_056,level_area,auto_mapped
+2.OG UV Aussenbereich,1,level_area_057,level_area,auto_mapped
+"2.U.G., R.2.02",1,basement_038,basement,auto_mapped
+"2810 Haupthaus im Keller, Königstuhl 12",1,basement_039,basement,auto_mapped
+2Q1,1,location_area_124,location_area,needs_review
+2Q2 GHZ,1,location_area_125,location_area,needs_review
+2Q3_Lüftung,1,location_area_126,location_area,needs_review
+2Q4_GHZ,1,location_area_127,location_area,needs_review
+2Q8,1,location_area_128,location_area,needs_review
+2Q9 GHZ Trafostation 327,1,transformer_station_017,transformer_station,auto_mapped
+3.OG - MTR Schule,1,level_area_058,level_area,auto_mapped
+3.OG - UV 3.2,1,level_area_059,level_area,auto_mapped
+3.OG - UV 3.3,1,level_area_060,level_area,auto_mapped
+3Q1,1,location_area_129,location_area,needs_review
+3Q1-Reserve,1,location_area_130,location_area,needs_review
+3Q12,1,location_area_131,location_area,needs_review
+3Q2,1,location_area_132,location_area,needs_review
+3Q3_GHZ,1,location_area_133,location_area,needs_review
+3Q4,1,location_area_134,location_area,needs_review
+3Q4  UV-411-99-1-AV,1,location_area_135,location_area,needs_review
+3Q5,1,location_area_136,location_area,needs_review
+3Q7-Kabel2,1,location_area_137,location_area,needs_review
+3Q8,1,location_area_138,location_area,needs_review
+3Q8-Kabel1,1,location_area_139,location_area,needs_review
+3Q9,1,location_area_140,location_area,needs_review
+4.0G,1,location_area_141,location_area,needs_review
+4210 / E99 / NSHV,1,electrical_distribution_039,electrical_distribution,auto_mapped
+4230/E00/Raum 03,1,level_area_061,level_area,auto_mapped
+4420,1,location_area_142,location_area,needs_review
+4Q2,1,location_area_143,location_area,needs_review
+4Q2-Bioquant,1,location_area_144,location_area,needs_review
+4Q3,1,location_area_145,location_area,needs_review
+4Q6,1,location_area_146,location_area,needs_review
+4Q7,1,location_area_147,location_area,needs_review
+4Q8,1,location_area_148,location_area,needs_review
+4Q9-Lüftung,1,location_area_149,location_area,needs_review
+5Q14 Container HBP vor 227,1,location_area_150,location_area,needs_review
+5mGang zum Brunnenpumpen-Raum,1,location_area_151,location_area,needs_review
+6130.1 E99 an der Decke Tiefgarage,1,parking_area_005,parking_area,auto_mapped
+6130.1 E99/NSHV,1,electrical_distribution_040,electrical_distribution,auto_mapped
+6130.2 E99 an der Decke Tiefgarage,1,parking_area_006,parking_area,auto_mapped
+"6130.2 E99, Technikraum",1,technical_center_021,technical_center,auto_mapped
+6130.2 Raum 99.2270,1,location_area_152,location_area,needs_review
+6130.2 an der Decke Tiefgarage,1,parking_area_007,parking_area,auto_mapped
+6130.2/E99,1,level_area_062,level_area,auto_mapped
+6130.2/E99.271,1,level_area_063,level_area,auto_mapped
+6130.3 WestTurm,1,location_area_153,location_area,needs_review
+6130/E99.271,1,level_area_064,level_area,auto_mapped
+6132,1,location_area_154,location_area,needs_review
+6305,1,location_area_155,location_area,needs_review
+6348,1,location_area_156,location_area,needs_review
+6400 I E99,1,level_area_065,level_area,auto_mapped
+"6411 Bettenhaus, Dachgeschoss, Aufzugsraum",1,roof_area_001,roof_area,auto_mapped
+6411/98/Raum 420,1,location_area_157,location_area,needs_review
+"6430, E99, NSHV AV",1,electrical_distribution_041,electrical_distribution,auto_mapped
+"6430, NSHV",1,electrical_distribution_042,electrical_distribution,auto_mapped
+6431/E02/Raum 703,1,level_area_066,level_area,auto_mapped
+6431/E02/Raum 706,1,level_area_067,level_area,auto_mapped
+"6433, E 98 / MSP / Raum 711",1,level_area_068,level_area,auto_mapped
+8Q1 Baustrom,1,location_area_158,location_area,needs_review
+8Q4,1,location_area_159,location_area,needs_review
+8Q5,1,location_area_160,location_area,needs_review
+8Q7,1,location_area_161,location_area,needs_review
+9003.99.001,1,location_area_162,location_area,needs_review
+9028.99.01,1,location_area_163,location_area,needs_review
+9040.05.813,1,location_area_164,location_area,needs_review
+99.716,1,location_area_165,location_area,needs_review
+AV GHZ Gebäudeeingang,1,location_area_166,location_area,needs_review
+AWT-Waschanlage,1,location_area_167,location_area,needs_review
+"Akademiestr.3, Geb. 3040",1,location_area_168,location_area,needs_review
+"Akademiestrasse 4, Ebene 99, Heizraum (Hauptmesser)",1,heating_plant_029,heating_plant,auto_mapped
+"Akademiestrasse 5, EDV Raum",1,location_area_169,location_area,needs_review
+Akademiestrasse 6,1,location_area_170,location_area,needs_review
+"Albert-Überle-Str., 2",1,location_area_171,location_area,needs_review
+"Albert-Überle-Strasse 1, Keller",1,basement_040,basement,auto_mapped
+"Albert-Überle-Strasse 3, Keller",1,basement_041,basement,auto_mapped
+Albert-Überle-Strasse 5,1,location_area_172,location_area,needs_review
+"Augustinergasse 7, E.G., Geb. 2140",1,location_area_173,location_area,needs_review
+"Augustinergasse 7, Keller",1,basement_042,basement,auto_mapped
+"Augustinergasse 9, Geb. 2150",1,location_area_174,location_area,needs_review
+"Augustinergasse13, Geb. 2180",1,location_area_175,location_area,needs_review
+"Augustinergasse15, Geb. 2190",1,location_area_176,location_area,needs_review
+"Aussenbeleuchtung, Geb. 6116",1,location_area_177,location_area,needs_review
+Aussenkeller,1,basement_043,basement,auto_mapped
+BHKW,1,location_area_178,location_area,needs_review
+Baufeld,1,location_area_179,location_area,needs_review
+Baustelle,1,location_area_180,location_area,needs_review
+Baustelle 4310 Ostflügel,1,location_area_181,location_area,needs_review
+Baustrom_Turm_West,1,location_area_182,location_area,needs_review
+Bauteil B,1,location_area_183,location_area,needs_review
+Bei der Brunnenanlage,1,location_area_184,location_area,needs_review
+"Bergheimer Str.54, Ebene 99, Aktenraum",1,level_area_069,level_area,auto_mapped
+"Bergheimer Str.54, Ebene 99, Heizraum",1,heating_plant_030,heating_plant,auto_mapped
+"BergheimerStr.20, Ebene 99,Heizraum",1,heating_plant_031,heating_plant,auto_mapped
+"Betriebsgebaeude, Geb. 4060, E.G.",1,location_area_185,location_area,needs_review
+Botanischer Garten /  Heizzentrale,1,heating_plant_032,heating_plant,auto_mapped
+Botanischer Garten / Schacht,1,location_area_186,location_area,needs_review
+Brunnen Chemie,1,location_area_187,location_area,needs_review
+"Brunnendruckbehaelterraum, U.G",1,location_area_188,location_area,needs_review
+"Brunnengasse 1, Keller",1,basement_044,basement,auto_mapped
+"Brunnenstube, INF 560",1,location_area_189,location_area,needs_review
+"Chirurgie, WerkstattGeb. , Geb. 6115",1,location_area_190,location_area,needs_review
+Druckluftentrale Schaltschrank,1,location_area_191,location_area,needs_review
+Druckluftzentrale,1,location_area_192,location_area,needs_review
+E 00,1,level_area_070,level_area,auto_mapped
+E 00/WäschereiGang,1,service_area_008,service_area,auto_mapped
+E 98 Sanitär/ Heizungszentrale,1,heating_plant_033,heating_plant,auto_mapped
+E 99 / Kältezentrale,1,cooling_plant_007,cooling_plant,auto_mapped
+E 99 Lüftungszentrale,1,level_area_071,level_area,auto_mapped
+E 99 R.842.2 Klimazentrale,1,level_area_072,level_area,auto_mapped
+E 99 Zentrale,1,level_area_073,level_area,auto_mapped
+"E 99, NSHV",1,electrical_distribution_043,electrical_distribution,auto_mapped
+"E 99, R.303",1,level_area_074,level_area,auto_mapped
+"E 99, Tiefgarage",1,parking_area_008,parking_area,auto_mapped
+E 99/ Karrengang,1,service_area_009,service_area,auto_mapped
+E 99/Elektroraum118,1,level_area_075,level_area,auto_mapped
+"E.99  R. U93, Geb.Hauptverteilung",1,electrical_distribution_044,electrical_distribution,auto_mapped
+E.99 Heizzentrale,1,heating_plant_034,heating_plant,auto_mapped
+"E.99 R. U93, Hauptverteilung",1,electrical_distribution_045,electrical_distribution,auto_mapped
+E.99 R842.2 Klimazentrale,1,level_area_076,level_area,auto_mapped
+E001 WC-Technikraum,1,technical_center_022,technical_center,auto_mapped
+E98 Dampfzentrale,1,level_area_077,level_area,auto_mapped
+E99 /  NSHV,1,electrical_distribution_046,electrical_distribution,auto_mapped
+E99 / Elektroraum,1,level_area_078,level_area,auto_mapped
+E99 / Elektroverteiler,1,level_area_079,level_area,auto_mapped
+E99 / NSHV,1,electrical_distribution_047,electrical_distribution,auto_mapped
+E99 / TW-Übergabe,1,water_plant_019,water_plant,auto_mapped
+E99 / Trafostation,1,transformer_station_018,transformer_station,auto_mapped
+E99 / Trafostation VZM,1,transformer_station_019,transformer_station,auto_mapped
+E99 I Reinraum,1,level_area_080,level_area,auto_mapped
+E99 Sanitärzentrale,1,water_plant_020,water_plant,auto_mapped
+E99 Trafostation,1,transformer_station_020,transformer_station,auto_mapped
+"E99, oberes Parkdeck",1,level_area_081,level_area,auto_mapped
+E99. 003 I NSHV,1,electrical_distribution_048,electrical_distribution,auto_mapped
+E99. 004 I NSHV,1,electrical_distribution_049,electrical_distribution,auto_mapped
+E99/842c,1,level_area_082,level_area,auto_mapped
+E99/Elektroraum 118,1,level_area_083,level_area,auto_mapped
+E99/Heizzentrale,1,heating_plant_035,heating_plant,auto_mapped
+E99/NSHV/  Feld 04 SV,1,electrical_distribution_050,electrical_distribution,auto_mapped
+E99/NSHV/ Feld 12 AV,1,electrical_distribution_051,electrical_distribution,auto_mapped
+"EG, Damen WC",1,location_area_193,location_area,needs_review
+"Eb 99, im Verbindungsgang vor 6226",1,level_area_084,level_area,auto_mapped
+"Eb.99 , Spange Q7/18 , Schaltschrank H3",1,level_area_085,level_area,auto_mapped
+"Eb.99 , Spange Q7/19 , Schaltschrank H2",1,level_area_086,level_area,auto_mapped
+"Eb.99 , Spange Q7/3 , Schaltschrank H5",1,level_area_087,level_area,auto_mapped
+Eb.99 Flur West neben Heizung,1,heating_plant_036,heating_plant,auto_mapped
+Eb.99 Flur neben Heiz 2,1,level_area_088,level_area,auto_mapped
+Eb.99 FlurWest neben Heiz.5,1,level_area_089,level_area,auto_mapped
+Eb.99 R 842.2 Klimazentrale,1,level_area_090,level_area,auto_mapped
+Eb.99 R.834A1 Schrank nb.Heiz.9 Heizzentrale,1,heating_plant_037,heating_plant,auto_mapped
+Eb.99 R.842.1 neben Heizung 7,1,heating_plant_038,heating_plant,auto_mapped
+Eb.99 R.842.2 Klimazentrale,1,level_area_091,level_area,auto_mapped
+Eb.99 R834 A1 Heizzentrale,1,heating_plant_039,heating_plant,auto_mapped
+Eb.99 R842.2 Klimazentrale,1,level_area_092,level_area,auto_mapped
+Eb.99 R842.b Klimazentrale,1,level_area_093,level_area,auto_mapped
+Eb.99.Flur West neben Heizung 5,1,heating_plant_040,heating_plant,auto_mapped
+Eb.99.FlurWest neben Hei 5,1,level_area_094,level_area,auto_mapped
+Eb99 R.834A1 Heizzentrale,1,heating_plant_041,heating_plant,auto_mapped
+"Ebene 0, BT1/ Flurspange vor Casino-Ausgang",1,level_area_095,level_area,auto_mapped
+"Ebene 00, Damen Toilette (Putzkammer)",1,level_area_096,level_area,auto_mapped
+"Ebene 00, Luftung (Post)",1,level_area_097,level_area,auto_mapped
+"Ebene 00, im Wandschrank neben Schacht R. 711",1,level_area_098,level_area,auto_mapped
+Ebene 98 / 106,1,level_area_099,level_area,auto_mapped
+"Ebene 98 / 106, Kompressorenraum",1,level_area_100,level_area,auto_mapped
+"Ebene 98, Heizraum (Wohnungen)",1,heating_plant_042,heating_plant,auto_mapped
+"Ebene 98, Heizung",1,heating_plant_043,heating_plant,auto_mapped
+"Ebene 98, Heizung (Ziehank)",1,heating_plant_044,heating_plant,auto_mapped
+"Ebene 98, Raum 106 (Energiezentrale, Kompressorenraum)",1,level_area_101,level_area,auto_mapped
+"Ebene 98, Raum 714",1,level_area_102,level_area,auto_mapped
+"Ebene 98, Technikraum",1,technical_center_023,technical_center,auto_mapped
+"Ebene 98, Technikzentrale",1,technical_center_024,technical_center,auto_mapped
+"Ebene 98, X14-Y32,Heiz.A1 Schrank",1,level_area_103,level_area,auto_mapped
+"Ebene 99 , Heizzentrale",1,heating_plant_045,heating_plant,auto_mapped
+"Ebene 99 , Raum : Casino Keller",1,basement_045,basement,auto_mapped
+"Ebene 99 , Technikzentrale",1,technical_center_025,technical_center,auto_mapped
+"Ebene 99 / K01, Wasserzentrale",1,water_plant_021,water_plant,auto_mapped
+"Ebene 99 / K16, Wasserzentrale",1,water_plant_022,water_plant,auto_mapped
+"Ebene 99,  Heizzentrale , Schaltschrank H1",1,heating_plant_046,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Alte Uni)",1,heating_plant_047,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Fussbodenheizung)",1,heating_plant_048,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Haus 4-51 )",1,heating_plant_049,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Haus 6,8,51)",1,heating_plant_050,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Haus4+4a)",1,heating_plant_051,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Mensa)",1,heating_plant_052,heating_plant,auto_mapped
+"Ebene 99, Heizraum (Pizzeria)",1,heating_plant_053,heating_plant,auto_mapped
+"Ebene 99, Heizraum (unter Küche)",1,heating_plant_054,heating_plant,auto_mapped
+"Ebene 99, Heizraum Hauptzahler",1,heating_plant_055,heating_plant,auto_mapped
+"Ebene 99, Heizung (Hauptzahler)",1,heating_plant_056,heating_plant,auto_mapped
+"Ebene 99, Keller",1,basement_046,basement,auto_mapped
+"Ebene 99, Keller (Buchladen)",1,basement_047,basement,auto_mapped
+"Ebene 99, Keller (Fussbodenheizung)",1,heating_plant_057,heating_plant,auto_mapped
+"Ebene 99, Keller (Metzgerei)",1,basement_048,basement,auto_mapped
+"Ebene 99, Keller (Universitat)",1,basement_049,basement,auto_mapped
+"Ebene 99, Kellergesch. Mitte",1,basement_050,basement,auto_mapped
+"Ebene 99, Lueftungszentrale",1,level_area_104,level_area,auto_mapped
+"Ebene 99, Lueftungszentrale (Druckerei)",1,level_area_105,level_area,auto_mapped
+"Ebene 99, R.103",1,level_area_106,level_area,auto_mapped
+"Ebene 99, R.680, Luft Zentr. Heiz.D1 Schrank",1,level_area_107,level_area,auto_mapped
+"Ebene 99, R625",1,level_area_108,level_area,auto_mapped
+"Ebene 99, Techn.Raum",1,level_area_109,level_area,auto_mapped
+"Ebene 99, unter Hausmeister-Wohnung",1,level_area_110,level_area,auto_mapped
+"Ebene 99, vor Heizzentrale",1,heating_plant_058,heating_plant,auto_mapped
+"Ebene 99,Heizraum",1,heating_plant_059,heating_plant,auto_mapped
+"Ebene 99,Kellergesch. Ost u. Neubau",1,basement_051,basement,auto_mapped
+"Ebene 99,vor Kuehlraum",1,level_area_111,level_area,auto_mapped
+"Ebene99, Lager (Gaststatte)",1,level_area_112,level_area,auto_mapped
+Einspeisung Bauteil A,1,location_area_194,location_area,needs_review
+Erdgeschoss Gewerberäume,1,location_area_195,location_area,needs_review
+"Fernheizwerk, E.99 / Brunnenanlage/Schaltschrank",1,level_area_113,level_area,auto_mapped
+"Fernheizwerk, Trinkwasserstation/Schaltschrank",1,water_plant_023,water_plant,auto_mapped
+"Frauenklinik, Laborgebaeude, Geb. 4255",1,location_area_196,location_area,needs_review
+"Friedrich-Ebert-Anlage 6-10, Geb. 3090",1,location_area_197,location_area,needs_review
+G411 Wärmetauscher 1,1,heating_plant_060,heating_plant,auto_mapped
+G411 Wärmetauscher 2,1,heating_plant_061,heating_plant,auto_mapped
+GHV-6130.1-99-170-AV,1,electrical_distribution_052,electrical_distribution,auto_mapped
+GHV-6130.1-99-376-SV,1,electrical_distribution_053,electrical_distribution,auto_mapped
+GHV-6130.2-99-278-AV,1,electrical_distribution_054,electrical_distribution,auto_mapped
+GHV-6130.3-99-372-AVFeld2,1,electrical_distribution_055,electrical_distribution,auto_mapped
+GHZ  412,1,location_area_198,location_area,needs_review
+GHZ 11Q6,1,location_area_199,location_area,needs_review
+GHZ 13Q1,1,location_area_200,location_area,needs_review
+GHZ 253/254,1,location_area_201,location_area,needs_review
+GHZ 364 Kabel 1 F5-Q1,1,location_area_202,location_area,needs_review
+GHZ 364 Kabel2 F5-Q2,1,location_area_203,location_area,needs_review
+GHZ 3Q7,1,location_area_204,location_area,needs_review
+GHZ 41/413,1,location_area_205,location_area,needs_review
+GHZ 411,1,location_area_206,location_area,needs_review
+GHZ 412,1,location_area_207,location_area,needs_review
+GHZ 4131  WMZ 5,1,location_area_208,location_area,needs_review
+GHZ Bau 6368,1,location_area_209,location_area,needs_review
+GHZ Kabel 1 F8 Q1,1,location_area_210,location_area,needs_review
+GHZ Noteinspeisung,1,location_area_211,location_area,needs_review
+GHZ Stadtwerke,1,location_area_212,location_area,needs_review
+GHZ Wärmemenge,1,heating_plant_062,heating_plant,auto_mapped
+GHZ41+413,1,location_area_213,location_area,needs_review
+Geb. 4360,1,location_area_214,location_area,needs_review
+Geb.4500 / E 00 /Treppenhaus,1,level_area_114,level_area,auto_mapped
+Geb.6560/E99/Technik-Zentrale,1,level_area_115,level_area,auto_mapped
+Gebäude 4370,1,location_area_215,location_area,needs_review
+Gewaechshaus 2,1,location_area_216,location_area,needs_review
+"Grabengasse 3-5, Geb. 2170, Keller",1,basement_052,basement,auto_mapped
+"Grabengasse, Hauptanschlussraum Tiefgarage",1,parking_area_009,parking_area,auto_mapped
+"Grabengasse, U.G., Hebeanlage Treppenhaus",1,basement_053,basement,auto_mapped
+"Grabengasse1, Keller ueber Hofeingang Augustinergasse",1,basement_054,basement,auto_mapped
+"Grosse Mantelgasse 2, im Schacht im Gebaeude.",1,location_area_217,location_area,needs_review
+GundolfStr.15/ BerlinerStr. 48,1,location_area_218,location_area,needs_review
+HD alte Glockengiesserei 11,1,location_area_219,location_area,needs_review
+HV-6130.1-10-170-AV,1,location_area_220,location_area,needs_review
+HV-6130.2-10-270-AV,1,location_area_221,location_area,needs_review
+HV-6130.3-13-370-AV,1,location_area_222,location_area,needs_review
+Hauptstr. 113,1,location_area_223,location_area,needs_review
+Hauptstr. 120,1,location_area_224,location_area,needs_review
+"Hauptstr. 126, U.G., Geb. 2080",1,basement_055,basement,auto_mapped
+Hauptstr.47-51,1,location_area_225,location_area,needs_review
+"Hauptstr.47-51, Ostflugel, U.G., Keller",1,basement_056,basement,auto_mapped
+"Hauptstrasse 120, Ebene 99, Keller",1,basement_057,basement,auto_mapped
+"Hauptstrasse 120, Keller",1,basement_058,basement,auto_mapped
+"Hauptstrasse 207, Keller",1,basement_059,basement,auto_mapped
+"Hauptstrasse 209, Keller",1,basement_060,basement,auto_mapped
+"Hauptstrasse 216, EG rechts",1,location_area_226,location_area,needs_review
+"Hauptstrasse 216, EG, links",1,location_area_227,location_area,needs_review
+Hauptstrasse 231,1,location_area_228,location_area,needs_review
+"Hauptstrasse 47, Keller",1,basement_061,basement,auto_mapped
+"Hauptstrasse 47-51, Keller Geb 3010",1,basement_062,basement,auto_mapped
+"Hauptstrasse 47-51, Keller Geb 3020",1,basement_063,basement,auto_mapped
+Haus F,1,location_area_229,location_area,needs_review
+Haus I / Keller,1,basement_064,basement,auto_mapped
+"Hautklinik, Bettenstation, Geb.  4330, E.G.",1,location_area_230,location_area,needs_review
+Heizraum,1,heating_plant_063,heating_plant,auto_mapped
+Heizzentrale 4060,1,heating_plant_064,heating_plant,auto_mapped
+"Heizzentrale, Geb. 6501",1,heating_plant_065,heating_plant,auto_mapped
+"Heizzentrale, Ã¼ber dem Wärmetauscher von Geb.6270, U.G.",1,heating_plant_066,heating_plant,auto_mapped
+Hez. 8,1,location_area_231,location_area,needs_review
+Hezzentrale,1,location_area_232,location_area,needs_review
+Hinter Kessel 4,1,location_area_233,location_area,needs_review
+"Hochhaus II, Geb. 6131, Elektrozentrale",1,location_area_234,location_area,needs_review
+"Hochhaus III, Geb. 6132, Elektrozentrale",1,location_area_235,location_area,needs_review
+"Hoersaal, Geb. 6306",1,location_area_236,location_area,needs_review
+"Hoersaal, Geb. 6308",1,location_area_237,location_area,needs_review
+INF 6370,1,location_area_238,location_area,needs_review
+Im Freien / E 00,1,level_area_116,level_area,auto_mapped
+"In der Decke, Flur Schwimmbad",1,location_area_239,location_area,needs_review
+"Institut fuer Rechtsmedizin, Geb. 4420, U.G.",1,basement_065,basement,auto_mapped
+KG 4410,1,basement_066,basement,auto_mapped
+"Kaeltezentrale, VZM, Geb,6670",1,cooling_plant_008,cooling_plant,auto_mapped
+Karlstrasse 16,1,location_area_240,location_area,needs_review
+"Karrengang, E.99",1,service_area_010,service_area,auto_mapped
+Keller unter d.Cafeteria,1,basement_067,basement,auto_mapped
+"Keller, Schulgasse 6",1,basement_068,basement,auto_mapped
+"Keller-Flur, Weberstr.13",1,basement_069,basement,auto_mapped
+Kellerdurchgang E99,1,basement_070,basement,auto_mapped
+"Kesselhaus, hinter K 5.",1,location_area_241,location_area,needs_review
+"Kettengasse 12-16, Heizraum",1,heating_plant_067,heating_plant,auto_mapped
+"KiKli Küchen+PersonalGeb.,Hauptverteilung",1,electrical_distribution_056,electrical_distribution,auto_mapped
+Knoten L,1,location_area_242,location_area,needs_review
+Kälte,1,cooling_plant_009,cooling_plant,auto_mapped
+Königstuhl 12,1,location_area_243,location_area,needs_review
+Küchenspüle,1,location_area_244,location_area,needs_review
+Luftungszentrale,1,location_area_245,location_area,needs_review
+Lüftung 61,1,location_area_246,location_area,needs_review
+Lüftungszentrale. AV Feld1,1,location_area_247,location_area,needs_review
+Lüftungszentrale.Schrank SV Feld8 Kühlmobil 65.909,1,location_area_248,location_area,needs_review
+ME 0.04 im EG,1,location_area_249,location_area,needs_review
+"Marsiliusplatz 1, Keller.",1,basement_071,basement,auto_mapped
+"Marstallhof 6, Keller",1,basement_072,basement,auto_mapped
+"Marstallstr. 1, Geb. 2010",1,location_area_250,location_area,needs_review
+"Marstallstrasse 6, Keller",1,basement_073,basement,auto_mapped
+Maschinenraum,1,location_area_251,location_area,needs_review
+"Med. Klinik, Geb. 4315",1,location_area_252,location_area,needs_review
+Mensa Geb.34,1,location_area_253,location_area,needs_review
+"Mensa Station 2/3,  Geb. 6304 1.U.G.",1,basement_074,basement,auto_mapped
+"Moro-Haus /  Ebene 99 ,  Heizzentrale",1,heating_plant_068,heating_plant,auto_mapped
+"Morohaus Geb.  6155, 1.UG, Hauptverteilung",1,electrical_distribution_057,electrical_distribution,auto_mapped
+NS-Hauptverteilung,1,electrical_distribution_058,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil1 F2,1,electrical_distribution_059,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil2 F2,1,electrical_distribution_060,electrical_distribution,auto_mapped
+NSGV SV UFHK Teil3 F2,1,electrical_distribution_061,electrical_distribution,auto_mapped
+NSHV 3/1    P1,1,electrical_distribution_062,electrical_distribution,auto_mapped
+NSHV 3/1    P2,1,electrical_distribution_063,electrical_distribution,auto_mapped
+NSHV 3/1    P3,1,electrical_distribution_064,electrical_distribution,auto_mapped
+NSHV 3/1    P4,1,electrical_distribution_065,electrical_distribution,auto_mapped
+NSHV 3/1    P5,1,electrical_distribution_066,electrical_distribution,auto_mapped
+NSHV 3/1    P6,1,electrical_distribution_067,electrical_distribution,auto_mapped
+NSHV 3/1    P7,1,electrical_distribution_068,electrical_distribution,auto_mapped
+NSHV 3/4    P1,1,electrical_distribution_069,electrical_distribution,auto_mapped
+NSHV 3/4    P10,1,electrical_distribution_070,electrical_distribution,auto_mapped
+NSHV 3/4    P11,1,electrical_distribution_071,electrical_distribution,auto_mapped
+NSHV 3/4    P12,1,electrical_distribution_072,electrical_distribution,auto_mapped
+NSHV 3/4    P2,1,electrical_distribution_073,electrical_distribution,auto_mapped
+NSHV 3/4    P4,1,electrical_distribution_074,electrical_distribution,auto_mapped
+NSHV 3/4    P5,1,electrical_distribution_075,electrical_distribution,auto_mapped
+NSHV 3/4    P6,1,electrical_distribution_076,electrical_distribution,auto_mapped
+NSHV 3/4    P7,1,electrical_distribution_077,electrical_distribution,auto_mapped
+NSHV 3/4    P8,1,electrical_distribution_078,electrical_distribution,auto_mapped
+NSHV 3/4    P9,1,electrical_distribution_079,electrical_distribution,auto_mapped
+NSHV 3/4   P3,1,electrical_distribution_080,electrical_distribution,auto_mapped
+NSHV AV,1,electrical_distribution_081,electrical_distribution,auto_mapped
+NSHV KoKli,1,electrical_distribution_082,electrical_distribution,auto_mapped
+NSHV-Halle,1,electrical_distribution_083,electrical_distribution,auto_mapped
+NSHV-VZM,1,electrical_distribution_084,electrical_distribution,auto_mapped
+"Nuklearmedizinische Station, Geb. 4480",1,location_area_254,location_area,needs_review
+OP-Container,1,location_area_255,location_area,needs_review
+"PH-Brunnen, Geb.  6560",1,location_area_256,location_area,needs_review
+"Patholog. Inst. Geb. 6220/6221, 1.UG, Hauptverteilung",1,electrical_distribution_085,electrical_distribution,auto_mapped
+"Patholog. Inst. Geb. 6221,1.UG, Hauptverteilung",1,electrical_distribution_086,electrical_distribution,auto_mapped
+"Patholog. Inst., Geb. 6221, Karrengang",1,service_area_011,service_area,auto_mapped
+"Personalbau, Ebene 98",1,level_area_117,level_area,auto_mapped
+"Philosophenweg 16, Keller",1,basement_075,basement,auto_mapped
+"Philosophenweg 16, unter Kellertreppe",1,basement_076,basement,auto_mapped
+Photovoltaikanlage Einsp.,1,location_area_257,location_area,needs_review
+Plankengasse 1,1,location_area_258,location_area,needs_review
+Plankengasse 3,1,location_area_259,location_area,needs_review
+"Plankengasse 3, Keller",1,basement_077,basement,auto_mapped
+"Plock 57A,Geb. 3051",1,location_area_260,location_area,needs_review
+"Plock 79-81, Geb. 3120",1,location_area_261,location_area,needs_review
+"Plock 79-81, Geb. 3121",1,location_area_262,location_area,needs_review
+"Ploeck 57 A, Keller / (SWH-Netze : Akademiestr.3)",1,basement_078,basement,auto_mapped
+"Psychiatrie, ehem.Neurolog.Klinik, Geb. 4190",1,location_area_263,location_area,needs_review
+Q1 Spülküche Mensa Trenner Cafe,1,location_area_264,location_area,needs_review
+Q14 Kassenhaus / Garage,1,location_area_265,location_area,needs_review
+Q14 Lastenaufzug Mensa,1,location_area_266,location_area,needs_review
+Q16 Lüftungsanlage Bauteil A  5.OG,1,level_area_118,level_area,auto_mapped
+Q2 UV 1  Parkhaus,1,location_area_267,location_area,needs_review
+Q21 Kleinkälte Bauteil C 1.UG,1,cooling_plant_010,cooling_plant,auto_mapped
+Q24 UV 13  Bauteil C,1,location_area_268,location_area,needs_review
+Q25 UV 14 Bauteil A,1,location_area_269,location_area,needs_review
+Q25 VT 7 Bauteil A,1,location_area_270,location_area,needs_review
+Q27 UV  7 Bauteil A,1,location_area_271,location_area,needs_review
+Q28 UV  7,1,location_area_272,location_area,needs_review
+Q29 VT 14 Bauteil A,1,location_area_273,location_area,needs_review
+Q3 VT 7 Bauteil A,1,location_area_274,location_area,needs_review
+Q38 VT 13 Mensa Kraft parallel 38-4,1,location_area_275,location_area,needs_review
+Q39 VT 13 Mensa Kraft parallel 38-4,1,location_area_276,location_area,needs_review
+Q4 VT 13 Mensa Kraft parallel 38-4,1,location_area_277,location_area,needs_review
+Q41 VT Küche neu 1.OG,1,level_area_119,level_area,auto_mapped
+Q7 Küche Cafeteria Eat&Meet,1,location_area_278,location_area,needs_review
+R 0.063-064,1,location_area_279,location_area,needs_review
+R 99/5,1,location_area_280,location_area,needs_review
+RTL-Anlagen,1,location_area_281,location_area,needs_review
+Raum 9025.99.13,1,location_area_282,location_area,needs_review
+Raum 9031.00.2,1,location_area_283,location_area,needs_review
+Raum 9037.99.007,1,location_area_284,location_area,needs_review
+Raum 9040.00.840,1,location_area_285,location_area,needs_review
+Raum 9040.00.843,1,location_area_286,location_area,needs_review
+Raum 99.3370,1,location_area_287,location_area,needs_review
+Raum : Neutralisation in Sanitärzentrale,1,water_plant_024,water_plant,auto_mapped
+"SHV, E 99",1,level_area_120,level_area,auto_mapped
+SV GHZ Gebäudeeingang,1,location_area_288,location_area,needs_review
+"Sandgasse 1, 3.O.G., WC",1,location_area_289,location_area,needs_review
+"Sandgasse 1, Ebene 00",1,level_area_121,level_area,auto_mapped
+"Sandgasse 1, Ebene 01",1,level_area_122,level_area,auto_mapped
+"Sandgasse 5, Ebene 00",1,level_area_123,level_area,auto_mapped
+"Sandgasse, 2.U.G., Technikraum Bauteil C",1,technical_center_026,technical_center,auto_mapped
+"Sanitärzentrale , BW-Enthartung",1,water_plant_025,water_plant,auto_mapped
+Sanitärzentrale 6269,1,water_plant_026,water_plant,auto_mapped
+Sanitärzentrale HH2 / HH3,1,water_plant_027,water_plant,auto_mapped
+Sanitärzentrale VZM,1,water_plant_028,water_plant,auto_mapped
+Sanitätzentrale 4210,1,location_area_290,location_area,needs_review
+Sanitätzentrale Kopfklinik,1,location_area_291,location_area,needs_review
+Schacht 183,1,location_area_292,location_area,needs_review
+"Schacht A1, Ebene 98 / X13 -Y34",1,level_area_124,level_area,auto_mapped
+"Schacht A2 , Ebene 98 / X22 -Y32",1,level_area_125,level_area,auto_mapped
+"Schacht A3 , Ebene 98 / X33 -Y30",1,level_area_126,level_area,auto_mapped
+"Schacht A4 , Ebene 98 / X31 -Y22",1,level_area_127,level_area,auto_mapped
+"Schacht A5 , Ebene 98 / X33 -Y15",1,level_area_128,level_area,auto_mapped
+"Schacht B1 , Ebene 98 / X12 -Y32",1,level_area_129,level_area,auto_mapped
+"Schacht B2 , Ebene 98 / X33-Y11",1,level_area_130,level_area,auto_mapped
+"Schacht C1 , Ebene 98 / X17 -Y32",1,level_area_131,level_area,auto_mapped
+"Schacht C2 , Ebene 98 / X31 -Y27",1,level_area_132,level_area,auto_mapped
+"Schacht C3 , Ebene 98 / X31 -Y18",1,level_area_133,level_area,auto_mapped
+"Schacht E , Ebene 98 / X22 -Y25 (vor Raum740, L.Schrank4.3)",1,level_area_134,level_area,auto_mapped
+"Schacht E , Ebene 98 / X24 -Y22",1,level_area_135,level_area,auto_mapped
+"Schacht E , Ebene 99",1,level_area_136,level_area,auto_mapped
+"Schulgasse 2+4, Geb. 2160",1,location_area_293,location_area,needs_review
+"Schulgasse 2, Zugang Augustinergasse 7.",1,location_area_294,location_area,needs_review
+"Schulgasse 4, Keller",1,basement_079,basement,auto_mapped
+Schurmannstr. 2,1,location_area_295,location_area,needs_review
+"Seminarstr. 2, Geb. 2200",1,location_area_296,location_area,needs_review
+"Seminarstr. 3,Geb. 2210, U.G.Kettengasse 12-16,Geb. 2220",1,basement_080,basement,auto_mapped
+"Seminarstr. 4, Geb. 2230",1,location_area_297,location_area,needs_review
+"SonderabluftzentraleVZM, Geb,6670",1,location_area_298,location_area,needs_review
+Sporthalle,1,location_area_299,location_area,needs_review
+TW-Uebergabe.,1,water_plant_029,water_plant,auto_mapped
+Technikraum Bauteil C,1,technical_center_027,technical_center,auto_mapped
+"Technikzentrale, Geb.6156",1,technical_center_028,technical_center,auto_mapped
+"Technikzentrale, Ost",1,technical_center_029,technical_center,auto_mapped
+Theoretikum 1,1,location_area_300,location_area,needs_review
+Theoretikum 2,1,location_area_301,location_area,needs_review
+"Theoretikum, Versorgungsgang West",1,location_area_302,location_area,needs_review
+"Theoretikum, Versorgungsgang-Ost",1,location_area_303,location_area,needs_review
+Tiefkeller,1,basement_081,basement,auto_mapped
+Trafo Chemie 2/0,1,transformer_station_021,transformer_station,auto_mapped
+Traforaum,1,location_area_304,location_area,needs_review
+Trafost. KIP 15Q1,1,location_area_305,location_area,needs_review
+Trafost. KIP 15Q2,1,location_area_306,location_area,needs_review
+Trafost. KIP 15Q3,1,location_area_307,location_area,needs_review
+Trafost. KIP 2Q3,1,location_area_308,location_area,needs_review
+Trafostation  4/5,1,transformer_station_022,transformer_station,auto_mapped
+"Trafostation  Hauptstr.207-209, Geb. 1010",1,transformer_station_023,transformer_station,auto_mapped
+"Trafostation 1/5,  Nebenraum",1,transformer_station_024,transformer_station,auto_mapped
+"Trafostation 1/5, E00 / Container",1,transformer_station_025,transformer_station,auto_mapped
+Trafostation 2/5,1,transformer_station_026,transformer_station,auto_mapped
+Trafostation I E99 I,1,transformer_station_027,transformer_station,auto_mapped
+Trafostation OSP,1,transformer_station_028,transformer_station,auto_mapped
+"Trafostation Plock55, Ausertrafostationraum, Geb. 3070",1,transformer_station_029,transformer_station,auto_mapped
+"Trafostation Plock55, Geb. 3070",1,transformer_station_030,transformer_station,auto_mapped
+Trafostation2/6 Mobil,1,transformer_station_031,transformer_station,auto_mapped
+Trafostion 2/7 EINC,1,location_area_309,location_area,needs_review
+Treppenhaus,1,location_area_310,location_area,needs_review
+"Turm 1, Lu.3, Geraet 5",1,location_area_311,location_area,needs_review
+"Turm 1, Lu.5, Geraet 6",1,location_area_312,location_area,needs_review
+"Turm 2, Lu. 4, Geraet 3",1,location_area_313,location_area,needs_review
+"Turm 2, Lu.4, Geraet 4",1,location_area_314,location_area,needs_review
+"Turm 3, Lu.3, Geraet 1",1,location_area_315,location_area,needs_review
+"Turm Geb.6307, Erdgeschoß",1,location_area_316,location_area,needs_review
+"Turm3, Lu 3, Geraet 2",1,location_area_317,location_area,needs_review
+U.G. - Wasserzentrale,1,water_plant_030,water_plant,auto_mapped
+U.G.U13,1,basement_082,basement,auto_mapped
+UBA geb.6101/ E99/,1,level_area_137,level_area,auto_mapped
+UG/Lüftungszentrale,1,location_area_318,location_area,needs_review
+UV4 31C1,1,location_area_319,location_area,needs_review
+Uebergabe,1,water_plant_031,water_plant,auto_mapped
+"Unter der Schanz 1, Tel.600189",1,location_area_320,location_area,needs_review
+Untergeschoss,1,basement_083,basement,auto_mapped
+VT-H 01.01.AV,1,location_area_321,location_area,needs_review
+"Verwaltung, Dez.III, Geb. 4040",1,location_area_322,location_area,needs_review
+"Verwaltung, Geb. 4370",1,location_area_323,location_area,needs_review
+"Vosstrasse 2, Ebene 99, Heizzraum",1,level_area_138,level_area,auto_mapped
+"Vosstrasse 2, Ebene 99,Heizraum",1,heating_plant_069,heating_plant,auto_mapped
+Waschmaschinenraum,1,location_area_324,location_area,needs_review
+Wasser Zentrale,1,location_area_325,location_area,needs_review
+Wasser-Anschluessraum,1,location_area_326,location_area,needs_review
+Wasserübergabe Ebene U2,1,water_plant_032,water_plant,auto_mapped
+Wasserübergaberaum E99,1,water_plant_033,water_plant,auto_mapped
+"Wasseuebergabe Sued, Karrengang, Schaltschrank",1,water_plant_034,water_plant,auto_mapped
+ZMBH Geb.282,1,location_area_327,location_area,needs_review
+ZV-6130-99.1-177-AV,1,location_area_328,location_area,needs_review
+ZV2-6130.02-99-278-AV,1,location_area_329,location_area,needs_review
+Zentrale VE-Anlage,1,location_area_330,location_area,needs_review
+Ziegelhäuser Landstr.17,1,location_area_331,location_area,needs_review
+"Ziegelhäuser Landstrasse 17, hinterm Holzverschlag",1,location_area_332,location_area,needs_review
+Zwischen den BW-Druckkesseln im Heizwerk,1,location_area_333,location_area,needs_review
+bei Geb.6304,1,location_area_334,location_area,needs_review
+frÃ¼her Sozialräume von Metzgerei BeireiÃŸ,1,location_area_335,location_area,needs_review
+im Flur 6670/98/003,1,location_area_336,location_area,needs_review
+im Versorgungsgang,1,location_area_337,location_area,needs_review
+in 6227,1,location_area_338,location_area,needs_review
+in 6327,1,location_area_339,location_area,needs_review
+stat.Heizung,1,heating_plant_070,heating_plant,auto_mapped
+unter dem Schwimmbecken,1,location_area_340,location_area,needs_review
+v,1,location_area_341,location_area,needs_review
+vor dem Gebäude 6294,1,location_area_342,location_area,needs_review
+Überflurhydrant,1,location_area_343,location_area,needs_review
+Übergabe AV,1,water_plant_035,water_plant,auto_mapped
+Übergabe RWE GHZ,1,water_plant_036,water_plant,auto_mapped
+Übergabe Wasser,1,water_plant_037,water_plant,auto_mapped
+Übergabestation Kessehaus KKH,1,water_plant_038,water_plant,auto_mapped

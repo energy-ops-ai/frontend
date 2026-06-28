@@ -1,0 +1,9 @@
+# Erdgas UKHD (diagram 179)
+
+3014 -> Summenzähler
+3449 -> Summenzähler
+Summenzähler -> 1847
+Summenzähler -> 1854
+1847 -> Summenzähler
+1854 -> Summenzähler
+Summenzähler -> 417

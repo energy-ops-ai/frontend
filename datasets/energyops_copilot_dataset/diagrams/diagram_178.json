@@ -1,0 +1,420 @@
+{
+  "id": 178,
+  "name": "Dampf INF",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 7005.1132054049585,
+        "y": 2527.5517609137423
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "1125",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1246"
+      }
+    },
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": 7006.549078348704,
+        "y": 2657.4982623227816
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "1123",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1288"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": 7503.77886286781,
+        "y": 2677.8864593899707
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "Summenzähler",
+        "unit": "kWh",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    },
+    {
+      "id": "node-4",
+      "type": "meterNode",
+      "position": {
+        "x": 6367.9205382617965,
+        "y": 2869.8127871375764
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-4",
+        "label": "Summenzähler",
+        "unit": "kWh",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "outgoing",
+        "showLoss": false
+      }
+    },
+    {
+      "id": "node-5",
+      "type": "meterNode",
+      "position": {
+        "x": 7038.125042353723,
+        "y": 3053.130710398294
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-5",
+        "label": "9062",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3659"
+      }
+    },
+    {
+      "id": "node-6",
+      "type": "meterNode",
+      "position": {
+        "x": 7039.425237661677,
+        "y": 3181.850045885757
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-6",
+        "label": "630",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1243"
+      }
+    },
+    {
+      "id": "node-7",
+      "type": "meterNode",
+      "position": {
+        "x": 7036.824847045768,
+        "y": 3319.670748528899
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-7",
+        "label": "1831",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2457"
+      }
+    },
+    {
+      "id": "node-8",
+      "type": "meterNode",
+      "position": {
+        "x": 7797.439102198957,
+        "y": 2471.94340774278
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-8",
+        "label": "1224",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2184"
+      }
+    },
+    {
+      "id": "node-9",
+      "type": "meterNode",
+      "position": {
+        "x": 7798.739297506912,
+        "y": 2574.6588370711593
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-9",
+        "label": "1218",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2178"
+      }
+    },
+    {
+      "id": "node-10",
+      "type": "meterNode",
+      "position": {
+        "x": 7801.339688122819,
+        "y": 2678.674461707493
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-10",
+        "label": "1212",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2173"
+      }
+    },
+    {
+      "id": "node-11",
+      "type": "meterNode",
+      "position": {
+        "x": 7797.439102198959,
+        "y": 2798.2924300392765
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-11",
+        "label": "1230",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2190"
+      }
+    },
+    {
+      "id": "node-12",
+      "type": "meterNode",
+      "position": {
+        "x": 7798.73929750691,
+        "y": 2903.6082499835643
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-12",
+        "label": "1350",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2262"
+      }
+    },
+    {
+      "id": "node-13",
+      "type": "meterNode",
+      "position": {
+        "x": 7800.039492814865,
+        "y": 3016.7252417755767
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-13",
+        "label": "1347",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2259"
+      }
+    },
+    {
+      "id": "node-14",
+      "type": "meterNode",
+      "position": {
+        "x": 7396.978947349072,
+        "y": 3053.1307103982936
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-14",
+        "label": "1792",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2436"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-1-node-3",
+      "source": "node-1",
+      "target": "node-3",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-4-node-1",
+      "source": "node-4",
+      "target": "node-1",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-2-node-4",
+      "source": "node-2",
+      "target": "node-4",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-4-node-5",
+      "source": "node-4",
+      "target": "node-5",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-4-node-6",
+      "source": "node-4",
+      "target": "node-6",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-7-node-4",
+      "source": "node-7",
+      "target": "node-4",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-8",
+      "source": "node-3",
+      "target": "node-8",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-9",
+      "source": "node-3",
+      "target": "node-9",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-10",
+      "source": "node-3",
+      "target": "node-10",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-11",
+      "source": "node-3",
+      "target": "node-11",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-12",
+      "source": "node-3",
+      "target": "node-12",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-13",
+      "source": "node-3",
+      "target": "node-13",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-5-node-14",
+      "source": "node-5",
+      "target": "node-14",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

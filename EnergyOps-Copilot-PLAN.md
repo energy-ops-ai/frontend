@@ -12,7 +12,7 @@ See `EnergyOPS Context.md` for the product brief.
 | Layer | Choice | Why |
 |---|---|---|
 | Server | **Hono** (TypeScript) | Lightweight modern framework; clean routes + SSE vs. raw `node:http`. |
-| Agent runtime | **Claude Agent SDK** (`@anthropic-ai/claude-agent-sdk`) over subscription OAuth token | Proven in `spike-agent-sdk/ts`; streaming, tool-calls, widgets, no API key. |
+| Agent runtime | **Claude Agent SDK** (`@anthropic-ai/claude-agent-sdk`) over subscription OAuth token | Streaming, tool-calls, widgets, no API key. |
 | Agent structure | **One conversational agent** + a declared **`subsystem-analyst` subagent** for big sweeps | Simple to build/demo; subagent gives isolated context for scale (pillar #3). |
 | Data access | Agent-driven **`query_data` (read-only SQL)** + topology helpers, **bounded responses** | Agent decides where to look — no pre-aggregation, misses nothing. |
 | Data store | **DuckDB** over the CSVs | Reads CSVs directly (zero ETL), fast analytical aggregation, scales to ~2,000 sensors. |
@@ -68,7 +68,7 @@ retrieval patterns. Annotations are the new addition vs. the earlier plan.
 ## Repository layout
 
 ```
-energyops-copilot/
+repo root/
 ├─ server/
 │  ├─ src/
 │  │  ├─ index.ts            # Hono app: /events (SSE), /message, /permission, /interrupt
@@ -84,7 +84,7 @@ energyops-copilot/
 │  │  │  ├─ duck.ts          # DuckDB: load CSVs as views, run bounded read-only SQL
 │  │  │  └─ memory.ts        # better-sqlite3: schema + queries for notes/decisions/annotations
 │  │  └─ types.ts            # shared widget + event types (also imported by web via path alias)
-│  ├─ data/ -> ../../energyops_copilot_sample_dataset   # symlink or configurable path
+│  ├─ data/ -> ../datasets                              # configurable path
 │  └─ package.json
 └─ web/
    ├─ src/

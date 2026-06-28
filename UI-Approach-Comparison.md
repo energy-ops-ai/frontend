@@ -4,7 +4,7 @@ Two independent takes on the same brief exist in `hackathon/`:
 
 - **`all-in-one/`** (Alexander Melde) — a polished, client-only **dashboard**: fixed 3-panel
   layout, three one-shot LLM prompts, seed data, a tight decision-memory loop.
-- **`frontend/energyops-copilot/`** (ours) — a client **+ server** **agentic** app: a real
+- **`frontend/`** (ours) — a client **+ server** **agentic** app: a real
   Claude Agent SDK tool-loop over live DuckDB data, a chat + dynamic widget workspace,
   multi-dataset / multi-session / resumable.
 

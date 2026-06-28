@@ -1,0 +1,163 @@
+{
+  "id": 162,
+  "name": "Campus",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 223.41547128713023,
+        "y": 96
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "1338",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1303"
+      }
+    },
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": 693.0483460903281,
+        "y": 237.39382407774997
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "1133",
+        "unit": "m³",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2109"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": 228.82713424415147,
+        "y": 315.05025299143097
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "318",
+        "unit": "m³",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1629"
+      }
+    },
+    {
+      "id": "node-4",
+      "type": "meterNode",
+      "position": {
+        "x": 134.51294117647046,
+        "y": 569.9011764705882
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-4",
+        "label": "1511",
+        "unit": "kWh",
+        "energyType": "electricity",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3904"
+      }
+    },
+    {
+      "id": "node-5",
+      "type": "meterNode",
+      "position": {
+        "x": 722.0234111124478,
+        "y": 584.3628973667406
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-5",
+        "label": "124",
+        "unit": "kWh",
+        "energyType": "electricity",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1572"
+      }
+    },
+    {
+      "id": "node-6",
+      "type": "meterNode",
+      "position": {
+        "x": 410.1203395054804,
+        "y": 806.4580620778829
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-6",
+        "label": "858",
+        "unit": "m³",
+        "energyType": "water",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1972"
+      }
+    },
+    {
+      "id": "node-7",
+      "type": "meterNode",
+      "position": {
+        "x": -59.564796721030916,
+        "y": 203.46047361074068
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-7",
+        "label": "8207",
+        "unit": "kWh",
+        "energyType": "heating",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1232"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-3-node-2",
+      "source": "node-3",
+      "target": "node-2",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-1-node-2",
+      "source": "node-1",
+      "target": "node-2",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

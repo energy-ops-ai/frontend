@@ -1,0 +1,257 @@
+{
+  "id": 179,
+  "name": "Erdgas UKHD",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 7270.321563975903,
+        "y": 2146.0004646548387
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "1847",
+        "unit": "kWh",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3910"
+      }
+    },
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": 7268.370355595276,
+        "y": 2278.6826345374498
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "1854",
+        "unit": "kWh",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3911"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": 8087.877875458461,
+        "y": 1765.5148304326462
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "1931",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2499"
+      }
+    },
+    {
+      "id": "node-5",
+      "type": "meterNode",
+      "position": {
+        "x": 8085.926667077834,
+        "y": 1878.6849165089902
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-5",
+        "label": "1933",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2500"
+      }
+    },
+    {
+      "id": "node-6",
+      "type": "meterNode",
+      "position": {
+        "x": 8080.073041935954,
+        "y": 2124.537172467946
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-6",
+        "label": "417",
+        "unit": "kWh",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1713"
+      }
+    },
+    {
+      "id": "node-7",
+      "type": "meterNode",
+      "position": {
+        "x": 6710.324758736059,
+        "y": 2136.2444227517058
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-7",
+        "label": "3014",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "4023"
+      }
+    },
+    {
+      "id": "node-8",
+      "type": "meterNode",
+      "position": {
+        "x": 6706.422341974804,
+        "y": 2276.731426156823
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-8",
+        "label": "3449",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "4117"
+      }
+    },
+    {
+      "id": "node-9",
+      "type": "meterNode",
+      "position": {
+        "x": 6973.981220675347,
+        "y": 2239.90219682463
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-9",
+        "label": "Summenzähler",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    },
+    {
+      "id": "node-10",
+      "type": "meterNode",
+      "position": {
+        "x": 7602.270319237125,
+        "y": 2232.0973633021235
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-10",
+        "label": "Summenzähler",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-7-node-9",
+      "source": "node-7",
+      "target": "node-9",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-8-node-9",
+      "source": "node-8",
+      "target": "node-9",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-9-node-1",
+      "source": "node-9",
+      "target": "node-1",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-9-node-2",
+      "source": "node-9",
+      "target": "node-2",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-1-node-10",
+      "source": "node-1",
+      "target": "node-10",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-2-node-10",
+      "source": "node-2",
+      "target": "node-10",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-10-node-6",
+      "source": "node-10",
+      "target": "node-6",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

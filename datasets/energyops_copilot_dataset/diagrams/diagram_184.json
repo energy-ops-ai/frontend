@@ -1,0 +1,952 @@
+{
+  "id": 184,
+  "name": "Kälte INF",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": -4940.761232438462,
+        "y": 5262.310263394073
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "875",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1296"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": -4940.850766837796,
+        "y": 5408.561314397512
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "1096",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1235"
+      }
+    },
+    {
+      "id": "node-4",
+      "type": "meterNode",
+      "position": {
+        "x": -4939.0423145274135,
+        "y": 5555.026692493304
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-4",
+        "label": "316",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1309"
+      }
+    },
+    {
+      "id": "node-5",
+      "type": "meterNode",
+      "position": {
+        "x": -4938.21175101625,
+        "y": 5708.407744986795
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-5",
+        "label": "7927",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "6335"
+      }
+    },
+    {
+      "id": "node-6",
+      "type": "meterNode",
+      "position": {
+        "x": -4941.681330348958,
+        "y": 5820.9075365140425
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-6",
+        "label": "373",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1343"
+      }
+    },
+    {
+      "id": "node-7",
+      "type": "meterNode",
+      "position": {
+        "x": -4942.341084304345,
+        "y": 5969.352176475993
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-7",
+        "label": "1160",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2130"
+      }
+    },
+    {
+      "id": "node-8",
+      "type": "meterNode",
+      "position": {
+        "x": -4943.000838259731,
+        "y": 6090.746904267098
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-8",
+        "label": "1723",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1317"
+      }
+    },
+    {
+      "id": "node-9",
+      "type": "meterNode",
+      "position": {
+        "x": -4944.320346170503,
+        "y": 6237.21228236289
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-9",
+        "label": "1751",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3863"
+      }
+    },
+    {
+      "id": "node-10",
+      "type": "meterNode",
+      "position": {
+        "x": -4945.639854081277,
+        "y": 6382.3581525479085
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-10",
+        "label": "2187",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2630"
+      }
+    },
+    {
+      "id": "node-11",
+      "type": "meterNode",
+      "position": {
+        "x": -4946.299608036662,
+        "y": 6503.752880339015
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-11",
+        "label": "1362",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2271"
+      }
+    },
+    {
+      "id": "node-12",
+      "type": "meterNode",
+      "position": {
+        "x": -4946.959361992049,
+        "y": 6623.432247846116
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-12",
+        "label": "973",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1237"
+      }
+    },
+    {
+      "id": "node-13",
+      "type": "meterNode",
+      "position": {
+        "x": -4949.512973035708,
+        "y": 6769.1524672086325
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-13",
+        "label": "1767",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1314"
+      }
+    },
+    {
+      "id": "node-15",
+      "type": "meterNode",
+      "position": {
+        "x": -4949.983896659361,
+        "y": 6940.323196771532
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-15",
+        "label": "1378",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1313"
+      }
+    },
+    {
+      "id": "node-16",
+      "type": "meterNode",
+      "position": {
+        "x": -4950.258131768981,
+        "y": 7211.009120513286
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-16",
+        "label": "1385",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1259"
+      }
+    },
+    {
+      "id": "node-17",
+      "type": "meterNode",
+      "position": {
+        "x": -4950.258131768981,
+        "y": 7358.134252564463
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-17",
+        "label": "2507",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1350"
+      }
+    },
+    {
+      "id": "node-18",
+      "type": "meterNode",
+      "position": {
+        "x": -4951.577639679754,
+        "y": 7503.939876704868
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-18",
+        "label": "1338",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1303"
+      }
+    },
+    {
+      "id": "node-19",
+      "type": "meterNode",
+      "position": {
+        "x": -4879.411277435903,
+        "y": 7655.482448143454
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-19",
+        "label": "2035",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1308"
+      }
+    },
+    {
+      "id": "node-20",
+      "type": "meterNode",
+      "position": {
+        "x": -5195.225772662899,
+        "y": 7707.00495809452
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-20",
+        "label": "435",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1721"
+      }
+    },
+    {
+      "id": "node-21",
+      "type": "meterNode",
+      "position": {
+        "x": -4903.969228235711,
+        "y": 7810.973734196899
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-21",
+        "label": "434",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1720"
+      }
+    },
+    {
+      "id": "node-22",
+      "type": "meterNode",
+      "position": {
+        "x": -4908.823745584796,
+        "y": 7965.663536267522
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-22",
+        "label": "9203",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "6638"
+      }
+    },
+    {
+      "id": "node-23",
+      "type": "meterNode",
+      "position": {
+        "x": -5150.1073738697205,
+        "y": 8088.4636900641635
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-23",
+        "label": "542",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1282"
+      }
+    },
+    {
+      "id": "node-24",
+      "type": "meterNode",
+      "position": {
+        "x": -4953.368804995975,
+        "y": 8238.597353546189
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-24",
+        "label": "436",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1280"
+      }
+    },
+    {
+      "id": "node-25",
+      "type": "meterNode",
+      "position": {
+        "x": -4954.642860001439,
+        "y": 8386.103496586438
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-25",
+        "label": "442",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1255"
+      }
+    },
+    {
+      "id": "node-26",
+      "type": "meterNode",
+      "position": {
+        "x": -4958.3900766632705,
+        "y": 8511.51109033085
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-26",
+        "label": "509",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1250"
+      }
+    },
+    {
+      "id": "node-27",
+      "type": "meterNode",
+      "position": {
+        "x": -4958.3900766632705,
+        "y": 8634.22532603273
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-27",
+        "label": "3455",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "5961"
+      }
+    },
+    {
+      "id": "node-28",
+      "type": "meterNode",
+      "position": {
+        "x": -4957.070568752497,
+        "y": 8746.383498448426
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-28",
+        "label": "553",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1311"
+      }
+    },
+    {
+      "id": "node-29",
+      "type": "meterNode",
+      "position": {
+        "x": -4955.751060841724,
+        "y": 8894.168384455004
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-29",
+        "label": "444",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1240"
+      }
+    },
+    {
+      "id": "node-30",
+      "type": "meterNode",
+      "position": {
+        "x": -4955.751060841725,
+        "y": 9016.882620156885
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-30",
+        "label": "586",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1248"
+      }
+    },
+    {
+      "id": "node-31",
+      "type": "meterNode",
+      "position": {
+        "x": -4955.751060841724,
+        "y": 9164.667506163449
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-31",
+        "label": "440",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1301"
+      }
+    },
+    {
+      "id": "node-32",
+      "type": "meterNode",
+      "position": {
+        "x": -4955.751060841725,
+        "y": 9289.22905294042
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-32",
+        "label": "437",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1340"
+      }
+    },
+    {
+      "id": "node-33",
+      "type": "meterNode",
+      "position": {
+        "x": -4954.4315529309515,
+        "y": 9417.262796553074
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-33",
+        "label": "438",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1336"
+      }
+    },
+    {
+      "id": "node-34",
+      "type": "meterNode",
+      "position": {
+        "x": -4954.682096383884,
+        "y": 9551.789324368807
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-34",
+        "label": "441",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1312"
+      }
+    },
+    {
+      "id": "node-35",
+      "type": "meterNode",
+      "position": {
+        "x": -4952.001604294656,
+        "y": 9679.870114173862
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-35",
+        "label": "7922",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "6330"
+      }
+    },
+    {
+      "id": "node-36",
+      "type": "meterNode",
+      "position": {
+        "x": -4953.070568752498,
+        "y": 9795.576925587362
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-36",
+        "label": "7884",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1348"
+      }
+    },
+    {
+      "id": "node-37",
+      "type": "meterNode",
+      "position": {
+        "x": -4951.709584574043,
+        "y": 9948.338509014533
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-37",
+        "label": "7886",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1342"
+      }
+    },
+    {
+      "id": "node-38",
+      "type": "meterNode",
+      "position": {
+        "x": -4949.070568752498,
+        "y": 10099.426031125544
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-38",
+        "label": "7887",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1310"
+      }
+    },
+    {
+      "id": "node-39",
+      "type": "meterNode",
+      "position": {
+        "x": -4942.3900766632705,
+        "y": 10257.1525690581
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-39",
+        "label": "7889",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1289"
+      }
+    },
+    {
+      "id": "node-40",
+      "type": "meterNode",
+      "position": {
+        "x": -4943.709584574043,
+        "y": 10408.937455064664
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-40",
+        "label": "7898",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1319"
+      }
+    },
+    {
+      "id": "node-41",
+      "type": "meterNode",
+      "position": {
+        "x": -4949.070568752497,
+        "y": 10559.983500907994
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-41",
+        "label": "7920",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1315"
+      }
+    },
+    {
+      "id": "node-42",
+      "type": "meterNode",
+      "position": {
+        "x": -4943.751060841724,
+        "y": 10710.757349915624
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-42",
+        "label": "7924",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "6332"
+      }
+    },
+    {
+      "id": "node-43",
+      "type": "meterNode",
+      "position": {
+        "x": -4944.305336191368,
+        "y": 10836.35638042758
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-43",
+        "label": "7896",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "6325"
+      }
+    },
+    {
+      "id": "node-44",
+      "type": "meterNode",
+      "position": {
+        "x": -4939.746019298123,
+        "y": 10956.308449137867
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-44",
+        "label": "7905",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3103"
+      }
+    },
+    {
+      "id": "node-45",
+      "type": "meterNode",
+      "position": {
+        "x": -4939.746019298124,
+        "y": 11107.251443128489
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-45",
+        "label": "7906",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3104"
+      }
+    },
+    {
+      "id": "node-46",
+      "type": "meterNode",
+      "position": {
+        "x": -4938.777452431144,
+        "y": 11258.194437119113
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-46",
+        "label": "7907",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3105"
+      }
+    },
+    {
+      "id": "node-47",
+      "type": "meterNode",
+      "position": {
+        "x": -4934.777452431144,
+        "y": 11408.590281410206
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-47",
+        "label": "7908",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3106"
+      }
+    },
+    {
+      "id": "node-48",
+      "type": "meterNode",
+      "position": {
+        "x": -4929.808885564165,
+        "y": 11569.433648241535
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-48",
+        "label": "7914",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3108"
+      }
+    },
+    {
+      "id": "node-49",
+      "type": "meterNode",
+      "position": {
+        "x": -4929.261735864634,
+        "y": 11752.376642232157
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-49",
+        "label": "7916",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "3110"
+      }
+    },
+    {
+      "id": "node-50",
+      "type": "meterNode",
+      "position": {
+        "x": -4935.398675238447,
+        "y": 5083.469598206173
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-50",
+        "label": "2245",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2660"
+      }
+    },
+    {
+      "id": "node-51",
+      "type": "meterNode",
+      "position": {
+        "x": -4294.543516914242,
+        "y": 5479.034272234681
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-51",
+        "label": "Summenzähler",
+        "unit": "kWh",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-50-node-51",
+      "source": "node-50",
+      "target": "node-51",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

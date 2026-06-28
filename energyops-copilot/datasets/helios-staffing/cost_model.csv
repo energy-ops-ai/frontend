@@ -1,8 +1,0 @@
-param,value
-currency,EUR
-regular_cost_per_person_day,230
-overstaffing_idle_cost_per_person_day,230
-understaffing_overtime_premium_pct,18
-understaffing_sla_tolerance_person_days,2
-understaffing_sla_penalty_per_person_day,600
-admin_person_days_per_day,8

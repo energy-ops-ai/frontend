@@ -1,0 +1,15 @@
+# Dampf INF (diagram 178)
+
+1125 -> Summenzähler
+Summenzähler -> 1125
+1123 -> Summenzähler
+Summenzähler -> 9062
+Summenzähler -> 630
+1831 -> Summenzähler
+Summenzähler -> 1224
+Summenzähler -> 1218
+Summenzähler -> 1212
+Summenzähler -> 1230
+Summenzähler -> 1350
+Summenzähler -> 1347
+9062 -> 1792

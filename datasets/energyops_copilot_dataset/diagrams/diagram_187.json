@@ -1,0 +1,108 @@
+{
+  "id": 187,
+  "name": "Diagramm 12",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 219.44507381552117,
+        "y": 248.03131665118735
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "1338",
+        "unit": "kWh",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1303"
+      }
+    },
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": 270.02415788516186,
+        "y": 442.1138485463201
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "1133",
+        "unit": "m³",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2109"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": 221.64908601436377,
+        "y": 633.654381559874
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "1162",
+        "unit": "m³",
+        "energyType": "cold",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2132"
+      }
+    },
+    {
+      "id": "node-4",
+      "type": "meterNode",
+      "position": {
+        "x": 816.5748424888716,
+        "y": 558.3396495325559
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-4",
+        "label": "Summenzähler",
+        "unit": "m³",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-2-node-4",
+      "source": "node-2",
+      "target": "node-4",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-3-node-4",
+      "source": "node-3",
+      "target": "node-4",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

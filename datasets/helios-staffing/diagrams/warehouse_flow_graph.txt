@@ -1,0 +1,27 @@
+# Warehouse process flow
+
+Topology edges:
+- Inbound pallets volume -> Unloading — planned
+- Unloading — planned -> Receiving — planned
+- Yard shunting — planned -> Unloading — planned
+- Receiving — planned -> Putaway — planned
+- Returns / QC — planned -> Putaway — planned
+- Putaway — planned -> VNA replenishment — planned
+- VNA replenishment — planned -> Picking — planned
+- Replenishment / relocation — planned -> Picking — planned
+- Aisle maintenance — planned -> Picking — planned
+- Picks volume -> Picking — planned
+- Picking — planned -> Pick QA — planned
+- Pick QA — planned -> Staging — planned
+- Co-Packing line — planned -> Staging — planned
+- Staging — planned -> Loading — planned
+- Transit drivers — planned -> Staging — planned
+- Loading — planned -> Outbound pallets volume
+- Loading — planned -> Operative staffing need (realized)
+- Picking — planned -> Operative staffing need (realized)
+- Team leads — planned -> Operative staffing need (realized)
+- Operative staffing need (realized) -> Total on-site staffing
+- Inbound office — planned -> Receiving — planned
+- Outbound office — planned -> Loading — planned
+- Inventory — planned -> Putaway — planned
+- Control room — planned -> Total on-site staffing

@@ -1,0 +1,56 @@
+[
+  {
+    "target_kind": "sensor",
+    "target_id": "951008",
+    "text": "[L01 · Maya · 2026-05-19] Transit drivers sit at 4 every day — it's the fixed shuttle rota, it doesn't move with outbound. The plan keeps nudging it to 4.2 / 4.5 on big outbound days. Ignore that, it's always 4.",
+    "updated_at": "2026-05-19T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951012",
+    "text": "[L02 · Maya · 2026-06-02] Co-Packing ran a crew of exactly 4 again all week regardless of volume. The optimiser scales it up with outbound — it shouldn't, that line is a fixed cell. Treat Co-Packing as a hard 4.\n[L10 · Maya · 2026-08-11] Co-Packing fixed-crew-of-4 has held for about 8 weeks straight now. Rock solid — applying it every cycle without thinking about it.",
+    "updated_at": "2026-08-11T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951004",
+    "text": "[L03 · Jonas · 2026-06-09] Picking is planned way too hot. We ran roughly 12–15% under the recommended pickers all week and still cleared every wave with time to spare. Trim picker person-days about 12%.\n[L06 · Jonas · 2026-06-30] When picks come in under ~7,000 we end up idling a picker — the line just doesn't need the body. Drop one picker on the genuinely low-volume days.\n[L11 · Maya · 2026-08-25] Pick-by-light went live Monday (24.08). Pickers are flying — we're way over plan now. Jonas' old −12% trim is too small; this week it looked more like −25%.\n[L12 · Jonas · 2026-09-01] Confirming pick-by-light two weeks in: picking need is running ~25–30% under the optimiser plan now, consistently. Retire the old 12% number — it's stale, it'll leave us overstaffed.",
+    "updated_at": "2026-09-01T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951002",
+    "text": "[L04 · Maya · 2026-06-16] Mondays the receiving desk backs up before 10:00 — it's the heaviest inbound day of the week and the plan staffs Receiving at its weekday baseline. Add +1 to Receiving on Mondays.\n[L07 · Maya · 2026-07-07] First working day after any closed day (public holiday or long weekend) the inbound backlog hits hard and we scramble on Receiving and Putaway. Add +1 to each on the day after a closure.",
+    "updated_at": "2026-07-07T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951006",
+    "text": "[L05 · Selin · 2026-06-23] Loading felt tight the last couple of paydays (last Monday of the month). Probably people stocking up after payday. Add +1 loader on payday Mondays to be safe.\n[L14 · Maya · 2026-09-22] Flu-season ramp is starting — wholesalers pulling orders forward. Outbound is climbing week over week and the optimiser is lagging the trend, under-planning Staging and Loading. Plan ahead of the forecast, not behind it.",
+    "updated_at": "2026-09-22T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951003",
+    "text": "[L07 · Maya · 2026-07-07] First working day after any closed day (public holiday or long weekend) the inbound backlog hits hard and we scramble on Receiving and Putaway. Add +1 to each on the day after a closure.",
+    "updated_at": "2026-07-07T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "950001",
+    "text": "[L08 · Selin · 2026-07-21] Late July is dead — heat, everyone on holiday, volumes down. We're carrying too many people. Cut the whole operative plan ~15% through the late-summer weeks.\n[L09 · Jonas · 2026-07-28] Pushing back on Selin's note from last week — the heat is KILLING throughput on the floor. People are visibly slower, pickers especially. We actually needed more hours this week, not fewer. Do not cut blindly just because it's summer.\n[L15 · Jonas · 2026-09-29] Autumn ramp confirmed — picks up ~8% vs last month and still climbing into October. We keep ending the week short on the outbound roles. Staff to the trend, not the rear-view forecast.",
+    "updated_at": "2026-09-29T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951013",
+    "text": "[L13 · Selin · 2026-09-15] VNA replenishment needed a 2nd person on a couple of heavy-inbound days (over ~2,000 pallets). I saw it happen twice. Might be worth planning a second body on big inbound days.",
+    "updated_at": "2026-09-15T00:00:00Z"
+  },
+  {
+    "target_kind": "sensor",
+    "target_id": "951005",
+    "text": "[L14 · Maya · 2026-09-22] Flu-season ramp is starting — wholesalers pulling orders forward. Outbound is climbing week over week and the optimiser is lagging the trend, under-planning Staging and Loading. Plan ahead of the forecast, not behind it.",
+    "updated_at": "2026-09-22T00:00:00Z"
+  }
+]

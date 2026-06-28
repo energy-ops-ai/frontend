@@ -1,0 +1,6 @@
+# KSG im VZM (diagram 177)
+
+1224 -> Summenzähler
+1218 -> Summenzähler
+1230 -> Summenzähler
+1792 -> Summenzähler

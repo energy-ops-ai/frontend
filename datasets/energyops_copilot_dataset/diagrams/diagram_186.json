@@ -1,0 +1,89 @@
+{
+  "id": 186,
+  "name": "Diagramm 11",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 318.2017825975279,
+        "y": 198.76582583003477
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "1931",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2499"
+      }
+    },
+    {
+      "id": "node-2",
+      "type": "meterNode",
+      "position": {
+        "x": 298.68542398292175,
+        "y": 370.75373612125026
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-2",
+        "label": "1933",
+        "unit": "m³",
+        "energyType": "gas",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "2500"
+      }
+    },
+    {
+      "id": "node-3",
+      "type": "meterNode",
+      "position": {
+        "x": 730.9636108859653,
+        "y": 258.4190982158812
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-3",
+        "label": "Summenzähler",
+        "unit": "m³",
+        "energyType": null,
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "sum",
+        "sumMode": "incoming",
+        "showLoss": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "reactflow__edge-node-1-node-3",
+      "source": "node-1",
+      "target": "node-3",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    },
+    {
+      "id": "reactflow__edge-node-2-node-3",
+      "source": "node-2",
+      "target": "node-3",
+      "sourceHandle": null,
+      "targetHandle": null,
+      "type": "smoothstep",
+      "animated": true,
+      "interactionWidth": 28,
+      "selected": false
+    }
+  ]
+}

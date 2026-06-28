@@ -1,0 +1,27 @@
+{
+  "id": 183,
+  "name": "Diagramm 9",
+  "type": "energy_topology",
+  "nodes": [
+    {
+      "id": "node-1",
+      "type": "meterNode",
+      "position": {
+        "x": 114.10023843485014,
+        "y": 336.3342907161872
+      },
+      "selected": false,
+      "data": {
+        "nodeId": "node-1",
+        "label": "8261",
+        "unit": "kWh",
+        "energyType": "electricity",
+        "latestValueLabel": "",
+        "linkedDiagram": null,
+        "kind": "meter",
+        "meterId": "1244"
+      }
+    }
+  ],
+  "edges": []
+}

@@ -1,0 +1,4 @@
+# Diagramm 12 (diagram 187)
+
+1133 -> Summenzähler
+1162 -> Summenzähler
