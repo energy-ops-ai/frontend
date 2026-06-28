@@ -51,6 +51,7 @@ const FALLBACK_ENERGY_COLOR = {
 
 const NODE_W = 180;
 const NODE_H = 66;
+const TOPOLOGY_MIN_ZOOM = 0.01;
 
 function energyColors(energyType?: string | null) {
   if (!energyType) return FALLBACK_ENERGY_COLOR;
@@ -224,6 +225,7 @@ export function TopologyWidget({
           edges={edges}
           fitView
           fitViewOptions={{ padding: 0.14 }}
+          minZoom={TOPOLOGY_MIN_ZOOM}
           maxZoom={Infinity}
           proOptions={{ hideAttribution: true }}
           nodesDraggable={false}
