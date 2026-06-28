@@ -375,6 +375,8 @@ export interface PermissionAnswer {
   updatedInput?: Record<string, unknown>;
 }
 
+const API_BASE = import.meta.env.VITE_SERVER_URL || '';
+
 export function useAgentStream(
   sessionId: string,
   options: {
@@ -412,7 +414,7 @@ export function useAgentStream(
       dispatch({ type: 'reset' });
     }
     dispatch({ type: 'live_start' });
-    const es = new EventSource(`/sessions/${sessionId}/events`);
+    const es = new EventSource(`${API_BASE}/sessions/${sessionId}/events`);
     esRef.current = es;
     es.onmessage = e => {
       if (!e.data) return;
@@ -506,7 +508,7 @@ export function useAgentStream(
         (userEchoSkipRef.current.get(text) ?? 0) + 1
       );
       try {
-        const res = await fetch(`/sessions/${sessionId}/message`, {
+        const res = await fetch(`${API_BASE}/sessions/${sessionId}/message`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -542,7 +544,7 @@ export function useAgentStream(
 
   const answerPermission = useCallback(
     async (id: string, answer: PermissionAnswer) => {
-      await fetch(`/sessions/${sessionId}/permission`, {
+      await fetch(`${API_BASE}/sessions/${sessionId}/permission`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, ...answer })
@@ -552,7 +554,7 @@ export function useAgentStream(
   );
 
   const interrupt = useCallback(() => {
-    void fetch(`/sessions/${sessionId}/interrupt`, { method: 'POST' });
+    void fetch(`${API_BASE}/sessions/${sessionId}/interrupt`, { method: 'POST' });
   }, [sessionId]);
 
   return { state, send, answerPermission, interrupt };

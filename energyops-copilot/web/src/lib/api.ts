@@ -75,8 +75,10 @@ export interface AnalysisRange {
   to?: string;
 }
 
+const API_BASE = import.meta.env.VITE_SERVER_URL || '';
+
 async function getJSON<T>(url: string): Promise<T> {
-  const res = await fetch(url);
+  const res = await fetch(`${API_BASE}${url}`);
   if (!res.ok) throw new Error(`${url} → ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -129,7 +131,7 @@ export async function postAnnotation(
   sessionId: string,
   body: { kind: AnnotationKind; id: string; text: string }
 ): Promise<Annotation> {
-  const res = await fetch(`/sessions/${sessionId}/annotation`, {
+  const res = await fetch(`${API_BASE}/sessions/${sessionId}/annotation`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -150,7 +152,7 @@ export async function startSession(
   claudeApiKey?: string,
   includePreviousKnowledge?: boolean
 ): Promise<string> {
-  const res = await fetch(`/datasets/${datasetId}/sessions`, {
+  const res = await fetch(`${API_BASE}/datasets/${datasetId}/sessions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -170,7 +172,7 @@ export async function startSession(
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
-  const res = await fetch(`/sessions/${sessionId}`, { method: 'DELETE' });
+  const res = await fetch(`${API_BASE}/sessions/${sessionId}`, { method: 'DELETE' });
   if (!res.ok) throw new Error(`delete session -> ${res.status}`);
 }
 
@@ -185,7 +187,7 @@ export async function postProviderCredentials(
     azureModel?: string;
   }
 ): Promise<void> {
-  const res = await fetch(`/sessions/${sessionId}/provider-credentials`, {
+  const res = await fetch(`${API_BASE}/sessions/${sessionId}/provider-credentials`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials)
@@ -238,7 +240,7 @@ export async function postDecision(
     impact?: number;
   }
 ): Promise<Decision> {
-  const res = await fetch(`/sessions/${sessionId}/decision`, {
+  const res = await fetch(`${API_BASE}/sessions/${sessionId}/decision`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)

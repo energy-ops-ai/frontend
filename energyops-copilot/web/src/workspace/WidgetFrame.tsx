@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Plus, StickyNote } from 'lucide-react';
 import { Button, Card, Textarea } from '@/components/ui';
 
+const API_BASE = import.meta.env.VITE_SERVER_URL || '';
+
 // Wraps a widget and adds a "+" button to pin an operator annotation to it.
 // The note is persisted to the annotation store (kind: 'widget') and is
 // readable by the agent via get_annotations.
@@ -23,7 +25,7 @@ export function WidgetFrame({
   useEffect(() => {
     let active = true;
     fetch(
-      `/sessions/${sessionId}/annotations?kind=widget&id=${encodeURIComponent(widgetId)}`
+      `${API_BASE}/sessions/${sessionId}/annotations?kind=widget&id=${encodeURIComponent(widgetId)}`
     )
       .then(r => (r.ok ? r.json() : []))
       .then((rows: { text: string }[]) => {
@@ -53,7 +55,7 @@ export function WidgetFrame({
   const save = async () => {
     setBusy(true);
     try {
-      await fetch(`/sessions/${sessionId}/annotation`, {
+      await fetch(`${API_BASE}/sessions/${sessionId}/annotation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ kind: 'widget', id: widgetId, text })
